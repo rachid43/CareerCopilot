@@ -28,9 +28,9 @@ Color scheme: Using #F08A5D (coral orange) as primary color instead of blue.
 - **AI Integration**: OpenAI API using GPT-4o model
 
 ### Data Storage Solutions
-- **Primary Database**: PostgreSQL via Neon Database
+- **Primary Database**: PostgreSQL via Neon Database (recently migrated from in-memory storage)
 - **ORM**: Drizzle ORM with TypeScript schema definitions
-- **Session Storage**: In-memory storage with session-based user identification
+- **Session Storage**: PostgreSQL-based storage with session-based user identification
 - **File Storage**: Temporary local storage for uploaded documents (cleaned after processing)
 
 ## Key Components
@@ -102,7 +102,13 @@ The application uses four main tables:
 1. **Session-based Architecture**: Uses session IDs instead of user authentication for simplicity
 2. **Shared Schema**: TypeScript schemas in `/shared` ensure type safety between frontend and backend
 3. **Document Parsing**: Server-side parsing ensures security and proper content extraction
-4. **Memory Storage Fallback**: Includes in-memory storage implementation for development/testing
+4. **Database Migration**: Recently migrated from in-memory storage to PostgreSQL for data persistence
 5. **Single Server Deployment**: Production serves both static files and API from single Express instance
+
+### Recent Changes
+
+- **January 2025**: Migrated from in-memory storage to PostgreSQL database
+- **January 2025**: Updated color scheme to coral orange (#F08A5D) as primary color
+- **January 2025**: Fixed AI mode selector to stack vertically for better mobile experience
 
 The application prioritizes user experience with a clean, accessible interface while maintaining robust backend processing for document handling and AI integration.

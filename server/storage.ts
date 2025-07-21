@@ -1,4 +1,6 @@
 import { users, profiles, documents, aiResults, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult } from "@shared/schema";
+import { db } from './db';
+import { eq, and } from 'drizzle-orm';
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -17,97 +19,102 @@ export interface IStorage {
   createAiResult(result: InsertAiResult): Promise<AiResult>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private profiles: Map<string, Profile>;
-  private documents: Map<number, Document>;
-  private aiResults: Map<number, AiResult>;
-  private currentUserId: number;
-  private currentProfileId: number;
-  private currentDocumentId: number;
-  private currentAiResultId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.profiles = new Map();
-    this.documents = new Map();
-    this.aiResults = new Map();
-    this.currentUserId = 1;
-    this.currentProfileId = 1;
-    this.currentDocumentId = 1;
-    this.currentAiResultId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async getProfile(sessionId: string): Promise<Profile | undefined> {
-    return this.profiles.get(sessionId);
+    const [profile] = await db.select().from(profiles).where(eq(profiles.sessionId, sessionId));
+    return profile || undefined;
   }
 
   async createProfile(insertProfile: InsertProfile): Promise<Profile> {
-    const id = this.currentProfileId++;
-    const profile: Profile = { 
-      ...insertProfile, 
-      id,
-      phone: insertProfile.phone || null,
-      position: insertProfile.position || null,
-      skills: insertProfile.skills || null
-    };
-    this.profiles.set(insertProfile.sessionId, profile);
+    const [profile] = await db
+      .insert(profiles)
+      .values(insertProfile)
+      .returning();
     return profile;
   }
 
   async updateProfile(sessionId: string, updateData: Partial<InsertProfile>): Promise<Profile | undefined> {
-    const existing = this.profiles.get(sessionId);
-    if (!existing) return undefined;
+    const existingProfile = await this.getProfile(sessionId);
     
-    const updated: Profile = { ...existing, ...updateData };
-    this.profiles.set(sessionId, updated);
-    return updated;
+    if (!existingProfile) return undefined;
+
+    const [updatedProfile] = await db
+      .update(profiles)
+      .set(updateData)
+      .where(eq(profiles.sessionId, sessionId))
+      .returning();
+    
+    return updatedProfile;
   }
 
   async getDocuments(sessionId: string): Promise<Document[]> {
-    return Array.from(this.documents.values()).filter(doc => doc.sessionId === sessionId);
+    return await db.select().from(documents).where(eq(documents.sessionId, sessionId));
   }
 
   async createDocument(insertDocument: InsertDocument): Promise<Document> {
-    const id = this.currentDocumentId++;
-    const document: Document = { ...insertDocument, id };
-    this.documents.set(id, document);
+    // Remove existing document of same type first
+    await db
+      .delete(documents)
+      .where(and(
+        eq(documents.sessionId, insertDocument.sessionId),
+        eq(documents.type, insertDocument.type)
+      ));
+
+    const [document] = await db
+      .insert(documents)
+      .values(insertDocument)
+      .returning();
+    
     return document;
   }
 
   async deleteDocument(id: number): Promise<boolean> {
-    return this.documents.delete(id);
+    const result = await db
+      .delete(documents)
+      .where(eq(documents.id, id));
+    
+    return (result.rowCount ?? 0) > 0;
   }
 
   async getAiResults(sessionId: string, mode?: string): Promise<AiResult[]> {
-    const results = Array.from(this.aiResults.values()).filter(result => result.sessionId === sessionId);
     if (mode) {
-      return results.filter(result => result.mode === mode);
+      return await db.select().from(aiResults).where(
+        and(
+          eq(aiResults.sessionId, sessionId),
+          eq(aiResults.mode, mode)
+        )
+      );
     }
-    return results;
+    
+    return await db.select().from(aiResults).where(eq(aiResults.sessionId, sessionId));
   }
 
   async createAiResult(insertAiResult: InsertAiResult): Promise<AiResult> {
-    const id = this.currentAiResultId++;
-    const result: AiResult = { ...insertAiResult, id };
-    this.aiResults.set(id, result);
-    return result;
+    const [aiResult] = await db
+      .insert(aiResults)
+      .values(insertAiResult)
+      .returning();
+    
+    return aiResult;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
