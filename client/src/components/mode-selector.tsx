@@ -41,7 +41,7 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
         <p className="text-sm text-secondary mt-1">Select how you'd like CareerCopilot to assist you</p>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="flex flex-col sm:flex-row">
+        <div className="flex flex-col">
           {modes.map((mode, index) => {
             const Icon = mode.icon;
             const isActive = activeMode === mode.id;
@@ -50,9 +50,9 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
               <Button
                 key={mode.id}
                 variant="ghost"
-                className={`flex-1 p-6 h-auto text-left justify-start rounded-none ${
-                  index < modes.length - 1 ? 'border-b sm:border-b-0 sm:border-r border-gray-200' : ''
-                } ${isActive ? 'bg-blue-50 border-l-4 border-l-primary' : 'hover:bg-gray-50'}`}
+                className={`w-full p-6 h-auto text-left justify-start rounded-none ${
+                  index < modes.length - 1 ? 'border-b border-gray-200' : ''
+                } ${isActive ? 'bg-orange-50 border-l-4 border-l-primary' : 'hover:bg-gray-50'}`}
                 onClick={() => onModeChange(mode.id)}
               >
                 <div className="flex items-start space-x-3 w-full">
