@@ -7,9 +7,11 @@ import { ResultsDisplay } from "@/components/results-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, HelpCircle, Settings, Trash2, Wand2 } from "lucide-react";
+import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User } from "lucide-react";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -20,6 +22,7 @@ export default function Home() {
   const [aiResults, setAiResults] = useState<any>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const { data: profile } = useQuery({
     queryKey: ['/api/profile'],
@@ -42,6 +45,17 @@ export default function Home() {
       });
     },
     onError: (error: any) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
       toast({
         title: "Error",
         description: error.message || "AI processing failed",
@@ -127,12 +141,23 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="text-secondary hover:text-neutral-900 transition-colors">
-                <HelpCircle size={20} />
-              </button>
-              <button className="text-secondary hover:text-neutral-900 transition-colors">
-                <Settings size={20} />
-              </button>
+              {user && (
+                <div className="flex items-center space-x-2 mr-4">
+                  <User size={18} className="text-gray-500" />
+                  <span className="text-sm text-gray-700">
+                    {user.firstName || user.email || user.username}
+                  </span>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.href = '/api/logout'}
+                className="flex items-center space-x-2"
+              >
+                <LogOut size={16} />
+                <span>Logout</span>
+              </Button>
             </div>
           </div>
         </div>

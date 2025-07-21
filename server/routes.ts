@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import multer from "multer";
 import OpenAI from "openai";
 import { storage } from "./storage";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema } from "@shared/schema";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -22,6 +23,10 @@ const upload = multer({
 
 function getSessionId(req: any): string {
   return req.sessionID || req.headers['x-session-id'] || 'default-session';
+}
+
+function getUserId(req: any): string {
+  return req.user?.claims?.sub || 'anonymous';
 }
 
 async function parseDocument(filePath: string, mimetype: string): Promise<string> {
@@ -50,9 +55,23 @@ async function parseDocument(filePath: string, mimetype: string): Promise<string
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  
-  // Profile endpoints
-  app.get("/api/profile", async (req, res) => {
+  // Setup authentication
+  await setupAuth(app);
+
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUserByUsername(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // Protected profile endpoints
+  app.get("/api/profile", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
       const profile = await storage.getProfile(sessionId);
@@ -62,7 +81,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/profile", async (req, res) => {
+  app.post("/api/profile", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
       const profileData = insertProfileSchema.parse({ ...req.body, sessionId });
@@ -88,7 +107,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Document upload endpoints
-  app.post("/api/documents/upload", upload.single('document'), async (req: any, res) => {
+  app.post("/api/documents/upload", isAuthenticated, upload.single('document'), async (req: any, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
@@ -117,7 +136,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/documents", async (req, res) => {
+  app.get("/api/documents", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
       const documents = await storage.getDocuments(sessionId);
@@ -127,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/documents/:id", async (req, res) => {
+  app.delete("/api/documents/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteDocument(id);
@@ -142,7 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI processing endpoints
-  app.post("/api/ai/create", async (req, res) => {
+  app.post("/api/ai/create", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
       const { profile, jobDescription } = req.body;
@@ -192,7 +211,7 @@ Make the content professional, relevant to the job requirements, and well-format
     }
   });
 
-  app.post("/api/ai/review", async (req, res) => {
+  app.post("/api/ai/review", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
       const documents = await storage.getDocuments(sessionId);
@@ -253,7 +272,7 @@ Focus on professional formatting, content quality, clarity, and overall effectiv
     }
   });
 
-  app.post("/api/ai/assess", async (req, res) => {
+  app.post("/api/ai/assess", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
       const { jobDescription } = req.body;

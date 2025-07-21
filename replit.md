@@ -107,6 +107,7 @@ The application uses four main tables:
 
 ### Recent Changes
 
+- **January 2025**: Added user authentication with Replit Auth integration
 - **January 2025**: Migrated from in-memory storage to PostgreSQL database
 - **January 2025**: Updated color scheme to coral orange (#F08A5D) as primary color
 - **January 2025**: Fixed AI mode selector to stack vertically for better mobile experience
