@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(18, 85%, 64%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(215, 16%, 47%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --accent: hsl(151, 71%, 45%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  --neutral-50: hsl(210, 40%, 98%);
+  --neutral-900: hsl(215, 25%, 27%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(18, 85%, 64%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(151, 71%, 45%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Custom utility classes matching the design */
+.text-primary {
+  color: hsl(18, 85%, 64%);
+}
+
+.text-secondary {
+  color: hsl(215, 16%, 47%);
+}
+
+.text-accent {
+  color: hsl(151, 71%, 45%);
+}
+
+.text-neutral-50 {
+  color: hsl(210, 40%, 98%);
+}
+
+.text-neutral-900 {
+  color: hsl(215, 25%, 27%);
+}
+
+.bg-primary {
+  background-color: hsl(18, 85%, 64%);
+}
+
+.bg-secondary {
+  background-color: hsl(215, 16%, 47%);
+}
+
+.bg-accent {
+  background-color: hsl(151, 71%, 45%);
+}
+
+.bg-neutral-50 {
+  background-color: hsl(210, 40%, 98%);
+}
+
+.bg-neutral-900 {
+  background-color: hsl(215, 25%, 27%);
+}
+
+.border-primary {
+  border-color: hsl(18, 85%, 64%);
+}
