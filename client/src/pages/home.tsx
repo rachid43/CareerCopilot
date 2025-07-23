@@ -15,6 +15,7 @@ import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User, Shield } from "
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/language-selector";
+import { Footer } from "@/components/footer";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -245,24 +246,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
-                <Bot className="text-white" size={12} />
-              </div>
-              <span className="text-sm text-secondary">Powered by OpenAI GPT-4</span>
-            </div>
-            <div className="flex items-center space-x-6 text-sm text-secondary">
-              <a href="#" className="hover:text-neutral-900 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-neutral-900 transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-neutral-900 transition-colors">Support</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

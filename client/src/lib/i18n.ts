@@ -91,6 +91,12 @@ export const translations = {
     language: 'Taal',
     dutch: 'Nederlands',
     english: 'Engels',
+    
+    // Footer translations
+    allRightsReserved: "Alle rechten voorbehouden",
+    privacyPolicy: "Privacybeleid",
+    termsOfService: "Algemene Voorwaarden",
+    support: "Ondersteuning",
   },
   en: {
     // Header
@@ -179,6 +185,12 @@ export const translations = {
     language: 'Language',
     dutch: 'Dutch',
     english: 'English',
+    
+    // Footer translations
+    allRightsReserved: "All rights reserved",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    support: "Support",
   },
 };
 
