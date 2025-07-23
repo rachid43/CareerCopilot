@@ -11,7 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User } from "lucide-react";
+import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User, Shield } from "lucide-react";
+import { Link } from "wouter";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -148,6 +149,18 @@ export default function Home() {
                     {user.firstName || user.email || user.username}
                   </span>
                 </div>
+              )}
+              {user?.role === 'superadmin' && (
+                <Link to="/admin">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white"
+                  >
+                    <Shield size={16} />
+                    <span>Admin Panel</span>
+                  </Button>
+                </Link>
               )}
               <Button
                 variant="outline"

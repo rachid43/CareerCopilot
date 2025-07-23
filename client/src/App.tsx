@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import Home from "@/pages/home";
 import { Landing } from "@/pages/landing";
+import AdminPanel from "@/pages/admin";
+import InvitePage from "@/pages/invite";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -13,11 +15,13 @@ function Router() {
 
   return (
     <Switch>
+      <Route path="/invite/:token" component={InvitePage} />
       {isLoading || !isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
         <>
           <Route path="/" component={Home} />
+          <Route path="/admin" component={AdminPanel} />
         </>
       )}
       <Route component={NotFound} />

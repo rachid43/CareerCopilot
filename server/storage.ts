@@ -1,11 +1,13 @@
-import { users, profiles, documents, aiResults, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult } from "@shared/schema";
+import { users, profiles, documents, aiResults, userInvitations, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult, type UserInvitation, type InsertUserInvitation } from "@shared/schema";
 import { db } from './db';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+  updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined>;
   
   getProfile(sessionId: string): Promise<Profile | undefined>;
   createProfile(profile: InsertProfile): Promise<Profile>;
@@ -17,6 +19,12 @@ export interface IStorage {
   
   getAiResults(sessionId: string, mode?: string): Promise<AiResult[]>;
   createAiResult(result: InsertAiResult): Promise<AiResult>;
+  
+  // User invitation methods
+  createInvitation(invitation: InsertUserInvitation): Promise<UserInvitation>;
+  getInvitationByToken(token: string): Promise<UserInvitation | undefined>;
+  markInvitationAsUsed(token: string): Promise<boolean>;
+  getActiveInvitations(): Promise<UserInvitation[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -114,6 +122,58 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return aiResult;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users);
+  }
+
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser || undefined;
+  }
+
+  async createInvitation(insertInvitation: InsertUserInvitation): Promise<UserInvitation> {
+    const [invitation] = await db
+      .insert(userInvitations)
+      .values(insertInvitation)
+      .returning();
+    
+    return invitation;
+  }
+
+  async getInvitationByToken(token: string): Promise<UserInvitation | undefined> {
+    const [invitation] = await db
+      .select()
+      .from(userInvitations)
+      .where(eq(userInvitations.token, token));
+    
+    return invitation || undefined;
+  }
+
+  async markInvitationAsUsed(token: string): Promise<boolean> {
+    const result = await db
+      .update(userInvitations)
+      .set({ isUsed: true })
+      .where(eq(userInvitations.token, token));
+    
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getActiveInvitations(): Promise<UserInvitation[]> {
+    return await db
+      .select()
+      .from(userInvitations)
+      .where(and(
+        eq(userInvitations.isUsed, false),
+        // Only get invitations that haven't expired
+        sql`expires_at > NOW()`
+      ));
   }
 }
 

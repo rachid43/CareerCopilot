@@ -111,5 +111,35 @@ The application uses four main tables:
 - **January 2025**: Migrated from in-memory storage to PostgreSQL database
 - **January 2025**: Updated color scheme to coral orange (#F08A5D) as primary color
 - **January 2025**: Fixed AI mode selector to stack vertically for better mobile experience
+- **January 2025**: Implemented superadmin role system with email-based user invitations
+- **January 2025**: Added user management features (activate/deactivate accounts, extend validity)
+- **January 2025**: Integrated SendGrid for email delivery of user invitations
 
-The application prioritizes user experience with a clean, accessible interface while maintaining robust backend processing for document handling and AI integration.
+### Superadmin Features
+
+The application now includes a comprehensive superadmin system:
+
+#### User Role Management
+- **Superadmin Role**: Full access to user management and invitation system
+- **User Role**: Standard access to career assistance features (default for new users)
+- **Account Expiration**: User accounts expire after 30 days by default
+- **Account Status**: Users can be activated/deactivated by superadmins
+
+#### Email-Based User Invitations
+- Superadmins can send invitation emails to new users
+- Invitations are valid for 30 days
+- Users complete account setup via email link with first/last name
+- SendGrid integration for reliable email delivery
+
+#### Admin Panel Features
+- **User Management Tab**: View all users, activate/deactivate accounts, extend account validity
+- **Invitations Tab**: View pending invitations and their status
+- **Send Invite Tab**: Send new user invitations via email
+- Role-based navigation with admin panel access for superadmins only
+
+#### Database Schema Updates
+- Added `role`, `isActive`, `accountExpiresAt` fields to users table
+- New `userInvitations` table for tracking email invitations
+- Enhanced storage interface with user management methods
+
+The application prioritizes user experience with a clean, accessible interface while maintaining robust backend processing for document handling and AI integration, now enhanced with comprehensive user management capabilities.

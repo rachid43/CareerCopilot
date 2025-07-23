@@ -4,7 +4,8 @@ import multer from "multer";
 import OpenAI from "openai";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema } from "@shared/schema";
+import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema } from "@shared/schema";
+import { sendEmail, generateInvitationEmail } from "./emailService";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 import fs from "fs/promises";
@@ -27,6 +28,36 @@ function getSessionId(req: any): string {
 
 function getUserId(req: any): string {
   return req.user?.claims?.sub || 'anonymous';
+}
+
+// Superadmin middleware
+const isSuperAdmin = async (req: any, res: any, next: any) => {
+  try {
+    const userId = req.user?.claims?.sub;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    const user = await storage.getUserByUsername(userId);
+    if (!user || user.role !== 'superadmin') {
+      return res.status(403).json({ message: "Superadmin access required" });
+    }
+    
+    // Check if account is active and not expired
+    if (!user.isActive || (user.accountExpiresAt && new Date() > user.accountExpiresAt)) {
+      return res.status(403).json({ message: "Account inactive or expired" });
+    }
+    
+    req.currentUser = user;
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Failed to verify admin privileges" });
+  }
+};
+
+// Generate random token for invitations
+function generateToken(): string {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 async function parseDocument(filePath: string, mimetype: string): Promise<string> {
@@ -335,6 +366,161 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
       res.json(result);
     } catch (error: any) {
       res.status(500).json({ message: `AI processing failed: ${error.message}` });
+    }
+  });
+
+  // Superadmin routes
+  
+  // Get all users (superadmin only)
+  app.get("/api/admin/users", isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+  
+  // Update user status (activate/deactivate)
+  app.patch("/api/admin/users/:id", isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { isActive, accountExpiresAt } = req.body;
+      
+      const updatedUser = await storage.updateUser(userId, { 
+        isActive,
+        accountExpiresAt: accountExpiresAt ? new Date(accountExpiresAt) : undefined
+      });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update user" });
+    }
+  });
+  
+  // Send user invitation
+  app.post("/api/admin/invite", isAuthenticated, isSuperAdmin, async (req: any, res) => {
+    try {
+      const { email } = req.body;
+      const currentUser = req.currentUser;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+      
+      // Check if email already exists
+      const existingUser = await storage.getUserByUsername(email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
+      
+      const token = generateToken();
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 30); // 30 days from now
+      
+      // Create invitation
+      const invitation = await storage.createInvitation({
+        email,
+        token,
+        expiresAt,
+        isUsed: false,
+        invitedBy: currentUser.id
+      });
+      
+      // Send email
+      const emailParams = generateInvitationEmail(
+        email, 
+        token, 
+        `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
+      );
+      
+      const emailSent = await sendEmail(emailParams);
+      
+      if (!emailSent) {
+        return res.status(500).json({ message: "Failed to send invitation email" });
+      }
+      
+      res.json({ 
+        message: "Invitation sent successfully",
+        invitation: {
+          id: invitation.id,
+          email: invitation.email,
+          expiresAt: invitation.expiresAt
+        }
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to send invitation: ${error.message}` });
+    }
+  });
+  
+  // Get active invitations
+  app.get("/api/admin/invitations", isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const invitations = await storage.getActiveInvitations();
+      res.json(invitations);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch invitations" });
+    }
+  });
+  
+  // Accept invitation and create account
+  app.post("/api/invite/:token", async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { firstName, lastName } = req.body;
+      
+      const invitation = await storage.getInvitationByToken(token);
+      
+      if (!invitation) {
+        return res.status(404).json({ message: "Invalid invitation token" });
+      }
+      
+      if (invitation.isUsed) {
+        return res.status(400).json({ message: "Invitation has already been used" });
+      }
+      
+      if (new Date() > invitation.expiresAt) {
+        return res.status(400).json({ message: "Invitation has expired" });
+      }
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(invitation.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User already exists" });
+      }
+      
+      // Create user account
+      const accountExpiry = new Date();
+      accountExpiry.setDate(accountExpiry.getDate() + 30); // 30 days active
+      
+      const newUser = await storage.createUser({
+        username: invitation.email,
+        email: invitation.email,
+        firstName: firstName || null,
+        lastName: lastName || null,
+        role: 'user',
+        isActive: true,
+        accountExpiresAt: accountExpiry
+      });
+      
+      // Mark invitation as used
+      await storage.markInvitationAsUsed(token);
+      
+      res.json({ 
+        message: "Account created successfully",
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName
+        }
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to create account: ${error.message}` });
     }
   });
 
