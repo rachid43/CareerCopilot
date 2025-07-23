@@ -13,6 +13,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User, Shield } from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "@/lib/i18n";
+import { LanguageSelector } from "@/components/language-selector";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -24,6 +26,7 @@ export default function Home() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const { data: profile } = useQuery({
     queryKey: ['/api/profile'],
@@ -119,10 +122,10 @@ export default function Home() {
 
   const getButtonText = () => {
     switch (activeMode) {
-      case 'create': return 'Generate CV & Cover Letter';
-      case 'review': return 'Analyze Documents';
-      case 'assess': return 'Calculate Match Score';
-      default: return 'Process';
+      case 'create': return t('generateCvCoverLetter');
+      case 'review': return t('analyzeDocuments');
+      case 'assess': return t('calculateMatchScore');
+      default: return t('processing');
     }
   };
 
@@ -137,8 +140,8 @@ export default function Home() {
                 <Bot className="text-white" size={20} />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-900">CareerCopilot</h1>
-                <p className="text-sm text-secondary">AI-Powered Career Assistant</p>
+                <h1 className="text-xl font-bold text-neutral-900">{t('appTitle')}</h1>
+                <p className="text-sm text-secondary">{t('appSubtitle')}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -150,6 +153,7 @@ export default function Home() {
                   </span>
                 </div>
               )}
+              <LanguageSelector />
               {user?.role === 'superadmin' && (
                 <Link to="/admin">
                   <Button
@@ -169,7 +173,7 @@ export default function Home() {
                 className="flex items-center space-x-2"
               >
                 <LogOut size={16} />
-                <span>Logout</span>
+                <span>{t('logout')}</span>
               </Button>
             </div>
           </div>
@@ -207,7 +211,7 @@ export default function Home() {
                     size="lg"
                   >
                     <Wand2 className="mr-2" size={16} />
-                    {isProcessing ? 'Processing...' : getButtonText()}
+                    {isProcessing ? t('processing') : getButtonText()}
                   </Button>
                   <Button
                     onClick={handleClearAll}
@@ -215,7 +219,7 @@ export default function Home() {
                     size="lg"
                   >
                     <Trash2 className="mr-2" size={16} />
-                    Clear All
+                    {t('clearAll')}
                   </Button>
                 </div>
 
@@ -224,7 +228,7 @@ export default function Home() {
                     <div className="flex items-center space-x-3">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
                       <span className="text-sm text-primary font-medium">
-                        AI is analyzing your content...
+                        {t('aiAnalyzing')}
                       </span>
                     </div>
                   </div>

@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { User, Save } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 export function PersonalProfile() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ export function PersonalProfile() {
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const { data: profile = null } = useQuery({
     queryKey: ['/api/profile'],
@@ -33,14 +35,14 @@ export function PersonalProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
       toast({
-        title: "Success",
-        description: "Profile saved successfully",
+        title: t('success'),
+        description: t('profileSavedDescription'),
       });
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
-        description: error.message || "Failed to save profile",
+        title: t('error'),
+        description: error.message || t('profileSaveFailed'),
         variant: "destructive",
       });
     },
@@ -65,8 +67,8 @@ export function PersonalProfile() {
   const handleSave = () => {
     if (!formData.name || !formData.email) {
       toast({
-        title: "Required fields missing",
-        description: "Please fill in at least your name and email",
+        title: "Verplichte velden ontbreken",
+        description: "Vul ten minste uw naam en e-mail in",
         variant: "destructive",
       });
       return;
@@ -80,16 +82,16 @@ export function PersonalProfile() {
       <CardHeader>
         <CardTitle className="flex items-center">
           <User className="text-primary mr-2" size={20} />
-          Personal Profile
+          {t('personalProfileTitle')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <Label htmlFor="name">Full Name *</Label>
+          <Label htmlFor="name">{t('name')} *</Label>
           <Input
             id="name"
             type="text"
-            placeholder="John Doe"
+            placeholder={t('namePlaceholder')}
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
             className="mt-1"
@@ -97,11 +99,11 @@ export function PersonalProfile() {
         </div>
 
         <div>
-          <Label htmlFor="email">Email *</Label>
+          <Label htmlFor="email">{t('email')} *</Label>
           <Input
             id="email"
             type="email"
-            placeholder="john@example.com"
+            placeholder={t('emailPlaceholder')}
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
             className="mt-1"
@@ -109,11 +111,11 @@ export function PersonalProfile() {
         </div>
 
         <div>
-          <Label htmlFor="phone">Phone</Label>
+          <Label htmlFor="phone">{t('phone')}</Label>
           <Input
             id="phone"
             type="tel"
-            placeholder="+1 (555) 123-4567"
+            placeholder={t('phonePlaceholder')}
             value={formData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
             className="mt-1"
@@ -121,11 +123,11 @@ export function PersonalProfile() {
         </div>
 
         <div>
-          <Label htmlFor="position">Current Position</Label>
+          <Label htmlFor="position">{t('position')}</Label>
           <Input
             id="position"
             type="text"
-            placeholder="Software Engineer"
+            placeholder={t('positionPlaceholder')}
             value={formData.position}
             onChange={(e) => handleInputChange('position', e.target.value)}
             className="mt-1"
@@ -133,10 +135,10 @@ export function PersonalProfile() {
         </div>
 
         <div>
-          <Label htmlFor="skills">Key Skills</Label>
+          <Label htmlFor="skills">{t('skills')}</Label>
           <Textarea
             id="skills"
-            placeholder="React, JavaScript, Python..."
+            placeholder={t('skillsPlaceholder')}
             value={formData.skills}
             onChange={(e) => handleInputChange('skills', e.target.value)}
             className="mt-1 h-20 resize-none"
@@ -149,7 +151,7 @@ export function PersonalProfile() {
           className="w-full bg-secondary text-white hover:bg-slate-600"
         >
           <Save className="mr-2" size={16} />
-          {saveMutation.isPending ? 'Saving...' : 'Save Profile'}
+          {saveMutation.isPending ? t('processing') : t('saveProfile')}
         </Button>
       </CardContent>
     </Card>

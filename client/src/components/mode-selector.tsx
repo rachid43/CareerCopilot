@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PenTool, Brain, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -10,26 +11,28 @@ interface ModeSelectorProps {
 }
 
 export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
+  const { t } = useLanguage();
+  
   const modes = [
     {
       id: 'create' as AIMode,
       icon: PenTool,
-      title: '✍️ Create',
-      description: 'Generate tailored CV and cover letter from scratch using your profile and job description',
+      title: `✍️ ${t('createMode')}`,
+      description: t('createModeDescription'),
       color: 'bg-primary',
     },
     {
       id: 'review' as AIMode,
       icon: Brain,
-      title: '🧠 Review',
-      description: 'Get detailed feedback and suggestions on your uploaded CV and cover letter',
+      title: `🧠 ${t('reviewMode')}`,
+      description: t('reviewModeDescription'),
       color: 'bg-secondary',
     },
     {
       id: 'assess' as AIMode,
       icon: CheckCircle,
-      title: '✅ Assess',
-      description: 'Compare your documents against the job description with match score and improvement tips',
+      title: `✅ ${t('assessMode')}`,
+      description: t('assessModeDescription'),
       color: 'bg-accent',
     },
   ];
@@ -37,8 +40,8 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
   return (
     <Card className="mb-6">
       <CardHeader className="border-b border-gray-200">
-        <CardTitle>Choose Your AI Mode</CardTitle>
-        <p className="text-sm text-secondary mt-1">Select how you'd like CareerCopilot to assist you</p>
+        <CardTitle>Kies uw AI Modus</CardTitle>
+        <p className="text-sm text-secondary mt-1">Selecteer hoe u wilt dat CareerCopilot u helpt</p>
       </CardHeader>
       <CardContent className="p-0">
         <div className="flex flex-col">

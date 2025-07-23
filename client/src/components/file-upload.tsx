@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, FileText, Trash2, CheckCircle } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/lib/i18n";
 
 export function FileUpload() {
   const [dragActive, setDragActive] = useState({ cv: false, coverLetter: false });
@@ -12,6 +12,7 @@ export function FileUpload() {
   const coverLetterInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const { data: documents = [] } = useQuery({
     queryKey: ['/api/documents'],
@@ -38,8 +39,8 @@ export function FileUpload() {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
       toast({
-        title: "Success",
-        description: `${variables.type === 'cv' ? 'CV' : 'Cover letter'} uploaded successfully`,
+        title: t('success'),
+        description: `${variables.type === 'cv' ? 'CV' : 'Motivatiebrief'} succesvol geüpload`,
       });
     },
     onError: (error: any) => {
@@ -140,7 +141,7 @@ export function FileUpload() {
       <CardHeader>
         <CardTitle className="flex items-center">
           <Upload className="text-primary mr-2" size={20} />
-          Upload Documents
+          {t('fileUploadTitle')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -179,9 +180,9 @@ export function FileUpload() {
             >
               <FileText className="mx-auto text-gray-400 mb-2" size={32} />
               <p className="text-sm text-secondary">
-                Drop your CV here or <span className="text-primary font-medium">browse files</span>
+                {t('dragDropText')}
               </p>
-              <p className="text-xs text-gray-500 mt-1">PDF or DOCX, max 10MB</p>
+              <p className="text-xs text-gray-500 mt-1">{t('supportedFormats')}</p>
               <input
                 ref={cvInputRef}
                 type="file"
@@ -195,7 +196,7 @@ export function FileUpload() {
 
         {/* Cover Letter Upload */}
         <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-2">Cover Letter (Optional)</label>
+          <label className="block text-sm font-medium text-neutral-700 mb-2">Motivatiebrief (Optioneel)</label>
           {coverLetterDoc ? (
             <div className="border-2 border-green-300 bg-green-50 rounded-lg p-4">
               <div className="flex items-center justify-between">

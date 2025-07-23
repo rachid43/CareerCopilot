@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Briefcase } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 interface JobDescriptionProps {
   value: string;
@@ -9,6 +10,7 @@ interface JobDescriptionProps {
 }
 
 export function JobDescription({ value, onChange }: JobDescriptionProps) {
+  const { t } = useLanguage();
   const characterLimit = 2000;
   const characterCount = value.length;
 
@@ -21,14 +23,14 @@ export function JobDescription({ value, onChange }: JobDescriptionProps) {
       <CardHeader>
         <CardTitle className="flex items-center">
           <Briefcase className="text-primary mr-2" size={20} />
-          Job Description
+          {t('jobDescriptionTitle')}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Paste the job description here..."
+          placeholder={t('jobDescriptionPlaceholder')}
           className="min-h-32 resize-none"
           maxLength={characterLimit}
         />
@@ -42,7 +44,7 @@ export function JobDescription({ value, onChange }: JobDescriptionProps) {
             onClick={handleClear}
             className="text-xs text-primary hover:text-orange-700 h-auto p-0"
           >
-            Clear
+            Wissen
           </Button>
         </div>
       </CardContent>

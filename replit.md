@@ -114,6 +114,9 @@ The application uses four main tables:
 - **January 2025**: Implemented superadmin role system with email-based user invitations
 - **January 2025**: Added user management features (activate/deactivate accounts, extend validity)
 - **January 2025**: Integrated SendGrid for email delivery of user invitations
+- **January 2025**: Added internationalization support with Dutch as default language and English option
+- **January 2025**: Implemented language selector component with Dutch/English switching
+- **January 2025**: Maintained superadmin interface in English while user interface defaults to Dutch
 
 ### Superadmin Features
 
@@ -142,4 +145,27 @@ The application now includes a comprehensive superadmin system:
 - New `userInvitations` table for tracking email invitations
 - Enhanced storage interface with user management methods
 
-The application prioritizes user experience with a clean, accessible interface while maintaining robust backend processing for document handling and AI integration, now enhanced with comprehensive user management capabilities.
+### Internationalization Features
+
+The application now supports Dutch and English languages:
+
+#### Language System
+- **Default Language**: Dutch (Nederlands) for all regular users
+- **Language Switching**: Users can toggle between Dutch and English via language selector
+- **Superadmin Exception**: Admin panel remains in English for consistency
+- **Persistent Preference**: Language choice is saved in localStorage
+
+#### Implementation Details
+- Comprehensive translation system with `useLanguage` hook
+- Translation files for all UI components and messages
+- Language selector component in main navigation
+- Dutch translations for forms, buttons, messages, and notifications
+
+#### Translation Coverage
+- Main navigation and headers in Dutch
+- All form fields and placeholders translated
+- AI mode descriptions and instructions
+- Error messages and toast notifications
+- File upload instructions and validation messages
+
+The application prioritizes user experience with a clean, accessible interface while maintaining robust backend processing for document handling and AI integration, now enhanced with comprehensive user management capabilities and full Dutch language support.
