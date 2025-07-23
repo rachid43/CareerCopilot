@@ -17,6 +17,11 @@ interface EmailParams {
 
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
+    console.log('Attempting to send email with SendGrid...');
+    console.log('From:', params.from);
+    console.log('To:', params.to);
+    console.log('Subject:', params.subject);
+    
     await mailService.send({
       to: params.to,
       from: params.from,
@@ -24,9 +29,14 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
       text: params.text || '',
       html: params.html || '',
     });
+    
+    console.log('Email sent successfully');
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('SendGrid email error:', error);
+    console.error('Error response:', error.response?.body);
+    console.error('Error code:', error.code);
+    console.error('Error message:', error.message);
     return false;
   }
 }
@@ -39,7 +49,7 @@ export function generateInvitationEmail(email: string, token: string, inviterNam
   
   return {
     to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com', // Note: You may need to verify this domain in SendGrid
+    from: process.env.SENDGRID_FROM_EMAIL || 'info@maptheorie.nl',
     subject: 'Welcome to CareerCopilot - Complete Your Account Setup',
     text: `
 Hello,

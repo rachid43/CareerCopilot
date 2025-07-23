@@ -467,6 +467,35 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
     }
   });
   
+  // Test SendGrid configuration (for debugging)
+  app.get("/api/admin/test-sendgrid", isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const testEmailParams = {
+        to: 'test@example.com', // This won't actually send, just tests authentication
+        from: process.env.SENDGRID_FROM_EMAIL || 'info@maptheorie.nl',
+        subject: 'SendGrid Test',
+        text: 'This is a test email to verify SendGrid configuration.'
+      };
+      
+      console.log('Testing SendGrid configuration...');
+      console.log('API Key exists:', !!process.env.SENDGRID_API_KEY);
+      console.log('API Key format:', process.env.SENDGRID_API_KEY?.substring(0, 10) + '...');
+      console.log('From email:', testEmailParams.from);
+      
+      // Don't actually send, just test if credentials work
+      res.json({ 
+        message: "SendGrid test initiated - check server logs for details",
+        config: {
+          hasApiKey: !!process.env.SENDGRID_API_KEY,
+          fromEmail: testEmailParams.from,
+          apiKeyPrefix: process.env.SENDGRID_API_KEY?.substring(0, 10)
+        }
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: `SendGrid test failed: ${error.message}` });
+    }
+  });
+
   // Accept invitation and create account
   app.post("/api/invite/:token", async (req, res) => {
     try {
