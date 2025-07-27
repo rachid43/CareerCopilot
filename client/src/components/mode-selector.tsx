@@ -11,7 +11,7 @@ interface ModeSelectorProps {
 }
 
 export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   
   const modes = [
     {
@@ -40,8 +40,8 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
   return (
     <Card className="mb-6">
       <CardHeader className="border-b border-gray-200">
-        <CardTitle>Kies uw AI Modus</CardTitle>
-        <p className="text-sm text-secondary mt-1">Selecteer hoe u wilt dat CareerCopilot u helpt</p>
+        <CardTitle>{t('aiModeTitle')}</CardTitle>
+        <p className="text-sm text-secondary mt-1">{t('aiModeSubtitle')}</p>
       </CardHeader>
       <CardContent className="p-0">
         <div className="flex flex-col">
@@ -58,13 +58,13 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
                 } ${isActive ? 'bg-orange-50 border-l-4 border-l-primary' : 'hover:bg-gray-50'}`}
                 onClick={() => onModeChange(mode.id)}
               >
-                <div className="flex items-start space-x-3 w-full">
+                <div className={`flex items-start w-full ${isRTL ? 'space-x-reverse space-x-3' : 'space-x-3'}`}>
                   <div className={`w-8 h-8 ${mode.color} rounded-lg flex items-center justify-center mt-1 flex-shrink-0`}>
                     <Icon className="text-white" size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-neutral-900 mb-1">{mode.title}</h3>
-                    <p className="text-sm text-secondary leading-relaxed">{mode.description}</p>
+                    <h3 className={`font-semibold text-neutral-900 mb-1 ${isRTL ? 'text-right' : 'text-left'}`}>{mode.title}</h3>
+                    <p className={`text-sm text-secondary leading-relaxed ${isRTL ? 'text-right' : 'text-left'}`}>{mode.description}</p>
                   </div>
                 </div>
               </Button>

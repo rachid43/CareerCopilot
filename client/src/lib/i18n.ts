@@ -14,6 +14,8 @@ export const translations = {
     adminPanel: 'Admin Paneel',
     
     // AI Modes
+    aiModeTitle: 'Kies uw AI Modus',
+    aiModeSubtitle: 'Selecteer hoe u wilt dat CareerCopilot u helpt',
     createMode: 'Aanmaken',
     reviewMode: 'Beoordelen', 
     assessMode: 'Evalueren',
@@ -110,6 +112,8 @@ export const translations = {
     adminPanel: 'Admin Panel',
     
     // AI Modes
+    aiModeTitle: 'Choose Your AI Mode',
+    aiModeSubtitle: 'Select how you want CareerCopilot to help you',
     createMode: 'Create',
     reviewMode: 'Review',
     assessMode: 'Assess',
@@ -206,6 +210,8 @@ export const translations = {
     adminPanel: 'لوحة الإدارة',
     
     // AI Modes
+    aiModeTitle: 'اختر وضع الذكاء الاصطناعي',
+    aiModeSubtitle: 'حدد كيف تريد من CareerCopilot أن يساعدك',
     createMode: 'إنشاء',
     reviewMode: 'مراجعة',
     assessMode: 'تقييم',
@@ -302,6 +308,8 @@ export const translations = {
     adminPanel: 'Yönetici Paneli',
     
     // AI Modes
+    aiModeTitle: 'AI Modunuzu Seçin',
+    aiModeSubtitle: 'CareerCopilot\'un size nasıl yardım etmesini istediğinizi seçin',
     createMode: 'Oluştur',
     reviewMode: 'İncele',
     assessMode: 'Değerlendir',
