@@ -468,29 +468,50 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
   });
   
   // Test SendGrid configuration (for debugging)
-  app.get("/api/admin/test-sendgrid", isAuthenticated, isSuperAdmin, async (req, res) => {
+  app.post("/api/admin/test-sendgrid", isAuthenticated, isSuperAdmin, async (req, res) => {
     try {
+      const { testEmail } = req.body;
+      const emailToUse = testEmail || 'test@example.com';
+      
       const testEmailParams = {
-        to: 'test@example.com', // This won't actually send, just tests authentication
+        to: emailToUse,
         from: process.env.SENDGRID_FROM_EMAIL || 'info@maptheorie.nl',
-        subject: 'SendGrid Test',
-        text: 'This is a test email to verify SendGrid configuration.'
+        subject: 'SendGrid Connection Test - CareerCopilot',
+        text: 'This is a test email to verify SendGrid configuration is working properly.',
+        html: '<h3>SendGrid Test</h3><p>This is a test email to verify SendGrid configuration is working properly.</p>'
       };
       
       console.log('Testing SendGrid configuration...');
       console.log('API Key exists:', !!process.env.SENDGRID_API_KEY);
       console.log('API Key format:', process.env.SENDGRID_API_KEY?.substring(0, 10) + '...');
       console.log('From email:', testEmailParams.from);
+      console.log('Test email to:', emailToUse);
       
-      // Don't actually send, just test if credentials work
-      res.json({ 
-        message: "SendGrid test initiated - check server logs for details",
-        config: {
-          hasApiKey: !!process.env.SENDGRID_API_KEY,
-          fromEmail: testEmailParams.from,
-          apiKeyPrefix: process.env.SENDGRID_API_KEY?.substring(0, 10)
-        }
-      });
+      // Actually attempt to send the test email
+      const emailSent = await sendEmail(testEmailParams);
+      
+      if (emailSent) {
+        res.json({ 
+          message: "SendGrid test email sent successfully!",
+          config: {
+            hasApiKey: !!process.env.SENDGRID_API_KEY,
+            fromEmail: testEmailParams.from,
+            apiKeyPrefix: process.env.SENDGRID_API_KEY?.substring(0, 10),
+            testEmailSent: true,
+            sentTo: emailToUse
+          }
+        });
+      } else {
+        res.status(500).json({ 
+          message: "SendGrid test email failed to send - check server logs for details",
+          config: {
+            hasApiKey: !!process.env.SENDGRID_API_KEY,
+            fromEmail: testEmailParams.from,
+            apiKeyPrefix: process.env.SENDGRID_API_KEY?.substring(0, 10),
+            testEmailSent: false
+          }
+        });
+      }
     } catch (error: any) {
       res.status(500).json({ message: `SendGrid test failed: ${error.message}` });
     }
