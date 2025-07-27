@@ -5,7 +5,7 @@ import OpenAI from "openai";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema } from "@shared/schema";
-import { sendEmail, generateInvitationEmail } from "./emailService";
+import { sendEmailWithFallback, generateInvitationEmail } from "./emailServiceSMTP";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 import fs from "fs/promises";
@@ -438,7 +438,7 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
         `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
       );
       
-      const emailSent = await sendEmail(emailParams);
+      const emailSent = await sendEmailWithFallback(emailParams);
       
       if (!emailSent) {
         return res.status(500).json({ message: "Failed to send invitation email" });
@@ -478,7 +478,7 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
         text: 'Testing if SendGrid works with current configuration.',
       };
       
-      const emailSent = await sendEmail(testEmailParams);
+      const emailSent = await sendEmailWithFallback(testEmailParams);
       
       res.json({ 
         success: emailSent,
@@ -511,7 +511,7 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
       console.log('Test email to:', emailToUse);
       
       // Actually attempt to send the test email
-      const emailSent = await sendEmail(testEmailParams);
+      const emailSent = await sendEmailWithFallback(testEmailParams);
       
       if (emailSent) {
         res.json({ 
