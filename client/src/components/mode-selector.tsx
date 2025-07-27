@@ -44,7 +44,8 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
         <p className="text-sm text-secondary mt-1">{t('aiModeSubtitle')}</p>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="flex flex-col">
+        <div className="flex flex-col"
+             style={{ flexDirection: 'column !important' }}>
           {modes.map((mode, index) => {
             const Icon = mode.icon;
             const isActive = activeMode === mode.id;
