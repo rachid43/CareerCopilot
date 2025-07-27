@@ -4,8 +4,14 @@ if (!process.env.SENDGRID_API_KEY) {
   throw new Error("SENDGRID_API_KEY environment variable must be set");
 }
 
+// Clean the API key by removing any trailing "Copied!" text
+const cleanApiKey = process.env.SENDGRID_API_KEY.replace(/Copied!$/, '');
+console.log('Original key length:', process.env.SENDGRID_API_KEY.length);
+console.log('Cleaned key length:', cleanApiKey.length);
+console.log('Key was cleaned:', process.env.SENDGRID_API_KEY !== cleanApiKey);
+
 const mailService = new MailService();
-mailService.setApiKey(process.env.SENDGRID_API_KEY);
+mailService.setApiKey(cleanApiKey);
 
 interface EmailParams {
   to: string;
