@@ -403,11 +403,20 @@ export function useLanguage() {
   }, [language]);
 
   const t = (key: keyof typeof translations.nl): string => {
-    return translations[language][key] || key;
+    const translation = translations[language]?.[key] || key;
+    // Debug log for translation
+    if (typeof translation === 'string') {
+      return translation;
+    }
+    console.warn('Translation not found for key:', key, 'in language:', language);
+    return key;
   };
 
   const switchLanguage = (newLanguage: Language) => {
+    console.log('switchLanguage called with:', newLanguage);
+    console.log('Current language:', language);
     setLanguage(newLanguage);
+    console.log('Language state updated to:', newLanguage);
   };
 
   return {

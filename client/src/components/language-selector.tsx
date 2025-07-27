@@ -10,6 +10,11 @@ import { Languages, Check } from "lucide-react";
 
 export function LanguageSelector() {
   const { language, t, switchLanguage } = useLanguage();
+  
+  const handleLanguageChange = (newLanguage: Language) => {
+    console.log('Switching language from', language, 'to', newLanguage);
+    switchLanguage(newLanguage);
+  };
 
   const languages: { code: Language; name: string; flag: string }[] = [
     { code: 'nl', name: t('dutch'), flag: '🇳🇱' },
@@ -31,7 +36,7 @@ export function LanguageSelector() {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => switchLanguage(lang.code)}
+            onClick={() => handleLanguageChange(lang.code)}
             className="flex items-center justify-between"
           >
             <div className="flex items-center space-x-2">
