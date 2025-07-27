@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/lib/i18n";
+import { useEffect } from "react";
 import Home from "@/pages/home";
 import { Landing } from "@/pages/landing";
 import AdminPanel from "@/pages/admin";
@@ -30,6 +32,15 @@ function Router() {
 }
 
 function App() {
+  const { language, isRTL } = useLanguage();
+
+  useEffect(() => {
+    // Update document attributes for language and direction
+    document.documentElement.lang = language;
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.body.lang = language;
+  }, [language, isRTL]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

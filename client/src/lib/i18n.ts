@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export type Language = 'nl' | 'en';
+export type Language = 'nl' | 'en' | 'ar' | 'tr';
 
 // Language translations
 export const translations = {
@@ -91,6 +91,8 @@ export const translations = {
     language: 'Taal',
     dutch: 'Nederlands',
     english: 'Engels',
+    arabic: 'Arabisch',
+    turkish: 'Turks',
     
     // Footer translations
     allRightsReserved: "Alle rechten voorbehouden",
@@ -185,12 +187,206 @@ export const translations = {
     language: 'Language',
     dutch: 'Dutch',
     english: 'English',
+    arabic: 'Arabic',
+    turkish: 'Turkish',
     
     // Footer translations
     allRightsReserved: "All rights reserved",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     support: "Support",
+  },
+  ar: {
+    // Header
+    appTitle: 'CareerCopilot',
+    appSubtitle: 'مساعد المهنة المدعوم بالذكاء الاصطناعي',
+    logout: 'تسجيل الخروج',
+    
+    // Navigation
+    adminPanel: 'لوحة الإدارة',
+    
+    // AI Modes
+    createMode: 'إنشاء',
+    reviewMode: 'مراجعة',
+    assessMode: 'تقييم',
+    createModeDescription: 'إنشاء سيرة ذاتية ورسالة تغطية جديدة بناءً على ملفك الشخصي ووصف الوظيفة',
+    reviewModeDescription: 'احصل على تعليقات مفصلة على المستندات المرفوعة',
+    assessModeDescription: 'قارن مستنداتك مع أوصاف الوظائف واحصل على درجة التطابق',
+    
+    // File Upload
+    fileUploadTitle: 'رفع المستندات',
+    fileUploadDescription: 'اسحب سيرتك الذاتية أو رسالة التغطية هنا',
+    dragDropText: 'اسحب الملفات هنا أو انقر للاختيار',
+    supportedFormats: 'ملفات PDF و DOCX مدعومة',
+    uploadedDocuments: 'المستندات المرفوعة',
+    deleteDocument: 'حذف المستند',
+    
+    // Job Description
+    jobDescriptionTitle: 'وصف الوظيفة',
+    jobDescriptionPlaceholder: 'الصق وصف الوظيفة هنا...',
+    jobDescriptionDescription: 'أضف وصف الوظيفة للحصول على نتائج أفضل',
+    
+    // Personal Profile
+    personalProfileTitle: 'الملف الشخصي',
+    personalProfileDescription: 'املأ تفاصيلك للحصول على نتائج مخصصة',
+    name: 'الاسم',
+    namePlaceholder: 'اسمك الكامل',
+    email: 'البريد الإلكتروني',
+    emailPlaceholder: 'your.email@example.com',
+    phone: 'الهاتف',
+    phonePlaceholder: '+966 50 123 4567',
+    position: 'المنصب المطلوب',
+    positionPlaceholder: 'مثال: مطور برمجيات أول',
+    skills: 'المهارات',
+    skillsPlaceholder: 'مثال: JavaScript, React, Node.js, Python',
+    saveProfile: 'حفظ الملف الشخصي',
+    updateProfile: 'تحديث الملف الشخصي',
+    
+    // Action Buttons
+    generateCvCoverLetter: 'إنشاء السيرة الذاتية ورسالة التغطية',
+    analyzeDocuments: 'تحليل المستندات',
+    calculateMatchScore: 'حساب درجة التطابق',
+    processing: 'جاري المعالجة...',
+    clearAll: 'مسح الكل',
+    
+    // Results
+    resultsTitle: 'نتائج الذكاء الاصطناعي',
+    noResults: 'لا توجد نتائج بعد. اختر وضعًا وانقر على زر المعالجة للبدء.',
+    copyToClipboard: 'نسخ إلى الحافظة',
+    downloadAsWord: 'تحميل كـ Word',
+    copied: 'تم النسخ!',
+    
+    // Messages
+    profileRequired: 'الملف الشخصي مطلوب',
+    profileRequiredDescription: 'يرجى ملء ملفك الشخصي أولاً',
+    documentsRequired: 'المستندات مطلوبة',
+    documentsRequiredDescription: 'يرجى رفع مستنداتك أولاً للمتابعة',
+    jobDescriptionRequired: 'وصف الوظيفة مطلوب',
+    jobDescriptionRequiredDescription: 'يرجى إضافة وصف وظيفة لهذا الوضع',
+    success: 'نجح',
+    aiProcessingComplete: 'تمت معالجة الذكاء الاصطناعي بنجاح',
+    error: 'خطأ',
+    aiProcessingFailed: 'فشلت معالجة الذكاء الاصطناعي',
+    unauthorized: 'غير مصرح',
+    unauthorizedDescription: 'تم تسجيل خروجك. جاري تسجيل الدخول مرة أخرى...',
+    profileSaved: 'تم حفظ الملف الشخصي',
+    profileSavedDescription: 'تم حفظ ملفك الشخصي بنجاح',
+    profileSaveFailed: 'فشل في حفظ الملف الشخصي',
+    documentDeleted: 'تم حذف المستند',
+    documentDeletedDescription: 'تم حذف المستند بنجاح',
+    documentDeleteFailed: 'فشل في حذف المستند',
+    
+    // Processing Status
+    aiAnalyzing: 'الذكاء الاصطناعي يحلل المحتوى...',
+    
+    // Language Selector
+    language: 'اللغة',
+    dutch: 'الهولندية',
+    english: 'الإنجليزية',
+    arabic: 'العربية',
+    turkish: 'التركية',
+    
+    // Footer translations
+    allRightsReserved: "جميع الحقوق محفوظة",
+    privacyPolicy: "سياسة الخصوصية",
+    termsOfService: "شروط الخدمة",
+    support: "الدعم",
+  },
+  tr: {
+    // Header
+    appTitle: 'CareerCopilot',
+    appSubtitle: 'AI Destekli Kariyer Asistanı',
+    logout: 'Çıkış Yap',
+    
+    // Navigation
+    adminPanel: 'Yönetici Paneli',
+    
+    // AI Modes
+    createMode: 'Oluştur',
+    reviewMode: 'İncele',
+    assessMode: 'Değerlendir',
+    createModeDescription: 'Profiliniz ve iş tanımına dayalı yeni CV ve ön yazı oluşturun',
+    reviewModeDescription: 'Yüklenen belgeleriniz hakkında ayrıntılı geri bildirim alın',
+    assessModeDescription: 'Belgelerinizi iş tanımlarıyla karşılaştırın ve eşleşme puanı alın',
+    
+    // File Upload
+    fileUploadTitle: 'Belge Yükle',
+    fileUploadDescription: 'CV\'nizi veya ön yazınızı buraya sürükleyin',
+    dragDropText: 'Dosyaları buraya sürükleyin veya seçmek için tıklayın',
+    supportedFormats: 'PDF ve DOCX dosyaları desteklenir',
+    uploadedDocuments: 'Yüklenen Belgeler',
+    deleteDocument: 'Belgeyi sil',
+    
+    // Job Description
+    jobDescriptionTitle: 'İş Tanımı',
+    jobDescriptionPlaceholder: 'İş tanımını buraya yapıştırın...',
+    jobDescriptionDescription: 'Daha iyi sonuçlar için iş tanımını ekleyin',
+    
+    // Personal Profile
+    personalProfileTitle: 'Kişisel Profil',
+    personalProfileDescription: 'Kişiselleştirilmiş sonuçlar için bilgilerinizi doldurun',
+    name: 'Ad',
+    namePlaceholder: 'Tam adınız',
+    email: 'E-posta',
+    emailPlaceholder: 'sizin.email@ornek.com',
+    phone: 'Telefon',
+    phonePlaceholder: '+90 555 123 4567',
+    position: 'İstenen Pozisyon',
+    positionPlaceholder: 'örn., Kıdemli Yazılım Geliştirici',
+    skills: 'Yetenekler',
+    skillsPlaceholder: 'örn., JavaScript, React, Node.js, Python',
+    saveProfile: 'Profili Kaydet',
+    updateProfile: 'Profili Güncelle',
+    
+    // Action Buttons
+    generateCvCoverLetter: 'CV ve Ön Yazı Oluştur',
+    analyzeDocuments: 'Belgeleri Analiz Et',
+    calculateMatchScore: 'Eşleşme Puanını Hesapla',
+    processing: 'İşleniyor...',
+    clearAll: 'Tümünü Temizle',
+    
+    // Results
+    resultsTitle: 'AI Sonuçları',
+    noResults: 'Henüz sonuç yok. Bir mod seçin ve başlamak için işlem düğmesine tıklayın.',
+    copyToClipboard: 'Panoya Kopyala',
+    downloadAsWord: 'Word Olarak İndir',
+    copied: 'Kopyalandı!',
+    
+    // Messages
+    profileRequired: 'Profil Gerekli',
+    profileRequiredDescription: 'Lütfen önce kişisel profilinizi doldurun',
+    documentsRequired: 'Belgeler Gerekli',
+    documentsRequiredDescription: 'Devam etmek için lütfen önce belgelerinizi yükleyin',
+    jobDescriptionRequired: 'İş Tanımı Gerekli',
+    jobDescriptionRequiredDescription: 'Bu mod için lütfen bir iş tanımı ekleyin',
+    success: 'Başarılı',
+    aiProcessingComplete: 'AI işleme başarıyla tamamlandı',
+    error: 'Hata',
+    aiProcessingFailed: 'AI işleme başarısız',
+    unauthorized: 'Yetkisiz',
+    unauthorizedDescription: 'Çıkış yaptınız. Tekrar giriş yapılıyor...',
+    profileSaved: 'Profil kaydedildi',
+    profileSavedDescription: 'Kişisel profiliniz başarıyla kaydedildi',
+    profileSaveFailed: 'Profil kaydetme başarısız',
+    documentDeleted: 'Belge silindi',
+    documentDeletedDescription: 'Belge başarıyla silindi',
+    documentDeleteFailed: 'Belge silme başarısız',
+    
+    // Processing Status
+    aiAnalyzing: 'AI içeriğinizi analiz ediyor...',
+    
+    // Language Selector
+    language: 'Dil',
+    dutch: 'Flemenkçe',
+    english: 'İngilizce',
+    arabic: 'Arapça',
+    turkish: 'Türkçe',
+    
+    // Footer translations
+    allRightsReserved: "Tüm hakları saklıdır",
+    privacyPolicy: "Gizlilik Politikası",
+    termsOfService: "Hizmet Şartları",
+    support: "Destek",
   },
 };
 
@@ -220,5 +416,8 @@ export function useLanguage() {
     switchLanguage,
     isNL: language === 'nl',
     isEN: language === 'en',
+    isAR: language === 'ar',
+    isTR: language === 'tr',
+    isRTL: language === 'ar',
   };
 }
