@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 
 export type Language = 'nl' | 'en' | 'ar' | 'tr';
 
@@ -390,44 +390,50 @@ export const translations = {
   },
 };
 
-// Global language state to force re-renders
-let globalLanguage: Language = (() => {
-  if (typeof window !== 'undefined') {
+// Language context
+interface LanguageContextType {
+  language: Language;
+  t: (key: keyof typeof translations.nl) => string;
+  switchLanguage: (newLanguage: Language) => void;
+  isNL: boolean;
+  isEN: boolean;
+  isAR: boolean;
+  isTR: boolean;
+  isRTL: boolean;
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+// Language Provider
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguage] = useState<Language>(() => {
+    // Default to Dutch as requested
     const saved = localStorage.getItem('careercopilot-language');
     return (saved as Language) || 'nl';
-  }
-  return 'nl';
-})();
-
-const listeners: (() => void)[] = [];
-
-// Language context hook
-export function useLanguage() {
-  const [language, setLanguage] = useState<Language>(globalLanguage);
+  });
 
   useEffect(() => {
-    const listener = () => setLanguage(globalLanguage);
-    listeners.push(listener);
-    return () => {
-      const index = listeners.indexOf(listener);
-      if (index > -1) listeners.splice(index, 1);
-    };
-  }, []);
+    localStorage.setItem('careercopilot-language', language);
+  }, [language]);
 
   const t = (key: keyof typeof translations.nl): string => {
-    const translation = translations[language]?.[key];
-    return typeof translation === 'string' ? translation : key;
+    const translation = translations[language]?.[key] || key;
+    // Debug log for translation
+    if (typeof translation === 'string') {
+      return translation;
+    }
+    console.warn('Translation not found for key:', key, 'in language:', language);
+    return key;
   };
 
   const switchLanguage = (newLanguage: Language) => {
     console.log('switchLanguage called with:', newLanguage);
-    globalLanguage = newLanguage;
-    localStorage.setItem('careercopilot-language', newLanguage);
-    // Notify all listeners
-    listeners.forEach(listener => listener());
+    console.log('Current language:', language);
+    setLanguage(newLanguage);
+    console.log('Language state updated to:', newLanguage);
   };
 
-  return {
+  const value = {
     language,
     t,
     switchLanguage,
@@ -437,4 +443,19 @@ export function useLanguage() {
     isTR: language === 'tr',
     isRTL: language === 'ar',
   };
+
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+// Language context hook
+export function useLanguage() {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
 }
