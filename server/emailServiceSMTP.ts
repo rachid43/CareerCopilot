@@ -63,9 +63,10 @@ export async function sendEmailWithFallback(params: EmailParams): Promise<boolea
 }
 
 export function generateInvitationEmail(email: string, token: string, inviterName: string): EmailParams {
-  const baseUrl = process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:5000' 
-    : `https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'careercopilot.replit.app'}`;
+  // Always use the Replit domain for invitation links to ensure accessibility
+  const baseUrl = process.env.REPLIT_DOMAINS 
+    ? `https://${process.env.REPLIT_DOMAINS.split(',')[0]}` 
+    : 'https://careercopilot.replit.app';
   const inviteUrl = `${baseUrl}/invite/${token}`;
   
   return {
