@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -17,14 +17,22 @@ import {
   Calendar,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  Upload,
+  FileSpreadsheet,
+  Loader2
 } from "lucide-react";
 import { format } from "date-fns";
+import Papa from "papaparse";
+import * as XLSX from "xlsx";
 import type { User, UserInvitation } from "@shared/schema";
 
 export default function AdminPanel() {
   const { toast } = useToast();
   const [inviteEmail, setInviteEmail] = useState("");
+  const [batchEmails, setBatchEmails] = useState<string[]>([]);
+  const [isProcessingBatch, setIsProcessingBatch] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch all users
   const { data: users = [], isLoading: usersLoading } = useQuery<User[]>({
@@ -126,6 +134,128 @@ export default function AdminPanel() {
       return { status: "expired", color: "destructive" as const };
     }
     return { status: "active", color: "default" as const };
+  };
+
+  // File processing functions
+  const processFile = (file: File) => {
+    const fileExtension = file.name.toLowerCase().split('.').pop();
+    
+    if (fileExtension === 'csv') {
+      processCsvFile(file);
+    } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+      processExcelFile(file);
+    } else {
+      toast({
+        title: "Unsupported file format",
+        description: "Please upload a CSV or Excel file.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const processCsvFile = (file: File) => {
+    Papa.parse(file, {
+      header: true,
+      complete: (results) => {
+        const emails = extractEmailsFromData(results.data);
+        setBatchEmails(emails);
+        toast({
+          title: "CSV file processed",
+          description: `Found ${emails.length} email addresses.`,
+        });
+      },
+      error: (error) => {
+        toast({
+          title: "Error processing CSV",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    });
+  };
+
+  const processExcelFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        
+        const emails = extractEmailsFromData(jsonData);
+        setBatchEmails(emails);
+        toast({
+          title: "Excel file processed",
+          description: `Found ${emails.length} email addresses.`,
+        });
+      } catch (error) {
+        toast({
+          title: "Error processing Excel file",
+          description: "Please check the file format and try again.",
+          variant: "destructive",
+        });
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  const extractEmailsFromData = (data: any[]): string[] => {
+    const emails: string[] = [];
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    data.forEach((row: any) => {
+      Object.values(row).forEach((value: any) => {
+        if (typeof value === 'string' && emailRegex.test(value.trim())) {
+          const email = value.trim().toLowerCase();
+          if (!emails.includes(email)) {
+            emails.push(email);
+          }
+        }
+      });
+    });
+    
+    return emails;
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const sendBatchInvitations = async () => {
+    if (batchEmails.length === 0) return;
+    
+    setIsProcessingBatch(true);
+    let successCount = 0;
+    let errorCount = 0;
+    
+    for (const email of batchEmails) {
+      try {
+        await fetch("/api/admin/invite", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+        successCount++;
+      } catch (error) {
+        errorCount++;
+      }
+    }
+    
+    setIsProcessingBatch(false);
+    setBatchEmails([]);
+    
+    toast({
+      title: "Batch invitations completed",
+      description: `Successfully sent: ${successCount}, Failed: ${errorCount}`,
+    });
+    
+    queryClient.invalidateQueries({ queryKey: ["/api/admin/invitations"] });
   };
 
   return (
@@ -288,9 +418,10 @@ export default function AdminPanel() {
         </TabsContent>
 
         <TabsContent value="invite" className="space-y-4">
+          {/* Single Invitation Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Send User Invitation</CardTitle>
+              <CardTitle>Send Single Invitation</CardTitle>
               <CardDescription>
                 Send an invitation email to a new user to create their account.
               </CardDescription>
@@ -331,6 +462,103 @@ export default function AdminPanel() {
                   )}
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+
+          {/* Batch Invitation Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileSpreadsheet className="h-5 w-5" />
+                Batch Invitations
+              </CardTitle>
+              <CardDescription>
+                Upload a CSV or Excel file containing email addresses to send multiple invitations at once.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* File Upload Section */}
+              <div>
+                <Label htmlFor="file-upload">Upload File</Label>
+                <div className="mt-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,.xlsx,.xls"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full justify-start"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Choose CSV or Excel File
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  The file should contain email addresses in any column. Duplicate emails will be automatically removed.
+                </p>
+              </div>
+
+              {/* Email Preview Section */}
+              {batchEmails.length > 0 && (
+                <div className="space-y-2">
+                  <Label>Found Email Addresses ({batchEmails.length})</Label>
+                  <div className="max-h-40 overflow-y-auto border rounded-md p-3 bg-gray-50">
+                    <div className="space-y-1">
+                      {batchEmails.map((email, index) => (
+                        <div key={index} className="text-sm font-mono">
+                          {email}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={sendBatchInvitations}
+                      disabled={isProcessingBatch}
+                      className="bg-[#F08A5D] hover:bg-[#E07B52]"
+                    >
+                      {isProcessingBatch ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Sending {batchEmails.length} Invitations...
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="h-4 w-4 mr-2" />
+                          Send {batchEmails.length} Invitations
+                        </>
+                      )}
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      onClick={() => setBatchEmails([])}
+                      disabled={isProcessingBatch}
+                    >
+                      Clear List
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Instructions */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">File Format Instructions:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• CSV files: Email addresses can be in any column with any header name</li>
+                  <li>• Excel files: Email addresses can be in any cell in the first worksheet</li>
+                  <li>• The system will automatically detect and extract valid email addresses</li>
+                  <li>• Duplicate emails will be removed automatically</li>
+                  <li>• Each invitation will be sent individually with a 30-day validity period</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
