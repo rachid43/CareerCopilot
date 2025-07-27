@@ -21,8 +21,10 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
     console.log('From:', params.from);
     console.log('To:', params.to);
     console.log('Subject:', params.subject);
+    console.log('API Key exists:', !!process.env.SENDGRID_API_KEY);
+    console.log('API Key format:', process.env.SENDGRID_API_KEY?.substring(0, 15) + '...');
     
-    await mailService.send({
+    const response = await mailService.send({
       to: params.to,
       from: params.from,
       subject: params.subject,
@@ -30,13 +32,18 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
       html: params.html || '',
     });
     
-    console.log('Email sent successfully');
+    console.log('Email sent successfully. Response:', response);
     return true;
   } catch (error: any) {
-    console.error('SendGrid email error:', error);
-    console.error('Error response:', error.response?.body);
+    console.error('SendGrid email error (full):', error);
+    if (error.response) {
+      console.error('Error response status:', error.response.status);
+      console.error('Error response headers:', error.response.headers);
+      console.error('Error response body:', JSON.stringify(error.response.body, null, 2));
+    }
     console.error('Error code:', error.code);
     console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     return false;
   }
 }

@@ -467,6 +467,29 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
     }
   });
   
+  // Simple SendGrid test without authentication (for debugging)
+  app.post("/api/test-sendgrid-simple", async (req, res) => {
+    try {
+      console.log('Simple SendGrid test starting...');
+      const testEmailParams = {
+        to: 'test@example.com',
+        from: process.env.SENDGRID_FROM_EMAIL || 'info@maptheorie.nl',
+        subject: 'Simple SendGrid Test',
+        text: 'Testing if SendGrid works with current configuration.',
+      };
+      
+      const emailSent = await sendEmail(testEmailParams);
+      
+      res.json({ 
+        success: emailSent,
+        message: emailSent ? "Email sent successfully" : "Email failed - check logs"
+      });
+    } catch (error: any) {
+      console.error('Simple test error:', error);
+      res.status(500).json({ message: `Test failed: ${error.message}` });
+    }
+  });
+
   // Test SendGrid configuration (for debugging)
   app.post("/api/admin/test-sendgrid", isAuthenticated, isSuperAdmin, async (req, res) => {
     try {
