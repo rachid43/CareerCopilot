@@ -73,6 +73,43 @@ export class DatabaseStorage implements IStorage {
     return updatedProfile;
   }
 
+  async getProfileByUserId(userId: string): Promise<Profile | undefined> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) return undefined;
+    
+    const [profile] = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.userId, user.id));
+    
+    return profile || undefined;
+  }
+
+  async createProfileForUser(userId: string, profileData: InsertProfile): Promise<Profile> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) throw new Error('User not found');
+    
+    const [profile] = await db
+      .insert(profiles)
+      .values({ ...profileData, userId: user.id })
+      .returning();
+    
+    return profile;
+  }
+
+  async updateProfileByUserId(userId: string, profileData: Partial<InsertProfile>): Promise<Profile | undefined> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) return undefined;
+    
+    const [profile] = await db
+      .update(profiles)
+      .set(profileData)
+      .where(eq(profiles.userId, user.id))
+      .returning();
+    
+    return profile || undefined;
+  }
+
   async getDocuments(sessionId: string): Promise<Document[]> {
     return await db.select().from(documents).where(eq(documents.sessionId, sessionId));
   }

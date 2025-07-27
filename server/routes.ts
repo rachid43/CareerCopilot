@@ -104,8 +104,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Protected profile endpoints
   app.get("/api/profile", isAuthenticated, async (req, res) => {
     try {
-      const sessionId = getSessionId(req);
-      const profile = await storage.getProfile(sessionId);
+      const userId = getUserId(req);
+      if (!userId || userId === 'anonymous') {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      
+      // Use user ID for profile isolation instead of session ID
+      const profile = await storage.getProfileByUserId(userId);
       res.json(profile || null);
     } catch (error) {
       res.status(500).json({ message: "Failed to get profile" });
@@ -114,16 +119,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/profile", isAuthenticated, async (req, res) => {
     try {
+      const userId = getUserId(req);
+      if (!userId || userId === 'anonymous') {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      
       const sessionId = getSessionId(req);
       const profileData = insertProfileSchema.parse({ ...req.body, sessionId });
       
-      const existingProfile = await storage.getProfile(sessionId);
+      const existingProfile = await storage.getProfileByUserId(userId);
       let profile;
       
       if (existingProfile) {
-        profile = await storage.updateProfile(sessionId, profileData);
+        profile = await storage.updateProfileByUserId(userId, profileData);
       } else {
-        profile = await storage.createProfile(profileData);
+        profile = await storage.createProfileForUser(userId, profileData);
       }
       
       res.json(profile);

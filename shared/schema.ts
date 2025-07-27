@@ -45,6 +45,7 @@ export const profiles = pgTable("profiles", {
   position: text("position"),
   skills: text("skills"),
   sessionId: text("session_id").notNull(),
+  userId: integer("user_id").references(() => users.id),
 });
 
 export const documents = pgTable("documents", {
