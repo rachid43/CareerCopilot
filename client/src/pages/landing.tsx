@@ -81,9 +81,9 @@ export function Landing() {
         {/* How it works */}
         <Card className="max-w-4xl mx-auto">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold mb-2">How It Works</CardTitle>
+            <CardTitle className="text-2xl font-bold mb-2">{t('howItWorks')}</CardTitle>
             <CardDescription className="text-lg">
-              Get AI-powered career assistance in three simple steps
+              {t('howItWorksSubtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid md:grid-cols-3 gap-8">
@@ -91,27 +91,27 @@ export function Landing() {
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 1
               </div>
-              <h3 className="font-semibold mb-2">Create Your Profile</h3>
+              <h3 className="font-semibold mb-2">{t('step1Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Set up your personal information, skills, and career objectives
+                {t('step1Description')}
               </p>
             </div>
             <div className="text-center">
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 2
               </div>
-              <h3 className="font-semibold mb-2">Choose Your Mode</h3>
+              <h3 className="font-semibold mb-2">{t('step2Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Select from Create, Review, or Assess based on your needs
+                {t('step2Description')}
               </p>
             </div>
             <div className="text-center">
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 3
               </div>
-              <h3 className="font-semibold mb-2">Get AI Insights</h3>
+              <h3 className="font-semibold mb-2">{t('step3Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Receive tailored recommendations and optimized documents
+                {t('step3Description')}
               </p>
             </div>
           </CardContent>

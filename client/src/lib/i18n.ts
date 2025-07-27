@@ -19,6 +19,14 @@ export const translations = {
     reviewDescription: 'Krijg gedetailleerde feedback en suggesties voor je geüploade documenten',
     assess: 'Evalueren',
     assessDescription: 'Vergelijk je documenten met functie-eisen en krijg een matching score',
+    howItWorks: 'Hoe Het Werkt',
+    howItWorksSubtitle: 'Krijg AI-aangedreven carrière-ondersteuning in drie eenvoudige stappen',
+    step1Title: 'Maak Je Profiel Aan',
+    step1Description: 'Stel je persoonlijke informatie, vaardigheden en carrièredoelen in',
+    step2Title: 'Kies Je Modus',
+    step2Description: 'Selecteer uit Aanmaken, Beoordelen of Evalueren op basis van je behoeften',
+    step3Title: 'Ontvang AI Inzichten',
+    step3Description: 'Ontvang op maat gemaakte aanbevelingen en geoptimaliseerde documenten',
     
     // Navigation
     adminPanel: 'Admin Paneel',
@@ -127,6 +135,14 @@ export const translations = {
     reviewDescription: 'Get detailed feedback and suggestions on your uploaded documents',
     assess: 'Assess',
     assessDescription: 'Compare your documents against job requirements with match scoring',
+    howItWorks: 'How It Works',
+    howItWorksSubtitle: 'Get AI-powered career assistance in three simple steps',
+    step1Title: 'Create Your Profile',
+    step1Description: 'Set up your personal information, skills, and career objectives',
+    step2Title: 'Choose Your Mode',
+    step2Description: 'Select from Create, Review, or Assess based on your needs',
+    step3Title: 'Get AI Insights',
+    step3Description: 'Receive tailored recommendations and optimized documents',
     
     // Navigation
     adminPanel: 'Admin Panel',
@@ -235,6 +251,14 @@ export const translations = {
     reviewDescription: 'احصل على تعليقات مفصلة واقتراحات حول مستنداتك المحملة',
     assess: 'تقييم',
     assessDescription: 'قارن مستنداتك مع متطلبات الوظيفة واحصل على نقاط المطابقة',
+    howItWorks: 'كيف يعمل',
+    howItWorksSubtitle: 'احصل على مساعدة مهنية مدعومة بالذكاء الاصطناعي في ثلاث خطوات بسيطة',
+    step1Title: 'أنشئ ملفك الشخصي',
+    step1Description: 'قم بإعداد معلوماتك الشخصية ومهاراتك وأهدافك المهنية',
+    step2Title: 'اختر وضعك',
+    step2Description: 'اختر من إنشاء أو مراجعة أو تقييم حسب احتياجاتك',
+    step3Title: 'احصل على رؤى الذكاء الاصطناعي',
+    step3Description: 'تلقَّ توصيات مخصصة ومستندات محسّنة',
     
     // Navigation
     adminPanel: 'لوحة الإدارة',
@@ -343,6 +367,14 @@ export const translations = {
     reviewDescription: 'Yüklediğiniz belgeler için ayrıntılı geri bildirim ve öneriler alın',
     assess: 'Değerlendir',
     assessDescription: 'Belgelerinizi iş gereksinimleriyle karşılaştırın ve eşleşme puanı alın',
+    howItWorks: 'Nasıl Çalışır',
+    howItWorksSubtitle: 'Üç basit adımda AI destekli kariyer yardımı alın',
+    step1Title: 'Profilinizi Oluşturun',
+    step1Description: 'Kişisel bilgilerinizi, yeteneklerinizi ve kariyer hedeflerinizi ayarlayın',
+    step2Title: 'Modunuzu Seçin',
+    step2Description: 'İhtiyaçlarınıza göre Oluştur, İncele veya Değerlendir\'den seçin',
+    step3Title: 'AI İçgörüleri Alın',
+    step3Description: 'Özelleştirilmiş öneriler ve optimize edilmiş belgeler alın',
     
     // Navigation
     adminPanel: 'Yönetici Paneli',
