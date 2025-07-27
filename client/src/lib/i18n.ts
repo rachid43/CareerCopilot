@@ -10,6 +10,16 @@ export const translations = {
     appSubtitle: 'AI-Aangedreven Carrière Assistent',
     logout: 'Uitloggen',
     
+    // Landing Page
+    landingSubtitle: 'AI-aangedreven carrière-assistent die je helpt bij het maken, beoordelen en optimaliseren van je CV\'s en motivatiebrieven',
+    getStarted: 'Begin Nu',
+    create: 'Aanmaken',
+    createDescription: 'Genereer op maat gemaakte CV en motivatiebrief vanuit je profiel en functieomschrijving',
+    review: 'Beoordelen',
+    reviewDescription: 'Krijg gedetailleerde feedback en suggesties voor je geüploade documenten',
+    assess: 'Evalueren',
+    assessDescription: 'Vergelijk je documenten met functie-eisen en krijg een matching score',
+    
     // Navigation
     adminPanel: 'Admin Paneel',
     
@@ -107,6 +117,16 @@ export const translations = {
     appTitle: 'CareerCopilot',
     appSubtitle: 'AI-Powered Career Assistant',
     logout: 'Logout',
+    
+    // Landing Page
+    landingSubtitle: 'AI-powered career assistant that helps you create, review, and optimize your CVs and cover letters',
+    getStarted: 'Get Started',
+    create: 'Create',
+    createDescription: 'Generate tailored CV and cover letter from your profile and job description',
+    review: 'Review',
+    reviewDescription: 'Get detailed feedback and suggestions on your uploaded documents',
+    assess: 'Assess',
+    assessDescription: 'Compare your documents against job requirements with match scoring',
     
     // Navigation
     adminPanel: 'Admin Panel',
@@ -206,6 +226,16 @@ export const translations = {
     appSubtitle: 'مساعد المهنة المدعوم بالذكاء الاصطناعي',
     logout: 'تسجيل الخروج',
     
+    // Landing Page
+    landingSubtitle: 'مساعد مهني مدعوم بالذكاء الاصطناعي يساعدك في إنشاء ومراجعة وتحسين سيرتك الذاتية ورسائل التغطية',
+    getStarted: 'ابدأ الآن',
+    create: 'إنشاء',
+    createDescription: 'إنشاء سيرة ذاتية ورسالة تغطية مخصصة من ملفك الشخصي ووصف الوظيفة',
+    review: 'مراجعة',
+    reviewDescription: 'احصل على تعليقات مفصلة واقتراحات حول مستنداتك المحملة',
+    assess: 'تقييم',
+    assessDescription: 'قارن مستنداتك مع متطلبات الوظيفة واحصل على نقاط المطابقة',
+    
     // Navigation
     adminPanel: 'لوحة الإدارة',
     
@@ -303,6 +333,16 @@ export const translations = {
     appTitle: 'CareerCopilot',
     appSubtitle: 'AI Destekli Kariyer Asistanı',
     logout: 'Çıkış Yap',
+    
+    // Landing Page
+    landingSubtitle: 'CV ve ön yazılarınızı oluşturmanıza, incelemenize ve optimize etmenize yardımcı olan AI destekli kariyer asistanı',
+    getStarted: 'Başla',
+    create: 'Oluştur',
+    createDescription: 'Profiliniz ve iş tanımınızdan özel CV ve ön yazı oluşturun',
+    review: 'İncele',
+    reviewDescription: 'Yüklediğiniz belgeler için ayrıntılı geri bildirim ve öneriler alın',
+    assess: 'Değerlendir',
+    assessDescription: 'Belgelerinizi iş gereksinimleriyle karşılaştırın ve eşleşme puanı alın',
     
     // Navigation
     adminPanel: 'Yönetici Paneli',

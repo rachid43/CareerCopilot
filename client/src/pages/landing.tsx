@@ -1,32 +1,43 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PenTool, Brain, CheckCircle, Sparkles } from "lucide-react";
+import { LanguageSelector } from "@/components/language-selector";
+import { useLanguage } from "@/lib/i18n";
 
 export function Landing() {
+  const { t } = useLanguage();
+  
   const features = [
     {
       icon: PenTool,
-      title: "Create",
-      description: "Generate tailored CV and cover letter from your profile and job description",
+      title: t('create'),
+      description: t('createDescription'),
       color: "bg-primary",
     },
     {
       icon: Brain,
-      title: "Review",
-      description: "Get detailed feedback and suggestions on your uploaded documents",
+      title: t('review'),
+      description: t('reviewDescription'),
       color: "bg-secondary",
     },
     {
       icon: CheckCircle,
-      title: "Assess",
-      description: "Compare your documents against job requirements with match scoring",
+      title: t('assess'),
+      description: t('assessDescription'),
       color: "bg-accent",
     },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
-      <div className="container mx-auto px-4 py-16">
+      {/* Top Navigation with Language Selector */}
+      <div className="w-full py-4 px-4">
+        <div className="container mx-auto flex justify-end">
+          <LanguageSelector />
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4">
@@ -34,14 +45,14 @@ export function Landing() {
             <h1 className="text-4xl font-bold text-gray-900">CareerCopilot</h1>
           </div>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            AI-powered career assistant that helps you create, review, and optimize your CVs and cover letters
+            {t('landingSubtitle')}
           </p>
           <Button 
             size="lg" 
             className="bg-primary hover:bg-orange-600 text-white px-8 py-3"
             onClick={() => window.location.href = '/api/login'}
           >
-            Get Started
+            {t('getStarted')}
           </Button>
         </div>
 
