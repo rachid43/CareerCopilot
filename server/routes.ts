@@ -467,15 +467,15 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
     }
   });
   
-  // Simple SendGrid test without authentication (for debugging)
-  app.post("/api/test-sendgrid-simple", async (req, res) => {
+  // Test Hostinger SMTP (for debugging)
+  app.post("/api/test-email", async (req, res) => {
     try {
-      console.log('Simple SendGrid test starting...');
+      console.log('Testing Hostinger SMTP...');
       const testEmailParams = {
         to: 'test@example.com',
-        from: process.env.SENDGRID_FROM_EMAIL || 'info@maptheorie.nl',
-        subject: 'Simple SendGrid Test',
-        text: 'Testing if SendGrid works with current configuration.',
+        from: process.env.SMTP_USER || 'info@maptheorie.nl',
+        subject: 'Hostinger SMTP Test',
+        text: 'Testing Hostinger SMTP email delivery.',
       };
       
       const emailSent = await sendEmailWithFallback(testEmailParams);
@@ -485,7 +485,7 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
         message: emailSent ? "Email sent successfully" : "Email failed - check logs"
       });
     } catch (error: any) {
-      console.error('Simple test error:', error);
+      console.error('Email test error:', error);
       res.status(500).json({ message: `Test failed: ${error.message}` });
     }
   });
@@ -498,15 +498,15 @@ Provide a match score from 0-100, analyze key skills, and give specific improvem
       
       const testEmailParams = {
         to: emailToUse,
-        from: process.env.SENDGRID_FROM_EMAIL || 'info@maptheorie.nl',
-        subject: 'SendGrid Connection Test - CareerCopilot',
-        text: 'This is a test email to verify SendGrid configuration is working properly.',
-        html: '<h3>SendGrid Test</h3><p>This is a test email to verify SendGrid configuration is working properly.</p>'
+        from: process.env.SMTP_USER || 'info@maptheorie.nl',
+        subject: 'Hostinger SMTP Test - CareerCopilot',
+        text: 'This is a test email to verify Hostinger SMTP configuration is working properly.',
+        html: '<h3>Hostinger SMTP Test</h3><p>This is a test email to verify Hostinger SMTP configuration is working properly.</p>'
       };
       
-      console.log('Testing SendGrid configuration...');
-      console.log('API Key exists:', !!process.env.SENDGRID_API_KEY);
-      console.log('API Key format:', process.env.SENDGRID_API_KEY?.substring(0, 10) + '...');
+      console.log('Testing Hostinger SMTP configuration...');
+      console.log('SMTP Host exists:', !!process.env.SMTP_HOST);
+      console.log('SMTP User:', process.env.SMTP_USER);
       console.log('From email:', testEmailParams.from);
       console.log('Test email to:', emailToUse);
       

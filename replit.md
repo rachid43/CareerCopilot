@@ -67,6 +67,7 @@ The application uses four main tables:
 ### Core Dependencies
 - **Database**: Neon Database (PostgreSQL)
 - **AI Service**: OpenAI API (GPT-4o model)
+- **Email Service**: Hostinger SMTP (info@maptheorie.nl)
 - **UI Components**: Radix UI primitives
 - **File Processing**: pdf-parse, mammoth for document parsing
 
@@ -113,7 +114,7 @@ The application uses four main tables:
 - **January 2025**: Fixed AI mode selector to stack vertically for better mobile experience
 - **January 2025**: Implemented superadmin role system with email-based user invitations
 - **January 2025**: Added user management features (activate/deactivate accounts, extend validity)
-- **January 2025**: Integrated SendGrid for email delivery of user invitations
+- **January 2025**: Implemented Hostinger SMTP for reliable email delivery of user invitations
 - **January 2025**: Added internationalization support with Dutch as default language and English option
 - **January 2025**: Implemented language selector component with Dutch/English switching
 - **January 2025**: Maintained superadmin interface in English while user interface defaults to Dutch
