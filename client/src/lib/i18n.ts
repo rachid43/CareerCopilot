@@ -12,7 +12,7 @@ export const translations = {
     
     // Landing Page
     landingSubtitle: 'AI-aangedreven carrière-assistent die je helpt bij het maken, beoordelen en optimaliseren van je CV\'s en motivatiebrieven',
-    getStarted: 'Begin Nu',
+    getStarted: 'Inloggen',
     create: 'Aanmaken',
     createDescription: 'Genereer op maat gemaakte CV en motivatiebrief vanuit je profiel en functieomschrijving',
     review: 'Beoordelen',
@@ -128,7 +128,7 @@ export const translations = {
     
     // Landing Page
     landingSubtitle: 'AI-powered career assistant that helps you create, review, and optimize your CVs and cover letters',
-    getStarted: 'Get Started',
+    getStarted: 'Login',
     create: 'Create',
     createDescription: 'Generate tailored CV and cover letter from your profile and job description',
     review: 'Review',
@@ -244,7 +244,7 @@ export const translations = {
     
     // Landing Page
     landingSubtitle: 'مساعد مهني مدعوم بالذكاء الاصطناعي يساعدك في إنشاء ومراجعة وتحسين سيرتك الذاتية ورسائل التغطية',
-    getStarted: 'ابدأ الآن',
+    getStarted: 'تسجيل الدخول',
     create: 'إنشاء',
     createDescription: 'إنشاء سيرة ذاتية ورسالة تغطية مخصصة من ملفك الشخصي ووصف الوظيفة',
     review: 'مراجعة',
@@ -360,7 +360,7 @@ export const translations = {
     
     // Landing Page
     landingSubtitle: 'CV ve ön yazılarınızı oluşturmanıza, incelemenize ve optimize etmenize yardımcı olan AI destekli kariyer asistanı',
-    getStarted: 'Başla',
+    getStarted: 'Giriş Yap',
     create: 'Oluştur',
     createDescription: 'Profiliniz ve iş tanımınızdan özel CV ve ön yazı oluşturun',
     review: 'İncele',
