@@ -45,15 +45,15 @@ export default function Home() {
     onSuccess: (data) => {
       setAiResults(data);
       toast({
-        title: "Success",
-        description: "AI processing completed successfully",
+        title: t('success'),
+        description: t('aiProcessingComplete'),
       });
     },
     onError: (error: any) => {
       if (isUnauthorizedError(error)) {
         toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
+          title: t('unauthorized'),
+          description: t('unauthorizedDescription'),
           variant: "destructive",
         });
         setTimeout(() => {
@@ -62,8 +62,8 @@ export default function Home() {
         return;
       }
       toast({
-        title: "Error",
-        description: error.message || "AI processing failed",
+        title: t('error'),
+        description: error.message || t('aiProcessingFailed'),
         variant: "destructive",
       });
     },
@@ -75,8 +75,8 @@ export default function Home() {
   const handleAIProcess = async () => {
     if (!profile && activeMode === 'create') {
       toast({
-        title: "Profile Required",
-        description: "Please fill out your personal profile first",
+        title: t('profileRequired'),
+        description: t('profileRequiredDescription'),
         variant: "destructive",
       });
       return;
@@ -84,8 +84,8 @@ export default function Home() {
 
     if (!jobDescription && (activeMode === 'create' || activeMode === 'assess')) {
       toast({
-        title: "Job Description Required",
-        description: "Please enter a job description",
+        title: t('jobDescriptionRequired'),
+        description: t('jobDescriptionRequiredDescription'),
         variant: "destructive",
       });
       return;
@@ -93,8 +93,8 @@ export default function Home() {
 
     if (!documents.length && (activeMode === 'review' || activeMode === 'assess')) {
       toast({
-        title: "Documents Required",
-        description: "Please upload your CV/resume first",
+        title: t('documentsRequired'),
+        description: t('documentsRequiredDescription'),
         variant: "destructive",
       });
       return;
@@ -163,7 +163,7 @@ export default function Home() {
                     className="flex items-center space-x-2 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white"
                   >
                     <Shield size={16} />
-                    <span>Admin Panel</span>
+                    <span>{t('adminPanel')}</span>
                   </Button>
                 </Link>
               )}
