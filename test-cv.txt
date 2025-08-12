@@ -1,0 +1,16 @@
+John Doe
+Software Engineer
+
+Contact Information:
+Email: john.doe@example.com
+Phone: +1 (555) 123-4567
+
+Professional Experience:
+- Senior Software Developer at Tech Corp (2020-2024)
+- Full Stack Developer at StartupXYZ (2018-2020)
+
+Skills:
+JavaScript, React, Node.js, Python, TypeScript, Docker, AWS
+
+Education:
+Bachelor of Computer Science, University of Technology (2018)
