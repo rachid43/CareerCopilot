@@ -117,9 +117,17 @@ ${cvContent}
       throw new Error('No response from OpenAI');
     }
 
-    // Parse the JSON response
+    // Parse the JSON response - handle markdown code blocks
     try {
-      const profileData = JSON.parse(result);
+      // Remove markdown code blocks if present
+      let cleanResult = result.trim();
+      if (cleanResult.startsWith('```json')) {
+        cleanResult = cleanResult.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (cleanResult.startsWith('```')) {
+        cleanResult = cleanResult.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+      
+      const profileData = JSON.parse(cleanResult);
       return profileData;
     } catch (parseError) {
       console.error('Failed to parse OpenAI response as JSON:', result);
