@@ -103,6 +103,8 @@ export const translations = {
     documentDeleted: 'Document verwijderd',
     documentDeletedDescription: 'Het document is succesvol verwijderd',
     documentDeleteFailed: 'Document verwijderen mislukt',
+    cvUploadedWithProfile: 'CV geüpload en profiel bijgewerkt met geëxtraheerde informatie',
+    coverLetterUploaded: 'Motivatiebrief succesvol geüpload',
     
     // Processing Status
     aiAnalyzing: 'AI analyseert uw inhoud...',
@@ -219,6 +221,8 @@ export const translations = {
     documentDeleted: 'Document deleted',
     documentDeletedDescription: 'The document has been deleted successfully',
     documentDeleteFailed: 'Failed to delete document',
+    cvUploadedWithProfile: 'CV uploaded and profile updated with extracted information',
+    coverLetterUploaded: 'Cover letter uploaded successfully',
     
     // Processing Status
     aiAnalyzing: 'AI is analyzing your content...',
@@ -335,6 +339,8 @@ export const translations = {
     documentDeleted: 'تم حذف المستند',
     documentDeletedDescription: 'تم حذف المستند بنجاح',
     documentDeleteFailed: 'فشل في حذف المستند',
+    cvUploadedWithProfile: 'تم رفع السيرة الذاتية وتحديث الملف الشخصي بالمعلومات المستخرجة',
+    coverLetterUploaded: 'تم رفع رسالة التغطية بنجاح',
     
     // Processing Status
     aiAnalyzing: 'الذكاء الاصطناعي يحلل المحتوى...',
@@ -451,6 +457,8 @@ export const translations = {
     documentDeleted: 'Belge silindi',
     documentDeletedDescription: 'Belge başarıyla silindi',
     documentDeleteFailed: 'Belge silme başarısız',
+    cvUploadedWithProfile: 'CV yüklendi ve profil çıkarılan bilgilerle güncellendi',
+    coverLetterUploaded: 'Ön yazı başarıyla yüklendi',
     
     // Processing Status
     aiAnalyzing: 'AI içeriğinizi analiz ediyor...',

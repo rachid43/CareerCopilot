@@ -38,10 +38,20 @@ export function FileUpload() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
-      toast({
-        title: t('success'),
-        description: `${variables.type === 'cv' ? 'CV' : 'Motivatiebrief'} succesvol geüpload`,
-      });
+      
+      // If CV was uploaded, refresh profile to show auto-populated data
+      if (variables.type === 'cv') {
+        queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+        toast({
+          title: t('success'),
+          description: t('cvUploadedWithProfile') || 'CV uploaded and profile updated with extracted information',
+        });
+      } else {
+        toast({
+          title: t('success'),
+          description: t('coverLetterUploaded') || 'Cover letter uploaded successfully',
+        });
+      }
     },
     onError: (error: any) => {
       toast({
@@ -133,8 +143,9 @@ export function FileUpload() {
     uploadMutation.mutate({ file, type });
   };
 
-  const cvDoc = documents.find((doc: any) => doc.type === 'cv');
-  const coverLetterDoc = documents.find((doc: any) => doc.type === 'cover-letter');
+  const documentsArray = Array.isArray(documents) ? documents : [];
+  const cvDoc = documentsArray.find((doc: any) => doc.type === 'cv');
+  const coverLetterDoc = documentsArray.find((doc: any) => doc.type === 'cover-letter');
 
   return (
     <Card>

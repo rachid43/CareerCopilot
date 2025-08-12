@@ -85,6 +85,52 @@ async function parseDocument(filePath: string, mimetype: string): Promise<string
   }
 }
 
+async function extractProfileFromCV(cvContent: string): Promise<any> {
+  try {
+    const prompt = `
+Extract personal information from this CV/Resume content and return it in JSON format with these exact fields:
+- name: Full name of the person
+- email: Email address if found
+- phone: Phone number if found
+- position: Current or desired job title/position
+- skills: Comma-separated list of key skills and technologies
+
+If any information is not found, use null for that field.
+Only return valid JSON, no additional text or explanations.
+
+CV Content:
+${cvContent}
+`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: "You are an expert at extracting personal information from CVs. Always return valid JSON only." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.1,
+      max_tokens: 500
+    });
+
+    const result = response.choices[0]?.message?.content;
+    if (!result) {
+      throw new Error('No response from OpenAI');
+    }
+
+    // Parse the JSON response
+    try {
+      const profileData = JSON.parse(result);
+      return profileData;
+    } catch (parseError) {
+      console.error('Failed to parse OpenAI response as JSON:', result);
+      return null;
+    }
+  } catch (error: any) {
+    console.error('Error extracting profile from CV:', error.message);
+    return null;
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   await setupAuth(app);
@@ -155,6 +201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const sessionId = getSessionId(req);
+      const userId = getUserId(req);
       const { type } = req.body; // 'cv' or 'cover-letter'
       
       if (!type || !['cv', 'cover-letter'].includes(type)) {
@@ -167,10 +214,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filename: req.file.originalname,
         content,
         type,
-        sessionId
+        sessionId,
+        userId
       });
 
       const document = await storage.createDocument(documentData);
+      
+      // If this is a CV, extract profile information and update user profile
+      if (type === 'cv') {
+        try {
+          const extractedProfile = await extractProfileFromCV(content);
+          
+          if (extractedProfile && (extractedProfile.name || extractedProfile.email || extractedProfile.phone || extractedProfile.position || extractedProfile.skills)) {
+            // Check if user already has a profile
+            const existingProfile = await storage.getProfileByUserId(userId);
+            
+            // Only update fields that are empty in existing profile or create new profile
+            const profileData: any = {
+              userId,
+              sessionId,
+              name: extractedProfile.name || (existingProfile?.name || ''),
+              email: extractedProfile.email || (existingProfile?.email || ''),
+              phone: extractedProfile.phone || (existingProfile?.phone || ''),
+              position: extractedProfile.position || (existingProfile?.position || ''),
+              skills: extractedProfile.skills || (existingProfile?.skills || '')
+            };
+
+            // Remove empty fields to avoid overwriting existing data with empty values
+            Object.keys(profileData).forEach(key => {
+              if (!profileData[key] && existingProfile && existingProfile[key as keyof typeof existingProfile]) {
+                profileData[key] = existingProfile[key as keyof typeof existingProfile];
+              }
+            });
+
+            if (existingProfile) {
+              await storage.updateProfile(existingProfile.sessionId, profileData);
+            } else {
+              const validatedProfileData = insertProfileSchema.parse(profileData);
+              await storage.createProfile(validatedProfileData);
+            }
+          }
+        } catch (profileError: any) {
+          console.error('Failed to extract/update profile from CV:', profileError.message);
+          // Don't fail the document upload if profile extraction fails
+        }
+      }
+      
       res.json(document);
     } catch (error: any) {
       res.status(500).json({ message: `Failed to upload document: ${error.message}` });
@@ -179,8 +268,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/documents", isAuthenticated, async (req, res) => {
     try {
-      const sessionId = getSessionId(req);
-      const documents = await storage.getDocuments(sessionId);
+      const userId = getUserId(req);
+      if (!userId || userId === 'anonymous') {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      
+      const documents = await storage.getDocumentsByUserId(userId);
       res.json(documents);
     } catch (error) {
       res.status(500).json({ message: "Failed to get documents" });

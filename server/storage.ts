@@ -10,10 +10,12 @@ export interface IStorage {
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined>;
   
   getProfile(sessionId: string): Promise<Profile | undefined>;
+  getProfileByUserId(userId: string): Promise<Profile | undefined>;
   createProfile(profile: InsertProfile): Promise<Profile>;
   updateProfile(sessionId: string, profile: Partial<InsertProfile>): Promise<Profile | undefined>;
   
   getDocuments(sessionId: string): Promise<Document[]>;
+  getDocumentsByUserId(userId: string): Promise<Document[]>;
   createDocument(document: InsertDocument): Promise<Document>;
   deleteDocument(id: number): Promise<boolean>;
   
@@ -51,6 +53,14 @@ export class DatabaseStorage implements IStorage {
     return profile || undefined;
   }
 
+  async getProfileByUserId(userId: string): Promise<Profile | undefined> {
+    const userIdNumber = parseInt(userId);
+    if (isNaN(userIdNumber)) return undefined;
+    
+    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, userIdNumber));
+    return profile || undefined;
+  }
+
   async createProfile(insertProfile: InsertProfile): Promise<Profile> {
     const [profile] = await db
       .insert(profiles)
@@ -71,18 +81,6 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updatedProfile;
-  }
-
-  async getProfileByUserId(userId: string): Promise<Profile | undefined> {
-    const user = await this.getUserByUsername(userId);
-    if (!user) return undefined;
-    
-    const [profile] = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.userId, user.id));
-    
-    return profile || undefined;
   }
 
   async createProfileForUser(userId: string, profileData: InsertProfile): Promise<Profile> {
@@ -112,6 +110,10 @@ export class DatabaseStorage implements IStorage {
 
   async getDocuments(sessionId: string): Promise<Document[]> {
     return await db.select().from(documents).where(eq(documents.sessionId, sessionId));
+  }
+
+  async getDocumentsByUserId(userId: string): Promise<Document[]> {
+    return await db.select().from(documents).where(eq(documents.userId, userId));
   }
 
   async createDocument(insertDocument: InsertDocument): Promise<Document> {
