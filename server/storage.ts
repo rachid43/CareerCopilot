@@ -1,4 +1,4 @@
-import { users, profiles, documents, aiResults, userInvitations, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult, type UserInvitation, type InsertUserInvitation } from "@shared/schema";
+import { users, profiles, documents, aiResults, userInvitations, chatConversations, chatMessages, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult, type UserInvitation, type InsertUserInvitation, type ChatConversation, type InsertChatConversation, type ChatMessage, type InsertChatMessage } from "@shared/schema";
 import { db } from './db';
 import { eq, and, sql, desc } from 'drizzle-orm';
 
@@ -27,6 +27,13 @@ export interface IStorage {
   getInvitationByToken(token: string): Promise<UserInvitation | undefined>;
   markInvitationAsUsed(token: string): Promise<boolean>;
   getActiveInvitations(): Promise<UserInvitation[]>;
+  
+  // Chat methods
+  getConversations(userId: number): Promise<ChatConversation[]>;
+  createConversation(conversation: InsertChatConversation): Promise<ChatConversation>;
+  getConversationMessages(conversationId: number): Promise<ChatMessage[]>;
+  createMessage(message: InsertChatMessage): Promise<ChatMessage>;
+  updateConversationTitle(conversationId: number, title: string): Promise<ChatConversation | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -223,6 +230,56 @@ export class DatabaseStorage implements IStorage {
         // Only get invitations that haven't expired
         sql`expires_at > NOW()`
       ));
+  }
+
+  // Chat methods implementation
+  async getConversations(userId: number): Promise<ChatConversation[]> {
+    return await db
+      .select()
+      .from(chatConversations)
+      .where(eq(chatConversations.userId, userId))
+      .orderBy(desc(chatConversations.updatedAt));
+  }
+
+  async createConversation(insertConversation: InsertChatConversation): Promise<ChatConversation> {
+    const [conversation] = await db
+      .insert(chatConversations)
+      .values(insertConversation)
+      .returning();
+    return conversation;
+  }
+
+  async getConversationMessages(conversationId: number): Promise<ChatMessage[]> {
+    return await db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages.conversationId, conversationId))
+      .orderBy(chatMessages.createdAt);
+  }
+
+  async createMessage(insertMessage: InsertChatMessage): Promise<ChatMessage> {
+    const [message] = await db
+      .insert(chatMessages)
+      .values(insertMessage)
+      .returning();
+      
+    // Update conversation's updatedAt timestamp
+    await db
+      .update(chatConversations)
+      .set({ updatedAt: new Date() })
+      .where(eq(chatConversations.id, insertMessage.conversationId));
+      
+    return message;
+  }
+
+  async updateConversationTitle(conversationId: number, title: string): Promise<ChatConversation | undefined> {
+    const [updatedConversation] = await db
+      .update(chatConversations)
+      .set({ title, updatedAt: new Date() })
+      .where(eq(chatConversations.id, conversationId))
+      .returning();
+    
+    return updatedConversation || undefined;
   }
 }
 

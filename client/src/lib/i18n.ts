@@ -127,6 +127,21 @@ export const translations = {
     privacyPolicy: "Privacybeleid",
     termsOfService: "Algemene Voorwaarden",
     support: "Ondersteuning",
+    
+    // Chat translations
+    aiCareerMentor: 'AI Carrière Mentor',
+    yourPersonalCareerGuide: 'Jouw Persoonlijke Carrièregids',
+    conversations: 'Gesprekken',
+    newConversation: 'Nieuw Gesprek',
+    noConversationsYet: 'Nog geen gesprekken',
+    startChatting: 'Begin met Chatten',
+    typeYourMessage: 'Stel me alles over je carrière...',
+    welcomeToCareerMentor: 'Welkom bij je AI Carrière Mentor',
+    careerMentorDescription: 'Ik ben er om je te helpen met carrièreadvies, sollicitatievoorbereidingen, cv-feedback en professionele begeleiding. Laten we een gesprek starten!',
+    startConversation: 'Start Gesprek',
+    failedToCreateConversation: 'Kon gesprek niet aanmaken',
+    failedToSendMessage: 'Kon bericht niet versturen',
+    backToHome: 'Terug naar Home',
   },
   en: {
     // Header
@@ -251,6 +266,21 @@ export const translations = {
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     support: "Support",
+    
+    // Chat translations
+    aiCareerMentor: 'AI Career Mentor',
+    yourPersonalCareerGuide: 'Your Personal Career Guide',
+    conversations: 'Conversations',
+    newConversation: 'New Conversation',
+    noConversationsYet: 'No conversations yet',
+    startChatting: 'Start Chatting',
+    typeYourMessage: 'Ask me anything about your career...',
+    welcomeToCareerMentor: 'Welcome to your AI Career Mentor',
+    careerMentorDescription: 'I\'m here to help you with career advice, interview preparation, resume feedback, and professional guidance. Let\'s start a conversation!',
+    startConversation: 'Start Conversation',
+    failedToCreateConversation: 'Failed to create conversation',
+    failedToSendMessage: 'Failed to send message',
+    backToHome: 'Back to Home',
   },
   ar: {
     // Header
@@ -375,6 +405,21 @@ export const translations = {
     privacyPolicy: "سياسة الخصوصية",
     termsOfService: "شروط الخدمة",
     support: "الدعم",
+    
+    // Chat translations
+    aiCareerMentor: 'مرشد المهنة الذكي',
+    yourPersonalCareerGuide: 'دليل المهنة الشخصي الخاص بك',
+    conversations: 'المحادثات',
+    newConversation: 'محادثة جديدة',
+    noConversationsYet: 'لا توجد محادثات بعد',
+    startChatting: 'ابدأ المحادثة',
+    typeYourMessage: 'اسأل أي شيء عن مهنتك...',
+    welcomeToCareerMentor: 'مرحباً بك في مرشد المهنة الذكي',
+    careerMentorDescription: 'أنا هنا لمساعدتك في النصائح المهنية وإعداد المقابلات وتقييم السيرة الذاتية والإرشاد المهني. لنبدأ محادثة!',
+    startConversation: 'ابدأ المحادثة',
+    failedToCreateConversation: 'فشل في إنشاء المحادثة',
+    failedToSendMessage: 'فشل في إرسال الرسالة',
+    backToHome: 'العودة للرئيسية',
   },
   tr: {
     // Header
@@ -499,6 +544,21 @@ export const translations = {
     privacyPolicy: "Gizlilik Politikası",
     termsOfService: "Hizmet Şartları",
     support: "Destek",
+    
+    // Chat translations
+    aiCareerMentor: 'AI Kariyer Mentoru',
+    yourPersonalCareerGuide: 'Kişisel Kariyer Rehberiniz',
+    conversations: 'Konuşmalar',
+    newConversation: 'Yeni Konuşma',
+    noConversationsYet: 'Henüz konuşma yok',
+    startChatting: 'Sohbete Başla',
+    typeYourMessage: 'Kariyeriniz hakkında her şeyi sorun...',
+    welcomeToCareerMentor: 'AI Kariyer Mentorunuza Hoş Geldiniz',
+    careerMentorDescription: 'Size kariyer tavsiyeleri, mülakat hazırlığı, CV geri bildirimi ve profesyonel rehberlik konularında yardımcı olmak için buradayım. Bir konuşma başlatalım!',
+    startConversation: 'Konuşmayı Başlat',
+    failedToCreateConversation: 'Konuşma oluşturulamadı',
+    failedToSendMessage: 'Mesaj gönderilemedi',
+    backToHome: 'Ana Sayfaya Dön',
   },
 };
 

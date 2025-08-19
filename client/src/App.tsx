@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/lib/i18n";
 import { useEffect } from "react";
 import Home from "@/pages/home";
+import ChatPage from "@/pages/chat";
 import { Landing } from "@/pages/landing";
 import AdminPanel from "@/pages/admin";
 import InvitePage from "@/pages/invite";
@@ -23,6 +24,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Home} />
+          <Route path="/chat" component={ChatPage} />
           <Route path="/admin" component={AdminPanel} />
         </>
       )}

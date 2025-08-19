@@ -4,7 +4,7 @@ import multer from "multer";
 import OpenAI from "openai";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema } from "@shared/schema";
+import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema, insertChatConversationSchema, insertChatMessageSchema } from "@shared/schema";
 import { sendEmailWithFallback, generateInvitationEmail } from "./emailServiceSMTP";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -916,6 +916,144 @@ Be precise with match percentages and provide comprehensive, actionable recommen
       });
     } catch (error: any) {
       res.status(500).json({ message: `Failed to create account: ${error.message}` });
+    }
+  });
+
+  // Chat API Routes
+  app.get("/api/chat/conversations", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const conversations = await storage.getConversations(user.id);
+      res.json(conversations);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to get conversations: ${error.message}` });
+    }
+  });
+
+  app.post("/api/chat/conversations", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { title = "New Conversation" } = req.body;
+      
+      const conversation = await storage.createConversation({
+        userId: user.id,
+        title
+      });
+      
+      res.json(conversation);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to create conversation: ${error.message}` });
+    }
+  });
+
+  app.get("/api/chat/conversations/:id/messages", isAuthenticated, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.id);
+      const messages = await storage.getConversationMessages(conversationId);
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to get messages: ${error.message}` });
+    }
+  });
+
+  app.post("/api/chat/conversations/:id/messages", isAuthenticated, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.id);
+      const { content, role = "user", language = 'en' } = req.body;
+      
+      if (!content) {
+        return res.status(400).json({ message: "Message content is required" });
+      }
+      
+      // Save user message
+      const userMessage = await storage.createMessage({
+        conversationId,
+        role: "user",
+        content
+      });
+      
+      // Generate AI response
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      const profile = user ? await storage.getProfileByUserId(userId) : null;
+      
+      // Language mapping for AI responses
+      const languageMap = {
+        'nl': 'Dutch',
+        'en': 'English', 
+        'ar': 'Arabic',
+        'tr': 'Turkish'
+      };
+      const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
+      
+      const prompt = `You are CareerCopilot, a friendly AI career mentor and advisor. Respond in ${responseLanguage}.
+
+USER CONTEXT:
+${profile ? `Name: ${profile.name}
+Position: ${profile.position || 'Not specified'}
+Skills: ${profile.skills || 'Not specified'}
+Email: ${profile.email}` : 'Profile not available'}
+
+INSTRUCTIONS:
+- Provide helpful, encouraging career advice
+- Be friendly, supportive, and professional
+- Ask follow-up questions to understand needs better
+- Offer specific, actionable guidance
+- Keep responses concise but informative
+- Use encouraging emojis occasionally to be more personable
+
+USER MESSAGE: ${content}`;
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: `You are CareerCopilot, a friendly AI career mentor. Always respond in ${responseLanguage} and be encouraging and helpful.` },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      });
+
+      const aiResponse = response.choices[0].message.content || "Sorry, I couldn't generate a response.";
+      
+      // Save AI response
+      const aiMessage = await storage.createMessage({
+        conversationId,
+        role: "assistant",
+        content: aiResponse
+      });
+      
+      // Auto-update conversation title if it's the first exchange
+      const messages = await storage.getConversationMessages(conversationId);
+      if (messages.length <= 2) {
+        const titlePrompt = `Generate a short conversation title (2-4 words) for this career mentoring topic: "${content}". Respond only with the title, no quotes.`;
+        
+        const titleResponse = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [{ role: "user", content: titlePrompt }],
+          temperature: 0.3,
+          max_tokens: 50
+        });
+        
+        const title = titleResponse.choices[0].message.content?.trim() || "Career Chat";
+        await storage.updateConversationTitle(conversationId, title);
+      }
+      
+      res.json({ userMessage, aiMessage });
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to send message: ${error.message}` });
     }
   });
 

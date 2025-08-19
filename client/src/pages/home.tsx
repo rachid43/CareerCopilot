@@ -168,6 +168,16 @@ export default function Home() {
                 </div>
               )}
               <LanguageSelector />
+              <Link to="/chat">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white"
+                >
+                  <Bot size={16} />
+                  <span>{t('aiCareerMentor')}</span>
+                </Button>
+              </Link>
               {(user as any)?.role === 'superadmin' && (
                 <Link to="/admin">
                   <Button
