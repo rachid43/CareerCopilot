@@ -291,4 +291,149 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Temporary in-memory storage to get app working while debugging Supabase connection
+class MemoryStorage implements IStorage {
+  private users: User[] = [];
+  private profiles: Profile[] = [];
+  private documents: Document[] = [];
+  private aiResults: AiResult[] = [];
+  private invitations: UserInvitation[] = [];
+  private conversations: ChatConversation[] = [];
+  private messages: ChatMessage[] = [];
+  private nextId = 1;
+
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.find(u => u.id === id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return this.users.find(u => u.username === username);
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const newUser = { ...user, id: this.nextId++, role: user.role || 'user', isActive: user.isActive ?? true } as User;
+    this.users.push(newUser);
+    return newUser;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return [...this.users];
+  }
+
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined> {
+    const index = this.users.findIndex(u => u.id === id);
+    if (index === -1) return undefined;
+    this.users[index] = { ...this.users[index], ...updates };
+    return this.users[index];
+  }
+
+  async getProfile(sessionId: string): Promise<Profile | undefined> {
+    return this.profiles.find(p => p.sessionId === sessionId);
+  }
+
+  async getProfileByUserId(userId: string): Promise<Profile | undefined> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) return undefined;
+    return this.profiles.find(p => p.userId === user.id);
+  }
+
+  async createProfile(profile: InsertProfile): Promise<Profile> {
+    const newProfile = { ...profile, id: this.nextId++ } as Profile;
+    this.profiles.push(newProfile);
+    return newProfile;
+  }
+
+  async updateProfile(sessionId: string, updates: Partial<InsertProfile>): Promise<Profile | undefined> {
+    const index = this.profiles.findIndex(p => p.sessionId === sessionId);
+    if (index === -1) return undefined;
+    this.profiles[index] = { ...this.profiles[index], ...updates };
+    return this.profiles[index];
+  }
+
+  async getDocuments(sessionId: string): Promise<Document[]> {
+    return this.documents.filter(d => d.sessionId === sessionId);
+  }
+
+  async getDocumentsByUserId(userId: string): Promise<Document[]> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) return [];
+    return this.documents.filter(d => d.userId === user.id);
+  }
+
+  async createDocument(document: InsertDocument): Promise<Document> {
+    const newDocument = { ...document, id: this.nextId++, uploadDate: new Date() } as Document;
+    this.documents.push(newDocument);
+    return newDocument;
+  }
+
+  async deleteDocument(id: number): Promise<boolean> {
+    const index = this.documents.findIndex(d => d.id === id);
+    if (index === -1) return false;
+    this.documents.splice(index, 1);
+    return true;
+  }
+
+  async getAiResults(sessionId: string, mode?: string): Promise<AiResult[]> {
+    return this.aiResults.filter(r => r.sessionId === sessionId && (!mode || r.mode === mode));
+  }
+
+  async createAiResult(result: InsertAiResult): Promise<AiResult> {
+    const newResult = { ...result, id: this.nextId++, createdAt: new Date() } as AiResult;
+    this.aiResults.push(newResult);
+    return newResult;
+  }
+
+  async createInvitation(invitation: InsertUserInvitation): Promise<UserInvitation> {
+    const newInvitation = { ...invitation, id: this.nextId++, createdAt: new Date() } as UserInvitation;
+    this.invitations.push(newInvitation);
+    return newInvitation;
+  }
+
+  async getInvitationByToken(token: string): Promise<UserInvitation | undefined> {
+    return this.invitations.find(i => i.token === token);
+  }
+
+  async markInvitationAsUsed(token: string): Promise<boolean> {
+    const invitation = this.invitations.find(i => i.token === token);
+    if (!invitation) return false;
+    (invitation as any).isUsed = true;
+    return true;
+  }
+
+  async getActiveInvitations(): Promise<UserInvitation[]> {
+    const now = new Date();
+    return this.invitations.filter(i => !i.isUsed && i.expiresAt > now);
+  }
+
+  async getConversations(userId: number): Promise<ChatConversation[]> {
+    return this.conversations.filter(c => c.userId === userId);
+  }
+
+  async createConversation(conversation: InsertChatConversation): Promise<ChatConversation> {
+    const newConversation = { ...conversation, id: this.nextId++, createdAt: new Date(), updatedAt: new Date() } as ChatConversation;
+    this.conversations.push(newConversation);
+    return newConversation;
+  }
+
+  async getConversationMessages(conversationId: number): Promise<ChatMessage[]> {
+    return this.messages.filter(m => m.conversationId === conversationId);
+  }
+
+  async createMessage(message: InsertChatMessage): Promise<ChatMessage> {
+    const newMessage = { ...message, id: this.nextId++, createdAt: new Date() } as ChatMessage;
+    this.messages.push(newMessage);
+    return newMessage;
+  }
+
+  async updateConversationTitle(conversationId: number, title: string): Promise<ChatConversation | undefined> {
+    const conversation = this.conversations.find(c => c.id === conversationId);
+    if (!conversation) return undefined;
+    (conversation as any).title = title;
+    (conversation as any).updatedAt = new Date();
+    return conversation;
+  }
+}
+
+// Use memory storage temporarily while debugging Supabase connection
+export const storage = new MemoryStorage();
+// export const storage = new DatabaseStorage();
