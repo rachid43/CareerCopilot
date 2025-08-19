@@ -142,6 +142,11 @@ export const translations = {
     failedToCreateConversation: 'Kon gesprek niet aanmaken',
     failedToSendMessage: 'Kon bericht niet versturen',
     backToHome: 'Terug naar Home',
+    clear: 'Wissen',
+    clearProfile: 'Profiel Wissen',
+    profileCleared: 'Profiel succesvol gewist',
+    requiredFields: 'Verplichte velden ontbreken',
+    requiredFieldsDescription: 'Vul ten minste uw naam en e-mail in',
   },
   en: {
     // Header
@@ -281,6 +286,11 @@ export const translations = {
     failedToCreateConversation: 'Failed to create conversation',
     failedToSendMessage: 'Failed to send message',
     backToHome: 'Back to Home',
+    clear: 'Clear',
+    clearProfile: 'Clear Profile',
+    profileCleared: 'Profile cleared successfully',
+    requiredFields: 'Required fields missing',
+    requiredFieldsDescription: 'Please fill in at least your name and email',
   },
   ar: {
     // Header
@@ -420,6 +430,11 @@ export const translations = {
     failedToCreateConversation: 'فشل في إنشاء المحادثة',
     failedToSendMessage: 'فشل في إرسال الرسالة',
     backToHome: 'العودة للرئيسية',
+    clear: 'مسح',
+    clearProfile: 'مسح الملف الشخصي',
+    profileCleared: 'تم مسح الملف الشخصي بنجاح',
+    requiredFields: 'الحقول المطلوبة مفقودة',
+    requiredFieldsDescription: 'الرجاء ملء الاسم والبريد الإلكتروني على الأقل',
   },
   tr: {
     // Header
@@ -559,6 +574,11 @@ export const translations = {
     failedToCreateConversation: 'Konuşma oluşturulamadı',
     failedToSendMessage: 'Mesaj gönderilemedi',
     backToHome: 'Ana Sayfaya Dön',
+    clear: 'Temizle',
+    clearProfile: 'Profili Temizle',
+    profileCleared: 'Profil başarıyla temizlendi',
+    requiredFields: 'Gerekli alanlar eksik',
+    requiredFieldsDescription: 'Lütfen en az adınızı ve e-postanızı doldurun',
   },
 };
 

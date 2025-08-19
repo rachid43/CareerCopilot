@@ -44,7 +44,7 @@ export function JobDescription({ value, onChange }: JobDescriptionProps) {
             onClick={handleClear}
             className="text-xs text-primary hover:text-orange-700 h-auto p-0"
           >
-            Wissen
+            {t('clear')}
           </Button>
         </div>
       </CardContent>

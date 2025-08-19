@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { User, Save } from "lucide-react";
+import { User, Save, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 
 export function PersonalProfile() {
@@ -64,11 +64,25 @@ export function PersonalProfile() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleClear = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      position: '',
+      skills: '',
+    });
+    toast({
+      title: t('success'),
+      description: t('profileCleared') || 'Profile cleared successfully',
+    });
+  };
+
   const handleSave = () => {
     if (!formData.name || !formData.email) {
       toast({
-        title: "Verplichte velden ontbreken",
-        description: "Vul ten minste uw naam en e-mail in",
+        title: t('requiredFields'),
+        description: t('requiredFieldsDescription'),
         variant: "destructive",
       });
       return;
@@ -145,14 +159,24 @@ export function PersonalProfile() {
           />
         </div>
 
-        <Button
-          onClick={handleSave}
-          disabled={saveMutation.isPending}
-          className="w-full bg-secondary text-white hover:bg-slate-600"
-        >
-          <Save className="mr-2" size={16} />
-          {saveMutation.isPending ? t('processing') : t('saveProfile')}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSave}
+            disabled={saveMutation.isPending}
+            className="flex-1 bg-secondary text-white hover:bg-slate-600"
+          >
+            <Save className="mr-2" size={16} />
+            {saveMutation.isPending ? t('processing') : t('saveProfile')}
+          </Button>
+          <Button
+            onClick={handleClear}
+            variant="outline"
+            className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
+          >
+            <Trash2 className="mr-2" size={16} />
+            {t('clearProfile')}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
