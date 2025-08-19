@@ -457,17 +457,17 @@ ${coverLetterDoc.content}
   "summary": "Professional assessment summary with next steps"
 }
 
-Be specific, actionable, and constructive in your feedback. Focus on top 3 strengths and improvements.`;
+Be specific, actionable, and constructive in your feedback.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
-          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide concise, actionable feedback in JSON format. Be direct and efficient." },
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, actionable feedback in JSON format." },
           { role: "user", content: prompt }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.3,
-        max_tokens: 1200
+        temperature: 0.2,
+        max_tokens: 2000
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
@@ -577,17 +577,17 @@ Provide detailed assessment in JSON format:
   "summary": "Comprehensive assessment with strategic guidance"
 }
 
-Be precise with match percentages and provide actionable recommendations. Focus on the most critical 3-5 skills and recommendations.`;
+Be precise with match percentages and provide comprehensive, actionable recommendations.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
-          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide concise, actionable feedback in JSON format. Be direct and efficient." },
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, actionable feedback in JSON format." },
           { role: "user", content: prompt }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.3,
-        max_tokens: 1500
+        temperature: 0.2,
+        max_tokens: 2500
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
