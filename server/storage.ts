@@ -451,6 +451,6 @@ class MemoryStorage implements IStorage {
   }
 }
 
-// Use memory storage temporarily while debugging Supabase connection
-export const storage = new MemoryStorage();
-// export const storage = new DatabaseStorage();
+// Use Supabase database storage now that tables are created
+export const storage = new DatabaseStorage();
+// export const storage = new MemoryStorage(); // Temporary fallback
