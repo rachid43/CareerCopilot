@@ -231,7 +231,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If this is a CV, extract profile information and update user profile
       if (type === 'cv') {
         try {
+          console.log('Starting CV profile extraction for user:', userId);
           const extractedProfile = await extractProfileFromCV(content);
+          console.log('Extracted profile data:', extractedProfile);
           
           if (extractedProfile && (extractedProfile.name || extractedProfile.email || extractedProfile.phone || extractedProfile.position || extractedProfile.skills)) {
             // Check if user already has a profile
@@ -262,12 +264,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
             });
 
+            console.log('About to save/update profile with data:', profileData);
+            
             if (existingProfile) {
-              await storage.updateProfileByUserId(user.id, profileData);
+              console.log('Updating existing profile');
+              await storage.updateProfileByUserId(user.id.toString(), profileData);
             } else {
+              console.log('Creating new profile');
               const validatedProfileData = insertProfileSchema.parse(profileData);
               await storage.createProfile(validatedProfileData);
             }
+            
+            console.log('Profile save/update completed successfully');
+          } else {
+            console.log('No valid profile data extracted from CV');
           }
         } catch (profileError: any) {
           console.error('Failed to extract/update profile from CV:', profileError);
