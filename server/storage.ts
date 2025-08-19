@@ -360,6 +360,23 @@ class MemoryStorage implements IStorage {
     return this.documents.filter(d => d.userId === user.id);
   }
 
+  async updateProfileByUserId(userId: string, updates: Partial<InsertProfile>): Promise<Profile | undefined> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) return undefined;
+    const index = this.profiles.findIndex(p => p.userId === user.id);
+    if (index === -1) return undefined;
+    this.profiles[index] = { ...this.profiles[index], ...updates };
+    return this.profiles[index];
+  }
+
+  async createProfileForUser(userId: string, profileData: InsertProfile): Promise<Profile> {
+    const user = await this.getUserByUsername(userId);
+    if (!user) throw new Error('User not found');
+    const newProfile = { ...profileData, userId: user.id, id: this.nextId++ } as Profile;
+    this.profiles.push(newProfile);
+    return newProfile;
+  }
+
   async createDocument(document: InsertDocument): Promise<Document> {
     const newDocument = { ...document, id: this.nextId++, uploadDate: new Date() } as Document;
     this.documents.push(newDocument);
