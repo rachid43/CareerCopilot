@@ -8,6 +8,7 @@ CareerCopilot is a comprehensive web application that helps users create, review
 
 Preferred communication style: Simple, everyday language.
 Color scheme: Using #F08A5D (coral orange) as primary color instead of blue.
+Deployment preference: Supabase for database and Vercel for hosting instead of current Replit/Neon setup.
 
 ## System Architecture
 
@@ -122,6 +123,10 @@ The application uses four main tables:
 - **January 2025**: Implemented comprehensive AI analysis criteria for professional CV and cover letter evaluation
 - **January 2025**: Added detailed match scoring system with component-based assessment for job alignment
 - **January 2025**: Fixed user isolation by migrating all endpoints from sessionId to userId for proper data security
+- **January 2025**: Added AI Career Mentor chatbot feature with full conversation history and multi-language support
+- **January 2025**: Updated landing page with AI chatbot showcase and single pricing tier ($9.97/€8.97)
+- **January 2025**: Implemented dynamic currency detection for European users
+- **January 2025**: Added clear buttons to job description and personal profile components with full translations
 
 ### Superadmin Features
 

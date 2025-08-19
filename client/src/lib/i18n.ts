@@ -137,6 +137,7 @@ export const translations = {
     startChatting: 'Begin met Chatten',
     typeYourMessage: 'Stel me alles over je carrière...',
     welcomeToCareerMentor: 'Welkom bij je AI Carrière Mentor',
+    careerMentor: 'Carrière Mentor',
     careerMentorDescription: 'Ik ben er om je te helpen met carrièreadvies, sollicitatievoorbereidingen, cv-feedback en professionele begeleiding. Laten we een gesprek starten!',
     startConversation: 'Start Gesprek',
     failedToCreateConversation: 'Kon gesprek niet aanmaken',
@@ -147,6 +148,22 @@ export const translations = {
     profileCleared: 'Profiel succesvol gewist',
     requiredFields: 'Verplichte velden ontbreken',
     requiredFieldsDescription: 'Vul ten minste uw naam en e-mail in',
+    
+    // Pricing
+    pricing: 'Prijzen',
+    pricingSubtitle: 'Eenvoudige, transparante prijzen voor professionals',
+    mostPopular: 'Meest Populair',
+    professionalPlan: 'Professional Plan',
+    month: 'maand',
+    unlimitedAccess: 'Onbeperkte toegang tot alle modi',
+    multiLanguageSupport: 'Volledige meertalige ondersteuning',
+    unlimitedUploads: 'Onbeperkte document uploads',
+    editableOutput: 'Bewerkbare AI output en downloads',
+    unlimitedChatbot: 'Onbeperkte carrière chatbot toegang',
+    matchScoring: 'Match scoring en verbeterings tips',
+    profileManagement: 'Profiel opslaan en hergebruiken',
+    startFreeTrial: 'Start Gratis Proefperiode',
+    noCommitment: 'Geen verplichtingen, stop wanneer je wilt',
   },
   en: {
     // Header
@@ -281,6 +298,7 @@ export const translations = {
     startChatting: 'Start Chatting',
     typeYourMessage: 'Ask me anything about your career...',
     welcomeToCareerMentor: 'Welcome to your AI Career Mentor',
+    careerMentor: 'Career Mentor',
     careerMentorDescription: 'I\'m here to help you with career advice, interview preparation, resume feedback, and professional guidance. Let\'s start a conversation!',
     startConversation: 'Start Conversation',
     failedToCreateConversation: 'Failed to create conversation',
@@ -291,6 +309,22 @@ export const translations = {
     profileCleared: 'Profile cleared successfully',
     requiredFields: 'Required fields missing',
     requiredFieldsDescription: 'Please fill in at least your name and email',
+    
+    // Pricing
+    pricing: 'Pricing',
+    pricingSubtitle: 'Simple, transparent pricing for professionals',
+    mostPopular: 'Most Popular',
+    professionalPlan: 'Professional Plan',
+    month: 'month',
+    unlimitedAccess: 'Unlimited access to all modes',
+    multiLanguageSupport: 'Full multi-language support',
+    unlimitedUploads: 'Unlimited document uploads',
+    editableOutput: 'Editable AI output and downloads',
+    unlimitedChatbot: 'Unlimited career chatbot access',
+    matchScoring: 'Match scoring and improvement tips',
+    profileManagement: 'Save and reuse personal profiles',
+    startFreeTrial: 'Start Free Trial',
+    noCommitment: 'No commitment, cancel anytime',
   },
   ar: {
     // Header
@@ -425,6 +459,7 @@ export const translations = {
     startChatting: 'ابدأ المحادثة',
     typeYourMessage: 'اسأل أي شيء عن مهنتك...',
     welcomeToCareerMentor: 'مرحباً بك في مرشد المهنة الذكي',
+    careerMentor: 'مرشد مهني',
     careerMentorDescription: 'أنا هنا لمساعدتك في النصائح المهنية وإعداد المقابلات وتقييم السيرة الذاتية والإرشاد المهني. لنبدأ محادثة!',
     startConversation: 'ابدأ المحادثة',
     failedToCreateConversation: 'فشل في إنشاء المحادثة',
@@ -435,6 +470,22 @@ export const translations = {
     profileCleared: 'تم مسح الملف الشخصي بنجاح',
     requiredFields: 'الحقول المطلوبة مفقودة',
     requiredFieldsDescription: 'الرجاء ملء الاسم والبريد الإلكتروني على الأقل',
+    
+    // Pricing
+    pricing: 'الأسعار',
+    pricingSubtitle: 'أسعار بسيطة وشفافة للمحترفين',
+    mostPopular: 'الأكثر شعبية',
+    professionalPlan: 'الخطة المهنية',
+    month: 'شهر',
+    unlimitedAccess: 'وصول غير محدود لجميع الأوضاع',
+    multiLanguageSupport: 'دعم كامل متعدد اللغات',
+    unlimitedUploads: 'رفع مستندات غير محدود',
+    editableOutput: 'مخرجات AI قابلة للتحرير والتنزيل',
+    unlimitedChatbot: 'وصول غير محدود لروبوت المحادثة المهني',
+    matchScoring: 'تسجيل المطابقة ونصائح التحسين',
+    profileManagement: 'حفظ وإعادة استخدام الملفات الشخصية',
+    startFreeTrial: 'ابدأ الفترة التجريبية المجانية',
+    noCommitment: 'بدون التزام، ألغ في أي وقت',
   },
   tr: {
     // Header
@@ -569,6 +620,7 @@ export const translations = {
     startChatting: 'Sohbete Başla',
     typeYourMessage: 'Kariyeriniz hakkında her şeyi sorun...',
     welcomeToCareerMentor: 'AI Kariyer Mentorunuza Hoş Geldiniz',
+    careerMentor: 'Kariyer Mentoru',
     careerMentorDescription: 'Size kariyer tavsiyeleri, mülakat hazırlığı, CV geri bildirimi ve profesyonel rehberlik konularında yardımcı olmak için buradayım. Bir konuşma başlatalım!',
     startConversation: 'Konuşmayı Başlat',
     failedToCreateConversation: 'Konuşma oluşturulamadı',
@@ -579,6 +631,22 @@ export const translations = {
     profileCleared: 'Profil başarıyla temizlendi',
     requiredFields: 'Gerekli alanlar eksik',
     requiredFieldsDescription: 'Lütfen en az adınızı ve e-postanızı doldurun',
+    
+    // Pricing
+    pricing: 'Fiyatlandırma',
+    pricingSubtitle: 'Profesyoneller için basit, şeffaf fiyatlandırma',
+    mostPopular: 'En Popüler',
+    professionalPlan: 'Profesyonel Plan',
+    month: 'ay',
+    unlimitedAccess: 'Tüm modlara sınırsız erişim',
+    multiLanguageSupport: 'Tam çok dilli destek',
+    unlimitedUploads: 'Sınırsız belge yükleme',
+    editableOutput: 'Düzenlenebilir AI çıktısı ve indirmeler',
+    unlimitedChatbot: 'Sınırsız kariyer chatbot erişimi',
+    matchScoring: 'Eşleşme puanlama ve iyileştirme ipuçları',
+    profileManagement: 'Kişisel profilleri kaydet ve yeniden kullan',
+    startFreeTrial: 'Ücretsiz Deneme Başlat',
+    noCommitment: 'Taahhüt yok, istediğiniz zaman iptal edin',
   },
 };
 

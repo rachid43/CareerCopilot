@@ -1,11 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PenTool, Brain, CheckCircle, Sparkles } from "lucide-react";
+import { PenTool, Brain, CheckCircle, Sparkles, MessageCircle, Globe, Upload, Download, Star, User } from "lucide-react";
 import { LanguageSelector } from "@/components/language-selector";
 import { useLanguage } from "@/lib/i18n";
+import { useState, useEffect } from "react";
 
 export function Landing() {
   const { t } = useLanguage();
+  const [isEuropean, setIsEuropean] = useState(false);
+  const [currency, setCurrency] = useState('$');
+  const [price, setPrice] = useState('9.97');
+  
+  // Detect user location for currency
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const europeanCountries = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
+        if (europeanCountries.includes(data.country_code)) {
+          setIsEuropean(true);
+          setCurrency('€');
+          setPrice('8.97');
+        }
+      } catch (error) {
+        console.log('Could not detect location, defaulting to USD');
+      }
+    };
+    
+    detectLocation();
+  }, []);
   
   const features = [
     {
@@ -25,6 +49,12 @@ export function Landing() {
       title: t('assess'),
       description: t('assessDescription'),
       color: "bg-accent",
+    },
+    {
+      icon: MessageCircle,
+      title: t('careerMentor'),
+      description: t('careerMentorDescription'),
+      color: "bg-green-500",
     },
   ];
 
@@ -57,7 +87,7 @@ export function Landing() {
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -76,6 +106,74 @@ export function Landing() {
               </Card>
             );
           })}
+        </div>
+
+        {/* Pricing Section */}
+        <div className="max-w-2xl mx-auto mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('pricing')}</h2>
+            <p className="text-lg text-gray-600">{t('pricingSubtitle')}</p>
+          </div>
+          
+          <Card className="relative border-2 border-primary shadow-xl">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
+                {t('mostPopular')}
+              </span>
+            </div>
+            
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-2xl font-bold">{t('professionalPlan')}</CardTitle>
+              <div className="text-4xl font-bold text-primary mt-4">
+                {currency}{price}
+                <span className="text-lg text-gray-500 font-normal">/{t('month')}</span>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="pt-0">
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center">
+                  <CheckCircle className="text-green-500 mr-3" size={20} />
+                  <span>{t('unlimitedAccess')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Globe className="text-blue-500 mr-3" size={20} />
+                  <span>{t('multiLanguageSupport')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Upload className="text-purple-500 mr-3" size={20} />
+                  <span>{t('unlimitedUploads')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Download className="text-orange-500 mr-3" size={20} />
+                  <span>{t('editableOutput')}</span>
+                </div>
+                <div className="flex items-center">
+                  <MessageCircle className="text-green-500 mr-3" size={20} />
+                  <span>{t('unlimitedChatbot')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Star className="text-yellow-500 mr-3" size={20} />
+                  <span>{t('matchScoring')}</span>
+                </div>
+                <div className="flex items-center">
+                  <User className="text-indigo-500 mr-3" size={20} />
+                  <span>{t('profileManagement')}</span>
+                </div>
+              </div>
+              
+              <Button 
+                size="lg" 
+                className="w-full bg-primary hover:bg-orange-600 text-white py-3"
+                onClick={() => window.location.href = '/api/login'}
+              >
+                {t('startFreeTrial')}
+              </Button>
+              <p className="text-center text-sm text-gray-500 mt-2">
+                {t('noCommitment')}
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* How it works */}
