@@ -457,12 +457,17 @@ ${coverLetterDoc.content}
   "summary": "Professional assessment summary with next steps"
 }
 
-Be specific, actionable, and constructive in your feedback.`;
+Be specific, actionable, and constructive in your feedback. Focus on top 3 strengths and improvements.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide concise, actionable feedback in JSON format. Be direct and efficient." },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.3,
+        max_tokens: 1200
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
@@ -552,8 +557,8 @@ Provide detailed assessment in JSON format:
     "motivationFit": 70
   },
   "skillsAnalysis": [
-    {"skill": "Required Skill Name", "found": true, "match": 95, "status": "excellent", "evidence": "Where found in documents"},
-    {"skill": "Missing Skill", "found": false, "match": 0, "status": "missing", "recommendation": "How to address"}
+    {"skill": "Required Skill Name", "found": true, "match": 95, "status": "excellent"},
+    {"skill": "Missing Skill", "found": false, "match": 0, "status": "missing"}
   ],
   "coverLetterScore": 82,
   "coverLetterFeedback": {
@@ -572,12 +577,17 @@ Provide detailed assessment in JSON format:
   "summary": "Comprehensive assessment with strategic guidance"
 }
 
-Be precise with match percentages and provide actionable recommendations.`;
+Be precise with match percentages and provide actionable recommendations. Focus on the most critical 3-5 skills and recommendations.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide concise, actionable feedback in JSON format. Be direct and efficient." },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.3,
+        max_tokens: 1500
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
