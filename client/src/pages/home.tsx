@@ -27,7 +27,7 @@ export default function Home() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const { data: profile } = useQuery({
     queryKey: ['/api/profile'],
@@ -103,7 +103,7 @@ export default function Home() {
     setIsProcessing(true);
     setAiResults(null);
 
-    const data: any = {};
+    const data: any = { language };
     if (activeMode === 'create') {
       data.profile = profile;
       data.jobDescription = jobDescription;

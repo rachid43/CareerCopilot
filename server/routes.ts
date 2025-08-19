@@ -357,6 +357,7 @@ Make the content professional, relevant to the job requirements, and well-format
     try {
       const userId = getUserId(req);
       const sessionId = getSessionId(req);
+      const { language = 'en' } = req.body;
       const documents = await storage.getDocumentsByUserId(userId);
       
       if (documents.length === 0) {
@@ -366,7 +367,18 @@ Make the content professional, relevant to the job requirements, and well-format
       const cvDoc = documents.find(doc => doc.type === 'cv');
       const coverLetterDoc = documents.find(doc => doc.type === 'cover-letter');
 
+      // Language mapping
+      const languageMap = {
+        'nl': 'Dutch',
+        'en': 'English', 
+        'ar': 'Arabic',
+        'tr': 'Turkish'
+      };
+      const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
+
       let prompt = `You are CareerCopilot, an expert career advisor. Analyze the provided documents using comprehensive professional criteria.
+
+IMPORTANT: Respond in ${responseLanguage} language. All feedback, recommendations, and analysis should be provided in ${responseLanguage}.
 
 `;
 
@@ -489,7 +501,7 @@ Be specific, actionable, and constructive in your feedback.`;
     try {
       const userId = getUserId(req);
       const sessionId = getSessionId(req);
-      const { jobDescription } = req.body;
+      const { jobDescription, language = 'en' } = req.body;
       const documents = await storage.getDocumentsByUserId(userId);
 
       if (!jobDescription) {
@@ -508,7 +520,18 @@ Be specific, actionable, and constructive in your feedback.`;
 
       const coverLetterDoc = documents.find(doc => doc.type === 'cover-letter');
       
+      // Language mapping
+      const languageMap = {
+        'nl': 'Dutch',
+        'en': 'English', 
+        'ar': 'Arabic',
+        'tr': 'Turkish'
+      };
+      const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
+
       let prompt = `You are CareerCopilot conducting a comprehensive job match assessment. Analyze alignment between the candidate's documents and job requirements.
+
+IMPORTANT: Respond in ${responseLanguage} language. All feedback, recommendations, and analysis should be provided in ${responseLanguage}.
 
 JOB DESCRIPTION:
 ${jobDescription}
