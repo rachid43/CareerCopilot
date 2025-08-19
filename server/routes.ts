@@ -336,13 +336,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/ai/create", isAuthenticated, async (req, res) => {
     try {
       const sessionId = getSessionId(req);
-      const { profile, jobDescription } = req.body;
+      const userId = getUserId(req);
+      const { profile, jobDescription, hasDocuments, language = 'en' } = req.body;
+      const documents = await storage.getDocumentsByUserId(userId);
 
-      if (!profile || !jobDescription) {
-        return res.status(400).json({ message: "Profile and job description are required" });
+      // Language mapping
+      const languageMap = {
+        'nl': 'Dutch',
+        'en': 'English', 
+        'ar': 'Arabic',
+        'tr': 'Turkish'
+      };
+      const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
+
+      // Check if we have either profile+jobDescription OR documents for improvement
+      if (!profile && documents.length === 0) {
+        return res.status(400).json({ message: "Profile or uploaded documents are required" });
       }
 
-      const prompt = `Generate a professional CV and cover letter based on the following information:
+      let prompt: string;
+
+      if (documents.length > 0) {
+        // Improvement mode: enhance existing documents
+        const cvDoc = documents.find(doc => doc.type === 'cv');
+        const coverLetterDoc = documents.find(doc => doc.type === 'cover-letter');
+        
+        prompt = `IMPORTANT: Respond in ${responseLanguage} language. All content should be provided in ${responseLanguage}.
+
+You are CareerCopilot, an expert career advisor. Improve and enhance the provided CV and/or cover letter based on professional best practices and modern standards.
+
+${cvDoc ? `EXISTING CV:
+${cvDoc.content}
+
+` : ''}${coverLetterDoc ? `EXISTING COVER LETTER:
+${coverLetterDoc.content}
+
+` : ''}${jobDescription ? `JOB DESCRIPTION (to tailor content):
+${jobDescription}
+
+` : ''}TASK: Create improved versions that are:
+- Professionally formatted and well-structured
+- ATS-friendly with clear sections and keywords
+- Compelling and achievement-focused
+- Tailored to ${jobDescription ? 'the job requirements' : 'modern professional standards'}
+- Enhanced with stronger action verbs and quantified results where possible
+
+Return the response in JSON format:
+{
+  "cv": "Enhanced CV content in ${responseLanguage}",
+  "coverLetter": "Enhanced cover letter content in ${responseLanguage}",
+  "improvements": ["List of key improvements made"]
+}`;
+      } else {
+        // Creation mode: generate from profile
+        prompt = `IMPORTANT: Respond in ${responseLanguage} language. All content should be provided in ${responseLanguage}.
+
+Generate a professional CV and cover letter based on the following information:
 
 Profile:
 Name: ${profile.name}
@@ -351,28 +400,39 @@ Phone: ${profile.phone}
 Position: ${profile.position}
 Skills: ${profile.skills}
 
-Job Description:
-${jobDescription}
+${jobDescription ? `Job Description:
+${jobDescription}` : 'Create general professional documents suitable for the candidate\'s field.'}
 
-Please create both a CV and cover letter tailored to this job. Return the response in JSON format with the following structure:
+Return the response in JSON format:
 {
-  "cv": "Complete CV content in plain text",
-  "coverLetter": "Complete cover letter content in plain text"
+  "cv": "Complete CV content in ${responseLanguage}",
+  "coverLetter": "Complete cover letter content in ${responseLanguage}"
 }
 
-Make the content professional, relevant to the job requirements, and well-formatted.`;
+Make the content professional, ATS-friendly, and well-formatted in ${responseLanguage}.`;
+      }
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
-        messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }
+        messages: [
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, professional CV and cover letter content in the requested language." },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.2,
+        max_tokens: 3000
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
 
       const aiResult = await storage.createAiResult({
         mode: 'create',
-        input: JSON.stringify({ profile, jobDescription }),
+        input: JSON.stringify({ 
+          profile, 
+          jobDescription, 
+          hasDocuments: documents.length > 0,
+          documentTypes: documents.map(d => d.type)
+        }),
         result: JSON.stringify(result),
         sessionId
       });

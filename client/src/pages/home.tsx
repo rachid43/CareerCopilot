@@ -82,10 +82,22 @@ export default function Home() {
       return;
     }
 
-    if (!jobDescription && (activeMode === 'create' || activeMode === 'assess')) {
+    // For create mode: require profile, but job description is optional if documents exist
+    // For assess mode: require job description
+    if (activeMode === 'assess' && !jobDescription) {
       toast({
         title: t('jobDescriptionRequired'),
         description: t('jobDescriptionRequiredDescription'),
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // For create mode: require either profile+jobDescription OR documents for improvement
+    if (activeMode === 'create' && !profile && documents.length === 0) {
+      toast({
+        title: t('profileOrDocumentsRequired'),
+        description: t('profileOrDocumentsRequiredDescription'),
         variant: "destructive",
       });
       return;
@@ -107,6 +119,7 @@ export default function Home() {
     if (activeMode === 'create') {
       data.profile = profile;
       data.jobDescription = jobDescription;
+      data.hasDocuments = documents.length > 0;
     } else if (activeMode === 'assess') {
       data.jobDescription = jobDescription;
     }
