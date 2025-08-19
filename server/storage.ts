@@ -151,11 +151,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteDocument(id: number): Promise<boolean> {
-    const result = await db
-      .delete(documents)
-      .where(eq(documents.id, id));
-    
-    return (result.rowCount ?? 0) > 0;
+    try {
+      await db
+        .delete(documents)
+        .where(eq(documents.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      return false;
+    }
   }
 
   async getAiResults(sessionId: string, mode?: string): Promise<AiResult[]> {
@@ -213,12 +217,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async markInvitationAsUsed(token: string): Promise<boolean> {
-    const result = await db
-      .update(userInvitations)
-      .set({ isUsed: true })
-      .where(eq(userInvitations.token, token));
-    
-    return (result.rowCount ?? 0) > 0;
+    try {
+      await db
+        .update(userInvitations)
+        .set({ isUsed: true })
+        .where(eq(userInvitations.token, token));
+      return true;
+    } catch (error) {
+      console.error('Error marking invitation as used:', error);
+      return false;
+    }
   }
 
   async getActiveInvitations(): Promise<UserInvitation[]> {

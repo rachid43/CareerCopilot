@@ -24,7 +24,7 @@ Deployment preference: Supabase for database and Vercel for hosting instead of c
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
 - **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Neon Database (serverless PostgreSQL)
+- **Database Provider**: Supabase (serverless PostgreSQL)
 - **File Processing**: Multer for file uploads, pdf-parse for PDFs, mammoth for DOCX files
 - **AI Integration**: OpenAI API using GPT-4o model
 
@@ -127,6 +127,9 @@ The application uses four main tables:
 - **January 2025**: Updated landing page with AI chatbot showcase and single pricing tier ($9.97/€8.97)
 - **January 2025**: Implemented dynamic currency detection for European users
 - **January 2025**: Added clear buttons to job description and personal profile components with full translations
+- **January 2025**: Migrated from Neon Database to Supabase for better scalability and Vercel integration
+- **January 2025**: Updated database driver from @neondatabase/serverless to postgres for Supabase compatibility
+- **January 2025**: Added Vercel deployment configuration with proper routing and build setup
 
 ### Superadmin Features
 
