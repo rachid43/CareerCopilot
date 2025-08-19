@@ -361,66 +361,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const cvDoc = documents.find(doc => doc.type === 'cv');
         const coverLetterDoc = documents.find(doc => doc.type === 'cover-letter');
         
-        prompt = `IMPORTANT: Respond in ${responseLanguage} language. All content should be provided in ${responseLanguage}.
+        prompt = `LANGUAGE: ${responseLanguage}
 
-You are CareerCopilot, an expert career advisor. Improve and enhance the provided CV and/or cover letter based on professional best practices and modern standards.
+CareerCopilot: Enhance documents using professional best practices.
 
-${cvDoc ? `EXISTING CV:
-${cvDoc.content}
+${cvDoc ? `CV:\n${cvDoc.content.substring(0, 2000)}${cvDoc.content.length > 2000 ? '...' : ''}\n\n` : ''}${coverLetterDoc ? `COVER LETTER:\n${coverLetterDoc.content.substring(0, 1500)}${coverLetterDoc.content.length > 1500 ? '...' : ''}\n\n` : ''}${jobDescription ? `JOB:\n${jobDescription.substring(0, 1000)}${jobDescription.length > 1000 ? '...' : ''}\n\n` : ''}ENHANCE with:
+- Professional structure & ATS optimization
+- Strong action verbs & quantified results  
+- ${jobDescription ? 'Job-specific tailoring' : 'Modern standards alignment'}
 
-` : ''}${coverLetterDoc ? `EXISTING COVER LETTER:
-${coverLetterDoc.content}
-
-` : ''}${jobDescription ? `JOB DESCRIPTION (to tailor content):
-${jobDescription}
-
-` : ''}TASK: Create improved versions that are:
-- Professionally formatted and well-structured
-- ATS-friendly with clear sections and keywords
-- Compelling and achievement-focused
-- Tailored to ${jobDescription ? 'the job requirements' : 'modern professional standards'}
-- Enhanced with stronger action verbs and quantified results where possible
-
-Return the response in JSON format:
+JSON response:
 {
-  "cv": "Enhanced CV content in ${responseLanguage}",
-  "coverLetter": "Enhanced cover letter content in ${responseLanguage}",
-  "improvements": ["List of key improvements made"]
+  "cv": "Enhanced CV",
+  "coverLetter": "Enhanced cover letter", 
+  "improvements": ["Key changes made"]
 }`;
       } else {
         // Creation mode: generate from profile
-        prompt = `IMPORTANT: Respond in ${responseLanguage} language. All content should be provided in ${responseLanguage}.
+        prompt = `LANGUAGE: ${responseLanguage}
 
-Generate a professional CV and cover letter based on the following information:
+Generate professional CV & cover letter.
 
-Profile:
-Name: ${profile.name}
-Email: ${profile.email}
-Phone: ${profile.phone}
+PROFILE:
+${profile.name} | ${profile.email} | ${profile.phone}
 Position: ${profile.position}
 Skills: ${profile.skills}
 
-${jobDescription ? `Job Description:
-${jobDescription}` : 'Create general professional documents suitable for the candidate\'s field.'}
+${jobDescription ? `JOB: ${jobDescription.substring(0, 800)}${jobDescription.length > 800 ? '...' : ''}` : 'Create general professional documents.'}
 
-Return the response in JSON format:
+JSON format:
 {
-  "cv": "Complete CV content in ${responseLanguage}",
-  "coverLetter": "Complete cover letter content in ${responseLanguage}"
-}
-
-Make the content professional, ATS-friendly, and well-formatted in ${responseLanguage}.`;
+  "cv": "Professional CV in ${responseLanguage}",
+  "coverLetter": "Tailored cover letter in ${responseLanguage}"
+}`;
       }
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
-          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, professional CV and cover letter content in the requested language." },
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, professional CV and cover letter content in the requested language. Be concise yet complete." },
           { role: "user", content: prompt }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.2,
-        max_tokens: 3000
+        temperature: 0.1,
+        max_tokens: 2000,
+        top_p: 0.9,
+        frequency_penalty: 0.1,
+        presence_penalty: 0.1
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
@@ -466,43 +453,23 @@ Make the content professional, ATS-friendly, and well-formatted in ${responseLan
       };
       const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
 
-      let prompt = `You are CareerCopilot, an expert career advisor. Analyze the provided documents using comprehensive professional criteria.
+      let prompt = `LANGUAGE: ${responseLanguage}
 
-IMPORTANT: Respond in ${responseLanguage} language. All feedback, recommendations, and analysis should be provided in ${responseLanguage}.
+CareerCopilot: Professional document analysis.
 
 `;
 
       if (cvDoc) {
-        prompt += `CV/RESUME ANALYSIS CRITERIA:
-📄 Format & Presentation (25 points):
-- Clarity: Logical structure, clean layout, readable fonts
-- Length: 1 page (entry-level) to 2 pages (experienced)  
-- Consistency: Uniform formatting (dates, titles, bullets)
-- Section hierarchy: Clear headings (Summary, Experience, Education, Skills)
+        prompt += `CV ANALYSIS (100 pts):
+Format/Presentation (25): Structure, layout, consistency
+Relevance (25): Keywords, industry alignment, quantified impact  
+Experience (20): Chronological order, action-result format
+Skills (15): Clear technical/soft skills, avoid buzzwords
+Education (10): Relevant degrees, clear dates
+Bonus (5): Projects, languages, portfolio links
 
-🎯 Relevance (25 points):
-- Tailoring: Evidence of alignment with industry/target roles
-- Keywords: Job-specific terms and action verbs
-- Quantifiable impact: Metrics and achievements, not just duties
-
-💼 Experience Section (20 points):
-- Reverse-chronological order
-- Clear job titles and employers
-- Action-result structure (e.g., "Improved X by Y% through Z")
-
-🧠 Skills & Competencies (15 points):
-- Technical and soft skills listed clearly
-- Avoids unproven buzzwords (e.g., "team player")
-
-🧑‍🎓 Education & Certifications (10 points):
-- Relevant degrees/training for the job
-- Clear dates and institutions
-
-🛠️ Optional but Valuable (5 points):
-- Projects, languages, volunteer experience, portfolio/GitHub/LinkedIn links
-
-CV/Resume Content:
-${cvDoc.content}
+CV Content:
+${cvDoc.content.substring(0, 2500)}${cvDoc.content.length > 2500 ? '...' : ''}
 
 `;
       }
@@ -564,12 +531,15 @@ Be specific, actionable, and constructive in your feedback.`;
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
-          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, actionable feedback in JSON format." },
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, actionable feedback in JSON format. Be efficient yet thorough." },
           { role: "user", content: prompt }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.2,
-        max_tokens: 2000
+        temperature: 0.1,
+        max_tokens: 1800,
+        top_p: 0.9,
+        frequency_penalty: 0.1,
+        presence_penalty: 0.1
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
@@ -695,12 +665,15 @@ Be precise with match percentages and provide comprehensive, actionable recommen
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
-          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, actionable feedback in JSON format." },
+          { role: "system", content: "You are CareerCopilot, an expert career advisor. Provide comprehensive, actionable feedback in JSON format. Be efficient and focused." },
           { role: "user", content: prompt }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.2,
-        max_tokens: 2500
+        temperature: 0.1,
+        max_tokens: 2200,
+        top_p: 0.9,
+        frequency_penalty: 0.1,
+        presence_penalty: 0.1
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
