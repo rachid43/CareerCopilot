@@ -237,9 +237,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Check if user already has a profile
             const existingProfile = await storage.getProfileByUserId(userId);
             
+            // Get the actual user ID from the users table
+            const user = await storage.getUserByUsername(userId.toString());
+            if (!user) {
+              console.error('User not found for CV profile extraction:', userId);
+              return;
+            }
+
             // Only update fields that are empty in existing profile or create new profile
             const profileData: any = {
-              userId: parseInt(userId.toString()), // Ensure userId is a number for profiles table
+              userId: user.id, // Use the actual user.id from users table
               sessionId,
               name: extractedProfile.name || (existingProfile?.name || ''),
               email: extractedProfile.email || (existingProfile?.email || ''),
@@ -256,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             });
 
             if (existingProfile) {
-              await storage.updateProfile(existingProfile.sessionId, profileData);
+              await storage.updateProfileByUserId(user.id, profileData);
             } else {
               const validatedProfileData = insertProfileSchema.parse(profileData);
               await storage.createProfile(validatedProfileData);
