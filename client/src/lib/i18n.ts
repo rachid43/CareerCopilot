@@ -48,6 +48,12 @@ export const translations = {
     supportedFormats: 'PDF en DOCX bestanden worden ondersteund',
     uploadedDocuments: 'Geüploade Documenten',
     deleteDocument: 'Document verwijderen',
+    dropCvText: 'Sleep uw CV hierheen of',
+    dropCoverLetterText: 'Sleep uw motivatiebrief hierheen of',
+    browseFiles: 'blader door bestanden',
+    pdfDocxMax: 'PDF of DOCX, max 10MB',
+    cvOptional: 'CV (Optioneel)',
+    coverLetterOptional: 'Motivatiebrief (Optioneel)',
     
     // Job Description
     jobDescriptionTitle: 'Functieomschrijving',
@@ -166,6 +172,12 @@ export const translations = {
     supportedFormats: 'PDF and DOCX files are supported',
     uploadedDocuments: 'Uploaded Documents',
     deleteDocument: 'Delete document',
+    dropCvText: 'Drop your CV here or',
+    dropCoverLetterText: 'Drop your cover letter here or',
+    browseFiles: 'browse files',
+    pdfDocxMax: 'PDF or DOCX, max 10MB',
+    cvOptional: 'CV (Optional)',
+    coverLetterOptional: 'Cover Letter (Optional)',
     
     // Job Description
     jobDescriptionTitle: 'Job Description',
@@ -284,6 +296,12 @@ export const translations = {
     supportedFormats: 'ملفات PDF و DOCX مدعومة',
     uploadedDocuments: 'المستندات المرفوعة',
     deleteDocument: 'حذف المستند',
+    dropCvText: 'اسحب سيرتك الذاتية هنا أو',
+    dropCoverLetterText: 'اسحب رسالة التغطية هنا أو',
+    browseFiles: 'تصفح الملفات',
+    pdfDocxMax: 'PDF أو DOCX، حد أقصى 10 ميجابايت',
+    cvOptional: 'السيرة الذاتية (اختيارية)',
+    coverLetterOptional: 'رسالة التغطية (اختيارية)',
     
     // Job Description
     jobDescriptionTitle: 'وصف الوظيفة',
@@ -402,6 +420,12 @@ export const translations = {
     supportedFormats: 'PDF ve DOCX dosyaları desteklenir',
     uploadedDocuments: 'Yüklenen Belgeler',
     deleteDocument: 'Belgeyi sil',
+    dropCvText: 'CV\'nizi buraya sürükleyin veya',
+    dropCoverLetterText: 'Ön yazınızı buraya sürükleyin veya',
+    browseFiles: 'dosyalara göz atın',
+    pdfDocxMax: 'PDF veya DOCX, maksimum 10MB',
+    cvOptional: 'CV (İsteğe Bağlı)',
+    coverLetterOptional: 'Ön Yazı (İsteğe Bağlı)',
     
     // Job Description
     jobDescriptionTitle: 'İş Tanımı',

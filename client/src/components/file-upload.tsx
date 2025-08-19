@@ -158,7 +158,7 @@ export function FileUpload() {
       <CardContent className="space-y-4">
         {/* CV Upload */}
         <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-2">CV/Resume</label>
+          <label className="block text-sm font-medium text-neutral-700 mb-2">{t('cvOptional')}</label>
           {cvDoc ? (
             <div className="border-2 border-green-300 bg-green-50 rounded-lg p-4">
               <div className="flex items-center justify-between">
@@ -191,9 +191,9 @@ export function FileUpload() {
             >
               <FileText className="mx-auto text-gray-400 mb-2" size={32} />
               <p className="text-sm text-secondary">
-                {t('dragDropText')}
+                {t('dropCvText')} <span className="text-primary font-medium">{t('browseFiles')}</span>
               </p>
-              <p className="text-xs text-gray-500 mt-1">{t('supportedFormats')}</p>
+              <p className="text-xs text-gray-500 mt-1">{t('pdfDocxMax')}</p>
               <input
                 ref={cvInputRef}
                 type="file"
@@ -207,7 +207,7 @@ export function FileUpload() {
 
         {/* Cover Letter Upload */}
         <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-2">Motivatiebrief (Optioneel)</label>
+          <label className="block text-sm font-medium text-neutral-700 mb-2">{t('coverLetterOptional')}</label>
           {coverLetterDoc ? (
             <div className="border-2 border-green-300 bg-green-50 rounded-lg p-4">
               <div className="flex items-center justify-between">
@@ -240,9 +240,9 @@ export function FileUpload() {
             >
               <FileText className="mx-auto text-gray-400 mb-2" size={32} />
               <p className="text-sm text-secondary">
-                Drop your cover letter or <span className="text-primary font-medium">browse files</span>
+                {t('dropCoverLetterText')} <span className="text-primary font-medium">{t('browseFiles')}</span>
               </p>
-              <p className="text-xs text-gray-500 mt-1">PDF or DOCX, max 10MB</p>
+              <p className="text-xs text-gray-500 mt-1">{t('pdfDocxMax')}</p>
               <input
                 ref={coverLetterInputRef}
                 type="file"
