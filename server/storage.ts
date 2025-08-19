@@ -54,10 +54,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getProfileByUserId(userId: string): Promise<Profile | undefined> {
-    const userIdNumber = parseInt(userId);
-    if (isNaN(userIdNumber)) return undefined;
+    console.log('getProfileByUserId called with userId:', userId, 'type:', typeof userId);
     
-    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, userIdNumber));
+    // First try to find user by username to get the actual user ID
+    const user = await this.getUserByUsername(userId);
+    if (!user) {
+      console.log('No user found with username:', userId);
+      return undefined;
+    }
+    
+    console.log('Found user:', user.id, 'looking for profile...');
+    
+    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id));
+    console.log('Found profile:', profile);
     return profile || undefined;
   }
 

@@ -163,10 +163,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "User not authenticated" });
       }
       
+      console.log('Getting profile for userId:', userId);
+      
       // Use user ID for profile isolation instead of session ID
       const profile = await storage.getProfileByUserId(userId);
+      console.log('Retrieved profile:', profile);
+      
       res.json(profile || null);
     } catch (error) {
+      console.error('Error retrieving profile:', error);
       res.status(500).json({ message: "Failed to get profile" });
     }
   });
