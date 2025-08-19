@@ -11,7 +11,7 @@ interface JobDescriptionProps {
 
 export function JobDescription({ value, onChange }: JobDescriptionProps) {
   const { t } = useLanguage();
-  const characterLimit = 2000;
+  const characterLimit = 3000;
   const characterCount = value.length;
 
   const handleClear = () => {
