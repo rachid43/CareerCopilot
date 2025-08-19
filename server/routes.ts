@@ -262,12 +262,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
               skills: extractedProfile.skills || (existingProfile?.skills || '')
             };
 
-            // Remove empty fields to avoid overwriting existing data with empty values
+            // Remove empty fields to avoid overwriting existing data with empty values, but allow overriding with new extracted data
             Object.keys(profileData).forEach(key => {
               if (!profileData[key] && existingProfile && existingProfile[key as keyof typeof existingProfile]) {
-                profileData[key] = existingProfile[key as keyof typeof existingProfile];
+                // Only use existing data if extracted data is truly empty, not just different
+                if (key !== 'skills' && key !== 'name' && key !== 'email' && key !== 'phone' && key !== 'position') {
+                  profileData[key] = existingProfile[key as keyof typeof existingProfile];
+                }
               }
             });
+            
+            // Ensure extracted skills override existing empty skills
+            if (extractedProfile.skills && extractedProfile.skills.trim()) {
+              profileData.skills = extractedProfile.skills;
+            }
 
             console.log('About to save/update profile with data:', profileData);
             

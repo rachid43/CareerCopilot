@@ -1,6 +1,6 @@
 import { users, profiles, documents, aiResults, userInvitations, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult, type UserInvitation, type InsertUserInvitation } from "@shared/schema";
 import { db } from './db';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, desc } from 'drizzle-orm';
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -65,7 +65,8 @@ export class DatabaseStorage implements IStorage {
     
     console.log('Found user:', user.id, 'looking for profile...');
     
-    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id));
+    const profileResults = await db.select().from(profiles).where(eq(profiles.userId, user.id)).orderBy(desc(profiles.id));
+    const profile = profileResults[0]; // Get the most recent profile
     console.log('Found profile:', profile);
     return profile || undefined;
   }
