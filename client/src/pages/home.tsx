@@ -94,16 +94,16 @@ export default function Home() {
     }
     
     // For create mode: require either profile+jobDescription OR documents for improvement
-    if (activeMode === 'create' && !profile && documents.length === 0) {
+    if (activeMode === 'create' && !profile && (!documents || (documents as any[]).length === 0)) {
       toast({
-        title: t('profileOrDocumentsRequired'),
-        description: t('profileOrDocumentsRequiredDescription'),
+        title: t('profileRequired'),
+        description: t('profileRequiredDescription'),
         variant: "destructive",
       });
       return;
     }
 
-    if (!documents.length && (activeMode === 'review' || activeMode === 'assess')) {
+    if ((!documents || (documents as any[]).length === 0) && (activeMode === 'review' || activeMode === 'assess')) {
       toast({
         title: t('documentsRequired'),
         description: t('documentsRequiredDescription'),
@@ -119,7 +119,7 @@ export default function Home() {
     if (activeMode === 'create') {
       data.profile = profile;
       data.jobDescription = jobDescription;
-      data.hasDocuments = documents.length > 0;
+      data.hasDocuments = documents && (documents as any[]).length > 0;
     } else if (activeMode === 'assess') {
       data.jobDescription = jobDescription;
     }
@@ -163,12 +163,12 @@ export default function Home() {
                 <div className="flex items-center space-x-2 mr-4">
                   <User size={18} className="text-gray-500" />
                   <span className="text-sm text-gray-700">
-                    {user.firstName || user.email || user.username}
+                    {(user as any)?.firstName || (user as any)?.email || (user as any)?.username}
                   </span>
                 </div>
               )}
               <LanguageSelector />
-              {user?.role === 'superadmin' && (
+              {(user as any)?.role === 'superadmin' && (
                 <Link to="/admin">
                   <Button
                     variant="outline"

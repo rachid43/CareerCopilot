@@ -15,6 +15,7 @@ import {
   CheckCircle,
   X
 } from "lucide-react";
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -54,6 +55,69 @@ export function ResultsDisplay({ mode, results, isLoading }: ResultsDisplayProps
     URL.revokeObjectURL(url);
   };
 
+  const handleDownloadDocx = async (content: string, filename: string) => {
+    try {
+      // Parse the content into paragraphs
+      const lines = content.split('\n');
+      const paragraphs = lines.map(line => {
+        const trimmedLine = line.trim();
+        
+        // Check if it's a heading (all caps or starts with specific keywords)
+        const isHeading = trimmedLine.length > 0 && (
+          trimmedLine === trimmedLine.toUpperCase() ||
+          /^(CONTACT|PROFESSIONAL|EXPERIENCE|EDUCATION|SKILLS|SUMMARY|OBJECTIVE)/i.test(trimmedLine) ||
+          /^[A-Z\s]+$/.test(trimmedLine)
+        );
+        
+        if (isHeading && trimmedLine.length > 0) {
+          return new Paragraph({
+            children: [new TextRun({ text: trimmedLine, bold: true, size: 28 })],
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 240, after: 120 }
+          });
+        } else if (trimmedLine.length > 0) {
+          return new Paragraph({
+            children: [new TextRun({ text: trimmedLine, size: 24 })],
+            spacing: { after: 120 }
+          });
+        } else {
+          return new Paragraph({ children: [new TextRun({ text: "", size: 24 })] });
+        }
+      });
+
+      // Create document
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: paragraphs
+        }]
+      });
+
+      // Generate and download
+      const buffer = await Packer.toBlob(doc);
+      const url = URL.createObjectURL(buffer);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename.replace('.txt', '.docx');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Downloaded!",
+        description: `${filename.replace('.txt', '.docx')} downloaded successfully`,
+      });
+    } catch (error) {
+      console.error('DOCX download error:', error);
+      toast({
+        title: "Download failed",
+        description: "Unable to generate DOCX file",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return null; // Loading state is handled in the parent component
   }
@@ -85,10 +149,10 @@ export function ResultsDisplay({ mode, results, isLoading }: ResultsDisplayProps
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => handleDownload(results.cv, 'cv.txt')}
+                    onClick={() => handleDownloadDocx(results.cv, 'cv.docx')}
                   >
                     <Download className="mr-1" size={14} />
-                    Download
+                    Download DOCX
                   </Button>
                 </div>
               </div>
@@ -123,10 +187,10 @@ export function ResultsDisplay({ mode, results, isLoading }: ResultsDisplayProps
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => handleDownload(results.coverLetter, 'cover-letter.txt')}
+                    onClick={() => handleDownloadDocx(results.coverLetter, 'cover-letter.docx')}
                   >
                     <Download className="mr-1" size={14} />
-                    Download
+                    Download DOCX
                   </Button>
                 </div>
               </div>
