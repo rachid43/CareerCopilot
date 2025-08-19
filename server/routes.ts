@@ -355,8 +355,9 @@ Make the content professional, relevant to the job requirements, and well-format
 
   app.post("/api/ai/review", isAuthenticated, async (req, res) => {
     try {
+      const userId = getUserId(req);
       const sessionId = getSessionId(req);
-      const documents = await storage.getDocuments(sessionId);
+      const documents = await storage.getDocumentsByUserId(userId);
       
       if (documents.length === 0) {
         return res.status(400).json({ message: "No documents uploaded for review" });
@@ -365,33 +366,98 @@ Make the content professional, relevant to the job requirements, and well-format
       const cvDoc = documents.find(doc => doc.type === 'cv');
       const coverLetterDoc = documents.find(doc => doc.type === 'cover-letter');
 
-      let prompt = `Please review the following documents and provide detailed feedback:
+      let prompt = `You are CareerCopilot, an expert career advisor. Analyze the provided documents using comprehensive professional criteria.
 
 `;
 
       if (cvDoc) {
-        prompt += `CV/Resume:
+        prompt += `CV/RESUME ANALYSIS CRITERIA:
+📄 Format & Presentation (25 points):
+- Clarity: Logical structure, clean layout, readable fonts
+- Length: 1 page (entry-level) to 2 pages (experienced)  
+- Consistency: Uniform formatting (dates, titles, bullets)
+- Section hierarchy: Clear headings (Summary, Experience, Education, Skills)
+
+🎯 Relevance (25 points):
+- Tailoring: Evidence of alignment with industry/target roles
+- Keywords: Job-specific terms and action verbs
+- Quantifiable impact: Metrics and achievements, not just duties
+
+💼 Experience Section (20 points):
+- Reverse-chronological order
+- Clear job titles and employers
+- Action-result structure (e.g., "Improved X by Y% through Z")
+
+🧠 Skills & Competencies (15 points):
+- Technical and soft skills listed clearly
+- Avoids unproven buzzwords (e.g., "team player")
+
+🧑‍🎓 Education & Certifications (10 points):
+- Relevant degrees/training for the job
+- Clear dates and institutions
+
+🛠️ Optional but Valuable (5 points):
+- Projects, languages, volunteer experience, portfolio/GitHub/LinkedIn links
+
+CV/Resume Content:
 ${cvDoc.content}
 
 `;
       }
 
       if (coverLetterDoc) {
-        prompt += `Cover Letter:
+        prompt += `COVER LETTER ANALYSIS CRITERIA:
+✍️ Structure (30 points):
+- Header with contact info and date
+- Personalized greeting (avoid "To Whom It May Concern")
+- Introduction: Position applied for and compelling hook
+- Body: Short paragraphs highlighting fit, achievements, motivation
+- Conclusion: Call to action and professional closing
+
+💬 Tone & Language (25 points):
+- Professional, confident, polite
+- Avoids clichés and generic phrases
+- Active voice and strong verbs
+
+📣 Content Quality (45 points):
+- Summarizes unique value proposition
+- Shows interest in company/industry, not just the job
+- Adds narrative/examples instead of restating CV
+- Demonstrates company knowledge and cultural fit
+
+Cover Letter Content:
 ${coverLetterDoc.content}
 
 `;
       }
 
-      prompt += `Please analyze these documents and provide feedback in JSON format with the following structure:
+      prompt += `Provide comprehensive analysis in JSON format:
 {
   "overallScore": 85,
-  "strengths": ["List of strengths"],
-  "improvements": ["List of improvement suggestions"],
-  "summary": "Brief summary of the analysis"
+  "cvAnalysis": {
+    "formatScore": 20,
+    "relevanceScore": 22,
+    "experienceScore": 18,
+    "skillsScore": 12,
+    "educationScore": 8,
+    "bonusScore": 3,
+    "strengths": ["Specific strengths with examples"],
+    "improvements": ["Specific actionable improvements"]
+  },
+  "coverLetterAnalysis": {
+    "structureScore": 25,
+    "toneScore": 20,
+    "contentScore": 35,
+    "strengths": ["Specific strengths with examples"],
+    "improvements": ["Specific actionable improvements"]
+  },
+  "keyRecommendations": [
+    "High-impact improvement suggestions"
+  ],
+  "summary": "Professional assessment summary with next steps"
 }
 
-Focus on professional formatting, content quality, clarity, and overall effectiveness.`;
+Be specific, actionable, and constructive in your feedback.`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -416,9 +482,10 @@ Focus on professional formatting, content quality, clarity, and overall effectiv
 
   app.post("/api/ai/assess", isAuthenticated, async (req, res) => {
     try {
+      const userId = getUserId(req);
       const sessionId = getSessionId(req);
       const { jobDescription } = req.body;
-      const documents = await storage.getDocuments(sessionId);
+      const documents = await storage.getDocumentsByUserId(userId);
 
       if (!jobDescription) {
         return res.status(400).json({ message: "Job description is required" });
@@ -434,30 +501,78 @@ Focus on professional formatting, content quality, clarity, and overall effectiv
         return res.status(400).json({ message: "CV is required for assessment" });
       }
 
-      const prompt = `Compare the following CV against the job description and provide a match assessment:
+      const coverLetterDoc = documents.find(doc => doc.type === 'cover-letter');
+      
+      let prompt = `You are CareerCopilot conducting a comprehensive job match assessment. Analyze alignment between the candidate's documents and job requirements.
 
-Job Description:
+JOB DESCRIPTION:
 ${jobDescription}
 
-CV:
+CV/RESUME:
 ${cvDoc.content}
 
-Please analyze the match and provide assessment in JSON format with the following structure:
+`;
+
+      if (coverLetterDoc) {
+        prompt += `COVER LETTER:
+${coverLetterDoc.content}
+
+COVER LETTER ALIGNMENT ASSESSMENT:
+🔍 Tailoring & Relevance (40 points):
+- Mentions company name, role title, specific job requirements
+- References exact qualifications/responsibilities from job ad
+- Highlights how applicant meets/exceeds key requirements
+
+🎯 Keyword Matching (30 points):
+- Uses role-specific terms and industry language from job description
+- Reflects skills, technologies, methodologies mentioned in posting
+
+💼 Fit & Motivation (30 points):
+- Expresses why applicant wants THIS role at THIS company
+- Demonstrates alignment with company values/mission
+
+`;
+      }
+
+      prompt += `MATCH SCORE COMPONENTS:
+- Skills Match (40%): % of job-required skills found in documents
+- Experience Alignment (25%): Relevance of background to role
+- Education/Certification Match (15%): Required qualifications
+- Keyword Optimization (10%): Use of job-specific terminology
+- Motivation/Cultural Fit (10%): Evidence of genuine interest
+
+Provide detailed assessment in JSON format:
 {
   "matchScore": 78,
-  "skillsAnalysis": [
-    {"skill": "React", "match": 100, "status": "excellent"},
-    {"skill": "AWS", "match": 70, "status": "good"},
-    {"skill": "Kubernetes", "match": 0, "status": "missing"}
-  ],
-  "recommendations": {
-    "high": ["High priority recommendations"],
-    "medium": ["Medium priority recommendations"]
+  "componentScores": {
+    "skillsMatch": 85,
+    "experienceAlignment": 75,
+    "educationMatch": 90,
+    "keywordOptimization": 65,
+    "motivationFit": 70
   },
-  "summary": "Brief summary of the assessment"
+  "skillsAnalysis": [
+    {"skill": "Required Skill Name", "found": true, "match": 95, "status": "excellent", "evidence": "Where found in documents"},
+    {"skill": "Missing Skill", "found": false, "match": 0, "status": "missing", "recommendation": "How to address"}
+  ],
+  "coverLetterScore": 82,
+  "coverLetterFeedback": {
+    "tailoringScore": 35,
+    "keywordScore": 25,
+    "fitScore": 22,
+    "strengths": ["Specific examples"],
+    "improvements": ["Actionable suggestions"]
+  },
+  "recommendations": {
+    "critical": ["Must-address gaps"],
+    "high": ["High-impact improvements"],
+    "medium": ["Nice-to-have enhancements"]
+  },
+  "competitiveAdvantages": ["Unique strengths that set candidate apart"],
+  "summary": "Comprehensive assessment with strategic guidance"
 }
 
-Provide a match score from 0-100, analyze key skills, and give specific improvement recommendations.`;
+Be precise with match percentages and provide actionable recommendations.`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",

@@ -118,6 +118,10 @@ The application uses four main tables:
 - **January 2025**: Added internationalization support with Dutch as default language and English option
 - **January 2025**: Implemented language selector component with Dutch/English switching
 - **January 2025**: Maintained superadmin interface in English while user interface defaults to Dutch
+- **January 2025**: Enhanced CV auto-population with OpenAI profile extraction from uploaded documents
+- **January 2025**: Implemented comprehensive AI analysis criteria for professional CV and cover letter evaluation
+- **January 2025**: Added detailed match scoring system with component-based assessment for job alignment
+- **January 2025**: Fixed user isolation by migrating all endpoints from sessionId to userId for proper data security
 
 ### Superadmin Features
 

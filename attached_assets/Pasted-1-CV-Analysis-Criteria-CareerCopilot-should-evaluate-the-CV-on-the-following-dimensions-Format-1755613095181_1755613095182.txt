@@ -1,0 +1,97 @@
+1. CV Analysis Criteria
+CareerCopilot should evaluate the CV on the following dimensions:
+
+📄 Format & Presentation
+Clarity: Logical structure, clean layout, and readable fonts.
+
+Length: Ideally 1 page (entry-level) to 2 pages (experienced).
+
+Consistency: Uniform formatting (dates, titles, bullets).
+
+Section hierarchy: Clear headings like Summary, Experience, Education, Skills.
+
+🎯 Relevance
+Tailoring: Evidence of alignment with industry or target roles.
+
+Keywords: Presence of job-specific terms and action verbs.
+
+Quantifiable impact: Metrics and achievements, not just duties.
+
+💼 Experience Section
+Reverse-chronological order.
+
+Clear job titles and employers.
+
+Bullet points with action-result structure (e.g., Improved X by Y% through Z).
+
+🧠 Skills & Competencies
+Technical and soft skills listed clearly.
+
+Avoids buzzwords without proof (e.g., "team player").
+
+🧑‍🎓 Education & Certifications
+Relevant degrees or training for the job.
+
+Date and institution clarity.
+
+🛠️ Optional but Valuable
+Projects, languages, volunteer experience, links to portfolio/GitHub/LinkedIn.
+
+✅ 2. Cover Letter: General Standard
+When reviewing a cover letter without a job description, CareerCopilot should assess:
+
+✍️ Structure
+Header with contact info and date.
+
+Greeting personalized if possible (avoid “To Whom It May Concern”).
+
+Introduction: Position applied for and a compelling hook.
+
+Body: A few short paragraphs that highlight fit, achievements, and motivation.
+
+Conclusion: Call to action and professional closing.
+
+💬 Tone & Language
+Professional, confident, and polite.
+
+Avoids clichés and generic phrases.
+
+Active voice and strong verbs.
+
+📣 Content Quality
+Summarizes unique value proposition.
+
+Shows interest in the company/industry, not just the job.
+
+Avoids restating the CV — adds narrative or examples instead.
+
+✅ 3. Cover Letter: Alignment with Job Description
+When a user uploads a job description, CareerCopilot should additionally assess:
+
+🔍 Tailoring & Relevance
+Mentions company name, role title, and specific job requirements.
+
+References exact qualifications or responsibilities from the job ad.
+
+Highlights how the applicant meets or exceeds the key requirements.
+
+🎯 Keyword Matching
+Uses role-specific terms and industry language from the job description.
+
+Reflects skills, technologies, or methodologies mentioned in the posting.
+
+💼 Fit & Motivation
+Expresses why the applicant wants this particular role at this company.
+
+Demonstrates alignment with company values or mission, if known.
+
+✅ Match Score Components
+CareerCopilot can return a match score (0–100) based on:
+
+% of job-required skills found in CV/letter
+
+Alignment of experience and education
+
+Tone and motivation match
+
+Use of keywords and personalization
