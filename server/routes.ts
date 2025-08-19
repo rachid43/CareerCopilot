@@ -239,7 +239,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
             // Only update fields that are empty in existing profile or create new profile
             const profileData: any = {
-              userId,
+              userId: parseInt(userId.toString()), // Ensure userId is a number for profiles table
               sessionId,
               name: extractedProfile.name || (existingProfile?.name || ''),
               email: extractedProfile.email || (existingProfile?.email || ''),
@@ -263,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
         } catch (profileError: any) {
-          console.error('Failed to extract/update profile from CV:', profileError.message);
+          console.error('Failed to extract/update profile from CV:', profileError);
           // Don't fail the document upload if profile extraction fails
         }
       }
