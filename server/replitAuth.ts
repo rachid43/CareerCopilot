@@ -26,19 +26,19 @@ const getOidcConfig = memoize(
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
   
-  // Use PostgreSQL store now that Supabase tables are created
-  const pgStore = connectPg(session);
-  const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
-    createTableIfMissing: true,
-    ttl: sessionTtl,
-    tableName: "sessions",
+  // Temporarily use memory store while resolving connection issue
+  const memoryStore = MemoryStore(session);
+  const sessionStore = new memoryStore({
+    checkPeriod: 86400000, // prune expired entries every 24h
   });
   
-  // Memory store fallback if needed
-  // const memoryStore = MemoryStore(session);
-  // const sessionStore = new memoryStore({
-  //   checkPeriod: 86400000,
+  // PostgreSQL store - will work once connection issue is resolved
+  // const pgStore = connectPg(session);
+  // const sessionStore = new pgStore({
+  //   conString: process.env.DATABASE_URL,
+  //   createTableIfMissing: true,
+  //   ttl: sessionTtl,
+  //   tableName: "sessions",
   // });
   
   return session({
