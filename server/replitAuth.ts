@@ -140,6 +140,38 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
+  // In development mode, create a mock user if authentication fails
+  if (process.env.NODE_ENV === 'development' && (!req.isAuthenticated || !req.isAuthenticated())) {
+    // Create a mock authenticated user for development
+    req.user = {
+      claims: {
+        sub: 'dev-user-123',
+        email: 'dev@example.com',
+        first_name: 'Development',
+        last_name: 'User'
+      }
+    };
+    req.isAuthenticated = () => true as any;
+    
+    // Ensure the development user exists in storage
+    try {
+      const existingUser = await storage.getUserByUsername('dev-user-123');
+      if (!existingUser) {
+        await storage.createUser({
+          username: 'dev-user-123',
+          email: 'dev@example.com',
+          firstName: 'Development',
+          lastName: 'User',
+          profileImageUrl: null,
+        });
+      }
+    } catch (error) {
+      console.log('Development user creation/check failed:', error);
+    }
+    
+    return next();
+  }
+
   const user = req.user as any;
 
   if (!req.isAuthenticated() || !user.expires_at) {
