@@ -104,7 +104,7 @@ export const jobApplications = pgTable("job_applications", {
   whereApplied: text("where_applied").notNull(), // 'LinkedIn' | 'Website' | 'Referral' | 'Other'
   credentialsUsed: text("credentials_used"),
   commentsInformation: text("comments_information"),
-  response: text("response").notNull().default("No Response"), // 'No Response' | 'Interview' | 'Offer' | 'Rejected' | 'Other'
+  response: text("response").notNull().default("No Response"), // 'No Response' | 'Interview' | 'Offer' | 'Rejected' | 'Open' | 'Under Interview' | 'WithDrawn' | 'Other'
   responseDate: date("response_date"),
   locationCity: text("location_city"),
   locationCountry: text("location_country"),

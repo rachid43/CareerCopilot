@@ -293,13 +293,24 @@ export function JobApplications() {
           return new Date().toISOString().split('T')[0];
         };
         
+        console.log('Headers found:', headers);
+        console.log('First 3 data rows:', dataRows.slice(0, 3));
+        
         const importedApplications = dataRows.map(row => {
-          // Smart column mapping based on header names
+          // Smart column mapping based on header names - try exact matches first, then partial matches
           const getValueByHeaders = (searchTerms: string[]) => {
+            // First try exact matches
             for (const term of searchTerms) {
-              const index = headers.findIndex(h => h.includes(term));
-              if (index !== -1 && row[index] !== undefined && row[index] !== null && row[index] !== '') {
-                return String(row[index]).trim();
+              const exactIndex = headers.findIndex(h => h === term.toLowerCase());
+              if (exactIndex !== -1 && row[exactIndex] !== undefined && row[exactIndex] !== null && row[exactIndex] !== '') {
+                return String(row[exactIndex]).trim();
+              }
+            }
+            // Then try partial matches
+            for (const term of searchTerms) {
+              const partialIndex = headers.findIndex(h => h.includes(term.toLowerCase()));
+              if (partialIndex !== -1 && row[partialIndex] !== undefined && row[partialIndex] !== null && row[partialIndex] !== '') {
+                return String(row[partialIndex]).trim();
               }
             }
             return '';
@@ -307,30 +318,38 @@ export function JobApplications() {
 
           // Get date values with proper conversion
           const getDateByHeaders = (searchTerms: string[]) => {
+            // First try exact matches
             for (const term of searchTerms) {
-              const index = headers.findIndex(h => h.includes(term));
-              if (index !== -1 && row[index] !== undefined && row[index] !== null && row[index] !== '') {
-                return convertExcelDate(row[index]);
+              const exactIndex = headers.findIndex(h => h === term.toLowerCase());
+              if (exactIndex !== -1 && row[exactIndex] !== undefined && row[exactIndex] !== null && row[exactIndex] !== '') {
+                return convertExcelDate(row[exactIndex]);
+              }
+            }
+            // Then try partial matches
+            for (const term of searchTerms) {
+              const partialIndex = headers.findIndex(h => h.includes(term.toLowerCase()));
+              if (partialIndex !== -1 && row[partialIndex] !== undefined && row[partialIndex] !== null && row[partialIndex] !== '') {
+                return convertExcelDate(row[partialIndex]);
               }
             }
             return '';
           };
 
-          const rawApplyDate = getDateByHeaders(['date', 'applied', 'apply']) || row[3];
-          const rawResponseDate = getDateByHeaders(['response date', 'reply date']) || row[8];
+          const rawApplyDate = getDateByHeaders(['apply date', 'date applied', 'applied date', 'date', 'applied', 'apply']) || row[3];
+          const rawResponseDate = getDateByHeaders(['response date', 'reply date', 'date response']) || row[8];
 
           const application: Partial<InsertJobApplication> = {
-            appliedRoles: getValueByHeaders(['role', 'position', 'job', 'title']) || row[1] || "",
+            appliedRoles: getValueByHeaders(['applied roles', 'role', 'position', 'job title', 'job', 'title']) || row[1] || "",
             company: getValueByHeaders(['company', 'employer', 'organization']) || row[2] || "",
             applyDate: rawApplyDate ? convertExcelDate(rawApplyDate) : new Date().toISOString().split('T')[0],
-            whereApplied: getValueByHeaders(['where', 'source', 'platform', 'site']) || row[4] || "Other",
-            credentialsUsed: getValueByHeaders(['credential', 'resume', 'cv']) || row[5] || "",
-            commentsInformation: getValueByHeaders(['comment', 'note', 'information']) || row[6] || "",
-            response: getValueByHeaders(['response', 'status', 'result']) || row[7] || "No Response",
+            whereApplied: getValueByHeaders(['where applied', 'where', 'source', 'platform', 'site', 'applied via']) || row[4] || "",
+            credentialsUsed: getValueByHeaders(['credentialsused', 'credentials used', 'credentials', 'login', 'account']) || row[5] || "",
+            commentsInformation: getValueByHeaders(['comments-information', 'comments information', 'comments', 'comment', 'notes', 'note', 'information']) || row[6] || "",
+            response: getValueByHeaders(['response', 'status', 'result', 'outcome']) || row[7] || "No Response",
             responseDate: rawResponseDate ? convertExcelDate(rawResponseDate) : "",
-            locationCity: getValueByHeaders(['city', 'location city']) || row[9] || "",
-            locationCountry: getValueByHeaders(['country', 'location country']) || row[10] || "",
-            interviewComments: getValueByHeaders(['interview', 'feedback']) || row[12] || ""
+            locationCity: getValueByHeaders(['location city', 'city', 'location']) || row[9] || "",
+            locationCountry: getValueByHeaders(['location country', 'country']) || row[10] || "",
+            interviewComments: getValueByHeaders(['interviewcomments', 'interview comments', 'interview', 'feedback', 'interview notes']) || row[12] || ""
           };
 
           // Validate required fields
@@ -338,47 +357,47 @@ export function JobApplications() {
             return null;
           }
 
-          // Clean and validate response status
-          const validResponses = ["No Response", "Interview", "Offer", "Rejected", "Other"];
-          if (application.response && !validResponses.includes(application.response)) {
-            // Try to map common response variations
+          // Map response status according to user requirements
+          if (application.response) {
             const responseMap: { [key: string]: string } = {
-              'no': 'No Response',
-              'none': 'No Response',
-              'pending': 'No Response',
-              'waiting': 'No Response',
-              'interview': 'Interview',
-              'phone': 'Interview',
-              'call': 'Interview',
-              'meeting': 'Interview',
-              'offer': 'Offer',
-              'accepted': 'Offer',
-              'hired': 'Offer',
-              'rejected': 'Rejected',
-              'declined': 'Rejected',
-              'denied': 'Rejected'
+              'on going': 'Open',
+              'ongoing': 'Open',
+              'negatif': 'Rejected',
+              'negative': 'Rejected',
+              'under interview': 'Under Interview',
+              'interview': 'Under Interview',
+              'no response': 'No Response',
+              'declined': 'WithDrawn',
+              'rejected': 'WithDrawn',
+              'withdraw': 'WithDrawn',
+              'withdrawn': 'WithDrawn'
             };
             
-            const normalizedResponse = application.response.toLowerCase();
-            application.response = responseMap[normalizedResponse] || "Other";
+            const normalizedResponse = application.response.toLowerCase().trim();
+            application.response = responseMap[normalizedResponse] || application.response;
           }
 
-          // Clean and validate where applied
-          const validSources = ["LinkedIn", "Indeed", "Company Website", "Referral", "Other"];
-          if (application.whereApplied && !validSources.includes(application.whereApplied)) {
-            // Try to map common source variations
-            const sourceMap: { [key: string]: string } = {
-              'linkedin': 'LinkedIn',
-              'indeed': 'Indeed',
-              'website': 'Company Website',
-              'company': 'Company Website',
-              'direct': 'Company Website',
-              'referral': 'Referral',
-              'reference': 'Referral'
-            };
-            
-            const normalizedSource = application.whereApplied.toLowerCase();
-            application.whereApplied = sourceMap[normalizedSource] || "Other";
+          // For whereApplied, preserve the original text but validate against allowed values
+          if (application.whereApplied) {
+            const validSources = ["LinkedIn", "Indeed", "Company Website", "Referral", "Other"];
+            if (!validSources.includes(application.whereApplied)) {
+              // Try to map common source variations but preserve if it doesn't match
+              const sourceMap: { [key: string]: string } = {
+                'linkedin': 'LinkedIn',
+                'indeed': 'Indeed',
+                'website': 'Company Website',
+                'company website': 'Company Website',
+                'company': 'Company Website',
+                'direct': 'Company Website',
+                'referral': 'Referral',
+                'reference': 'Referral'
+              };
+              
+              const normalizedSource = application.whereApplied.toLowerCase().trim();
+              application.whereApplied = sourceMap[normalizedSource] || "Other";
+            }
+          } else {
+            application.whereApplied = "Other";
           }
 
           return application;
@@ -439,6 +458,7 @@ export function JobApplications() {
         try {
           // Clean up the application data before sending
           const cleanApplication: InsertJobApplication = {
+            userId: 1, // This will be set by the authenticated user in the backend
             appliedRoles: application.appliedRoles?.trim() || "",
             company: application.company?.trim() || "",
             applyDate: application.applyDate || new Date().toISOString().split('T')[0],
@@ -737,9 +757,12 @@ export function JobApplications() {
               <SelectContent>
                 <SelectItem value="all">All Responses</SelectItem>
                 <SelectItem value="No Response">No Response</SelectItem>
+                <SelectItem value="Open">Open</SelectItem>
+                <SelectItem value="Under Interview">Under Interview</SelectItem>
                 <SelectItem value="Interview">Interview</SelectItem>
                 <SelectItem value="Offer">Offer</SelectItem>
                 <SelectItem value="Rejected">Rejected</SelectItem>
+                <SelectItem value="WithDrawn">WithDrawn</SelectItem>
                 <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
@@ -1048,9 +1071,12 @@ function JobApplicationForm({ initialData, onSubmit, isLoading }: JobApplication
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="No Response">No Response</SelectItem>
+              <SelectItem value="Open">Open</SelectItem>
+              <SelectItem value="Under Interview">Under Interview</SelectItem>
               <SelectItem value="Interview">Interview</SelectItem>
               <SelectItem value="Offer">Offer</SelectItem>
               <SelectItem value="Rejected">Rejected</SelectItem>
+              <SelectItem value="WithDrawn">WithDrawn</SelectItem>
               <SelectItem value="Other">Other</SelectItem>
             </SelectContent>
           </Select>
