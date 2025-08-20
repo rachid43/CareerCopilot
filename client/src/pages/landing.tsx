@@ -87,13 +87,6 @@ export function Landing() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth
           </p>
-          <Button 
-            size="lg" 
-            className="bg-primary hover:bg-orange-600 text-white px-8 py-3"
-            onClick={() => window.location.href = '/api/login'}
-          >
-            {t('getStarted')}
-          </Button>
         </div>
 
         {/* Features */}
