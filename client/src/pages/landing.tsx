@@ -111,8 +111,8 @@ export function Landing() {
         {/* Demo Video Section */}
         <div className="max-w-4xl mx-auto mb-16">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">See CareerCopilot in Action</h2>
-            <p className="text-lg text-gray-600">Watch how our AI transforms your career documents in minutes</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Watch CareerCopilot in Action</h2>
+            <p className="text-lg text-gray-600">Experience How AI Helps You Build Job-Winning Applications — Fast</p>
           </div>
           
           <Card className="overflow-hidden shadow-xl">
