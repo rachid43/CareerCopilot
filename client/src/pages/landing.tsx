@@ -291,7 +291,7 @@ export function Landing() {
 
         {/* Footer */}
         <div className="text-center mt-16 text-gray-500">
-          <p>Powered by OpenAI GPT-4o • Secure • Fast • Professional</p>
+          <p>AI powered • Secure • Fast • Professional</p>
         </div>
       </div>
     </div>
