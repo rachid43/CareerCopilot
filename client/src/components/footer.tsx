@@ -8,7 +8,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-sm text-gray-600">
-            © 2025 CareerCopilot. {t('allRightsReserved')}.
+            © 2025 Career<span className="text-primary">Copilot</span>. {t('allRightsReserved')}.
           </div>
           
           <div className="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">

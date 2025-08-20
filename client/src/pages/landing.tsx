@@ -86,7 +86,7 @@ export function Landing() {
               alt="CareerCopilot" 
               className="w-10 h-10 mr-3"
             />
-            <span className="text-xl font-bold text-gray-900">CareerCopilot</span>
+            <span className="text-xl font-bold text-gray-900">Career<span className="text-primary">Copilot</span></span>
           </div>
           <div className="flex items-center gap-4">
             <LanguageSelector />
@@ -104,7 +104,7 @@ export function Landing() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">CareerCopilot</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
           <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
             Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth
           </h2>
@@ -135,7 +135,7 @@ export function Landing() {
         {/* Demo Video Section */}
         <div className="max-w-4xl mx-auto mb-16">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Watch CareerCopilot in Action</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Watch Career<span className="text-primary">Copilot</span> in Action</h2>
             <p className="text-lg text-gray-600">Experience How AI Helps You Build Job-Winning Applications — Fast</p>
           </div>
           
@@ -151,7 +151,7 @@ export function Landing() {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">Demo Video Coming Soon</h3>
                   <p className="text-gray-600">
-                    See how CareerCopilot helps users create professional CVs,<br/>
+                    See how Career<span className="text-primary">Copilot</span> helps users create professional CVs,<br/>
                     get detailed feedback, and chat with our AI career mentor
                   </p>
                 </div>

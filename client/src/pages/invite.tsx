@@ -84,12 +84,12 @@ export default function InvitePage() {
             </div>
             <CardTitle className="text-green-600">Account Created!</CardTitle>
             <CardDescription>
-              Your CareerCopilot account has been successfully created.
+              Your Career<span className="text-primary">Copilot</span> account has been successfully created.
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-sm text-muted-foreground mb-4">
-              You can now log in to start using CareerCopilot to create, review, and assess your CVs and cover letters.
+              You can now log in to start using Career<span className="text-primary">Copilot</span> to create, review, and assess your CVs and cover letters.
             </p>
             <Button 
               onClick={() => window.location.href = "/"}
@@ -110,7 +110,7 @@ export default function InvitePage() {
           <div className="mx-auto w-12 h-12 bg-[#F08A5D] bg-opacity-10 rounded-full flex items-center justify-center mb-4">
             <UserPlus className="h-6 w-6 text-[#F08A5D]" />
           </div>
-          <CardTitle>Welcome to CareerCopilot</CardTitle>
+          <CardTitle>Welcome to Career<span className="text-primary">Copilot</span></CardTitle>
           <CardDescription>
             Complete your account setup to get started with AI-powered career assistance.
           </CardDescription>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import React from 'react';
 
 export type Language = 'nl' | 'en' | 'ar' | 'tr';
 
@@ -6,7 +7,7 @@ export type Language = 'nl' | 'en' | 'ar' | 'tr';
 export const translations = {
   nl: {
     // Header
-    appTitle: 'CareerCopilot',
+    appTitle: 'Career<span className="text-primary">Copilot</span>',
     appSubtitle: 'AI-Aangedreven Carrière Assistent',
     logout: 'Uitloggen',
     
@@ -35,7 +36,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'Kies uw AI Modus',
-    aiModeSubtitle: 'Selecteer hoe u wilt dat CareerCopilot u helpt',
+    aiModeSubtitle: 'Selecteer hoe u wilt dat Career<span className="text-primary">Copilot</span> u helpt',
     createMode: 'Aanmaken',
     reviewMode: 'Beoordelen', 
     assessMode: 'Evalueren',
@@ -169,7 +170,7 @@ export const translations = {
   },
   en: {
     // Header
-    appTitle: 'CareerCopilot',
+    appTitle: 'Career<span className="text-primary">Copilot</span>',
     appSubtitle: 'AI-Powered Career Assistant',
     logout: 'Logout',
     
@@ -198,7 +199,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'Choose Your AI Mode',
-    aiModeSubtitle: 'Select how you want CareerCopilot to help you',
+    aiModeSubtitle: 'Select how you want Career<span className="text-primary">Copilot</span> to help you',
     createMode: 'Create',
     reviewMode: 'Review',
     assessMode: 'Assess',
@@ -332,7 +333,7 @@ export const translations = {
   },
   ar: {
     // Header
-    appTitle: 'CareerCopilot',
+    appTitle: 'Career<span className="text-primary">Copilot</span>',
     appSubtitle: 'مساعد المهنة المدعوم بالذكاء الاصطناعي',
     logout: 'تسجيل الخروج',
     
@@ -361,7 +362,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'اختر وضع الذكاء الاصطناعي',
-    aiModeSubtitle: 'حدد كيف تريد من CareerCopilot أن يساعدك',
+    aiModeSubtitle: 'حدد كيف تريد من Career<span className="text-primary">Copilot</span> أن يساعدك',
     createMode: 'إنشاء',
     reviewMode: 'مراجعة',
     assessMode: 'تقييم',
@@ -495,7 +496,7 @@ export const translations = {
   },
   tr: {
     // Header
-    appTitle: 'CareerCopilot',
+    appTitle: 'Career<span className="text-primary">Copilot</span>',
     appSubtitle: 'AI Destekli Kariyer Asistanı',
     logout: 'Çıkış Yap',
     
@@ -524,7 +525,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'AI Modunuzu Seçin',
-    aiModeSubtitle: 'CareerCopilot\'un size nasıl yardım etmesini istediğinizi seçin',
+    aiModeSubtitle: 'Career<span className="text-primary">Copilot</span>\'un size nasıl yardım etmesini istediğinizi seçin',
     createMode: 'Oluştur',
     reviewMode: 'İncele',
     assessMode: 'Değerlendir',
@@ -670,6 +671,16 @@ let globalLanguage: Language = (() => {
 const listeners: (() => void)[] = [];
 
 // Language context hook
+// Helper component to render CareerCopilot with styled "Copilot"
+export function CareerCopilotText({ className = "" }: { className?: string }): JSX.Element {
+  return React.createElement(
+    'span', 
+    { className }, 
+    'Career',
+    React.createElement('span', { className: 'text-primary' }, 'Copilot')
+  );
+}
+
 export function useLanguage() {
   const [language, setLanguage] = useState<Language>(globalLanguage);
 

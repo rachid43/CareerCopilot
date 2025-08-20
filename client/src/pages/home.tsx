@@ -154,7 +154,9 @@ export default function Home() {
                 <Bot className="text-white" size={20} />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-900">{t('appTitle')}</h1>
+                <h1 className="text-xl font-bold text-neutral-900">
+                  <span dangerouslySetInnerHTML={{ __html: t('appTitle') }} />
+                </h1>
                 <p className="text-sm text-secondary">{t('appSubtitle')}</p>
               </div>
             </div>
