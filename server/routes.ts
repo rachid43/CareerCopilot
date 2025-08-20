@@ -4,7 +4,7 @@ import multer from "multer";
 import OpenAI from "openai";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema, insertChatConversationSchema, insertChatMessageSchema } from "@shared/schema";
+import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema, insertChatConversationSchema, insertChatMessageSchema, insertJobApplicationSchema } from "@shared/schema";
 import { sendEmailWithFallback, generateInvitationEmail } from "./emailServiceSMTP";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -1054,6 +1054,161 @@ USER MESSAGE: ${content}`;
       res.json({ userMessage, aiMessage });
     } catch (error: any) {
       res.status(500).json({ message: `Failed to send message: ${error.message}` });
+    }
+  });
+
+  // Job Applications Tracker routes
+  
+  // Get all job applications for current user
+  app.get("/api/job-applications", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const applications = await storage.getJobApplications(user.id);
+      res.json(applications);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to fetch job applications: ${error.message}` });
+    }
+  });
+  
+  // Create new job application
+  app.post("/api/job-applications", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Validate request body
+      const validationResult = insertJobApplicationSchema.safeParse({
+        ...req.body,
+        userId: user.id
+      });
+      
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: fromZodError(validationResult.error).toString()
+        });
+      }
+      
+      const application = await storage.createJobApplication(validationResult.data);
+      res.status(201).json(application);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to create job application: ${error.message}` });
+    }
+  });
+  
+  // Update job application
+  app.put("/api/job-applications/:id", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      const applicationId = parseInt(req.params.id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Validate request body (partial update)
+      const updateSchema = insertJobApplicationSchema.partial();
+      const validationResult = updateSchema.safeParse(req.body);
+      
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: fromZodError(validationResult.error).toString()
+        });
+      }
+      
+      const updatedApplication = await storage.updateJobApplication(applicationId, validationResult.data);
+      
+      if (!updatedApplication) {
+        return res.status(404).json({ message: "Job application not found" });
+      }
+      
+      res.json(updatedApplication);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to update job application: ${error.message}` });
+    }
+  });
+  
+  // Delete job application
+  app.delete("/api/job-applications/:id", isAuthenticated, async (req, res) => {
+    try {
+      const applicationId = parseInt(req.params.id);
+      const success = await storage.deleteJobApplication(applicationId);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Job application not found" });
+      }
+      
+      res.json({ message: "Job application deleted successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to delete job application: ${error.message}` });
+    }
+  });
+  
+  // Get job applications dashboard summary
+  app.get("/api/job-applications/dashboard", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const applications = await storage.getJobApplications(user.id);
+      
+      // Calculate dashboard statistics
+      const totalApplications = applications.length;
+      const responses = applications.filter(app => app.response && app.response !== 'No Response');
+      const interviews = applications.filter(app => app.response === 'Interview');
+      const offers = applications.filter(app => app.response === 'Offer');
+      const rejections = applications.filter(app => app.response === 'Rejected');
+      
+      // Calculate follow-up reminders (45+ days without response)
+      const now = new Date();
+      const followUpReminders = applications.filter(app => {
+        if (app.response && app.response !== 'No Response') return false;
+        const applyDate = new Date(app.applyDate);
+        const daysSinceApplication = Math.floor((now.getTime() - applyDate.getTime()) / (1000 * 60 * 60 * 24));
+        return daysSinceApplication >= 45;
+      });
+      
+      // Calculate late follow-ups (60+ days without response)
+      const lateFollowUps = applications.filter(app => {
+        if (app.response && app.response !== 'No Response') return false;
+        const applyDate = new Date(app.applyDate);
+        const daysSinceApplication = Math.floor((now.getTime() - applyDate.getTime()) / (1000 * 60 * 60 * 24));
+        return daysSinceApplication >= 60;
+      });
+      
+      const summary = {
+        totalApplications,
+        totalResponses: responses.length,
+        interviews: interviews.length,
+        offers: offers.length,
+        rejections: rejections.length,
+        pendingResponse: totalApplications - responses.length,
+        followUpReminders: followUpReminders.length,
+        lateFollowUps: lateFollowUps.length,
+        responseRate: totalApplications > 0 ? Math.round((responses.length / totalApplications) * 100) : 0,
+        interviewRate: totalApplications > 0 ? Math.round((interviews.length / totalApplications) * 100) : 0,
+        offerRate: totalApplications > 0 ? Math.round((offers.length / totalApplications) * 100) : 0
+      };
+      
+      res.json(summary);
+    } catch (error: any) {
+      res.status(500).json({ message: `Failed to fetch dashboard data: ${error.message}` });
     }
   });
 

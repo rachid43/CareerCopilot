@@ -1,4 +1,4 @@
-import { users, profiles, documents, aiResults, userInvitations, chatConversations, chatMessages, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult, type UserInvitation, type InsertUserInvitation, type ChatConversation, type InsertChatConversation, type ChatMessage, type InsertChatMessage } from "@shared/schema";
+import { users, profiles, documents, aiResults, userInvitations, chatConversations, chatMessages, jobApplications, type User, type InsertUser, type Profile, type InsertProfile, type Document, type InsertDocument, type AiResult, type InsertAiResult, type UserInvitation, type InsertUserInvitation, type ChatConversation, type InsertChatConversation, type ChatMessage, type InsertChatMessage, type JobApplication, type InsertJobApplication } from "@shared/schema";
 import { db } from './db';
 import { eq, and, sql, desc } from 'drizzle-orm';
 
@@ -34,6 +34,12 @@ export interface IStorage {
   getConversationMessages(conversationId: number): Promise<ChatMessage[]>;
   createMessage(message: InsertChatMessage): Promise<ChatMessage>;
   updateConversationTitle(conversationId: number, title: string): Promise<ChatConversation | undefined>;
+  
+  // Job Applications methods
+  getJobApplications(userId: number): Promise<JobApplication[]>;
+  createJobApplication(application: InsertJobApplication): Promise<JobApplication>;
+  updateJobApplication(id: number, updates: Partial<InsertJobApplication>): Promise<JobApplication | undefined>;
+  deleteJobApplication(id: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -289,6 +295,43 @@ export class DatabaseStorage implements IStorage {
     
     return updatedConversation || undefined;
   }
+
+  // Job Applications methods implementation
+  async getJobApplications(userId: number): Promise<JobApplication[]> {
+    return await db
+      .select()
+      .from(jobApplications)
+      .where(eq(jobApplications.userId, userId))
+      .orderBy(desc(jobApplications.createdAt));
+  }
+
+  async createJobApplication(insertApplication: InsertJobApplication): Promise<JobApplication> {
+    const [application] = await db
+      .insert(jobApplications)
+      .values(insertApplication)
+      .returning();
+    return application;
+  }
+
+  async updateJobApplication(id: number, updates: Partial<InsertJobApplication>): Promise<JobApplication | undefined> {
+    const [updatedApplication] = await db
+      .update(jobApplications)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(jobApplications.id, id))
+      .returning();
+    
+    return updatedApplication || undefined;
+  }
+
+  async deleteJobApplication(id: number): Promise<boolean> {
+    try {
+      await db.delete(jobApplications).where(eq(jobApplications.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting job application:', error);
+      return false;
+    }
+  }
 }
 
 // Temporary in-memory storage to get app working while debugging Supabase connection
@@ -300,6 +343,7 @@ class MemoryStorage implements IStorage {
   private invitations: UserInvitation[] = [];
   private conversations: ChatConversation[] = [];
   private messages: ChatMessage[] = [];
+  private jobApplications: JobApplication[] = [];
   private nextId = 1;
 
   async getUser(id: number): Promise<User | undefined> {
@@ -448,6 +492,40 @@ class MemoryStorage implements IStorage {
     (conversation as any).title = title;
     (conversation as any).updatedAt = new Date();
     return conversation;
+  }
+
+  // Job Applications methods for MemoryStorage
+  async getJobApplications(userId: number): Promise<JobApplication[]> {
+    return this.jobApplications.filter(app => app.userId === userId);
+  }
+
+  async createJobApplication(application: InsertJobApplication): Promise<JobApplication> {
+    const newApplication = { 
+      ...application, 
+      id: this.nextId++, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    } as JobApplication;
+    this.jobApplications.push(newApplication);
+    return newApplication;
+  }
+
+  async updateJobApplication(id: number, updates: Partial<InsertJobApplication>): Promise<JobApplication | undefined> {
+    const index = this.jobApplications.findIndex(app => app.id === id);
+    if (index === -1) return undefined;
+    this.jobApplications[index] = { 
+      ...this.jobApplications[index], 
+      ...updates, 
+      updatedAt: new Date() 
+    };
+    return this.jobApplications[index];
+  }
+
+  async deleteJobApplication(id: number): Promise<boolean> {
+    const index = this.jobApplications.findIndex(app => app.id === id);
+    if (index === -1) return false;
+    this.jobApplications.splice(index, 1);
+    return true;
   }
 }
 

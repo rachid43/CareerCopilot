@@ -7,7 +7,8 @@ import {
   varchar, 
   jsonb,
   boolean,
-  index
+  index,
+  date
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -93,6 +94,25 @@ export const userInvitations = pgTable("user_invitations", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Job Applications Tracker table
+export const jobApplications = pgTable("job_applications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  appliedRoles: text("applied_roles").notNull(),
+  company: text("company").notNull(),
+  applyDate: date("apply_date").notNull(),
+  whereApplied: text("where_applied").notNull(), // 'LinkedIn' | 'Website' | 'Referral' | 'Other'
+  credentialsUsed: text("credentials_used"),
+  commentsInformation: text("comments_information"),
+  response: text("response").notNull().default("No Response"), // 'No Response' | 'Interview' | 'Offer' | 'Rejected' | 'Other'
+  responseDate: date("response_date"),
+  locationCity: text("location_city"),
+  locationCountry: text("location_country"),
+  interviewComments: text("interview_comments"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -127,6 +147,12 @@ export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({
   createdAt: true,
 });
 
+export const insertJobApplicationSchema = createInsertSchema(jobApplications).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Profile = typeof profiles.$inferSelect;
@@ -141,3 +167,5 @@ export type ChatConversation = typeof chatConversations.$inferSelect;
 export type InsertChatConversation = z.infer<typeof insertChatConversationSchema>;
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+export type JobApplication = typeof jobApplications.$inferSelect;
+export type InsertJobApplication = z.infer<typeof insertJobApplicationSchema>;

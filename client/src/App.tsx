@@ -11,6 +11,7 @@ import ChatPage from "@/pages/chat";
 import { Landing } from "@/pages/landing";
 import AdminPanel from "@/pages/admin";
 import InvitePage from "@/pages/invite";
+import { JobApplications } from "@/pages/job-applications";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -25,6 +26,7 @@ function Router() {
         <>
           <Route path="/" component={Home} />
           <Route path="/chat" component={ChatPage} />
+          <Route path="/job-applications" component={JobApplications} />
           <Route path="/admin" component={AdminPanel} />
         </>
       )}
