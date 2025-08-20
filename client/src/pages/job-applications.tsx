@@ -296,21 +296,33 @@ export function JobApplications() {
         console.log('Headers found:', headers);
         console.log('First 3 data rows:', dataRows.slice(0, 3));
         
+        // Debug header mapping
+        console.log('Header index mapping:');
+        headers.forEach((header, index) => {
+          console.log(`Index ${index}: "${header}"`);
+        });
+        
         const importedApplications = dataRows.map(row => {
           // Smart column mapping based on header names - try exact matches first, then partial matches
           const getValueByHeaders = (searchTerms: string[]) => {
             // First try exact matches
             for (const term of searchTerms) {
               const exactIndex = headers.findIndex(h => h === term.toLowerCase());
-              if (exactIndex !== -1 && row[exactIndex] !== undefined && row[exactIndex] !== null && row[exactIndex] !== '') {
-                return String(row[exactIndex]).trim();
+              if (exactIndex !== -1) {
+                const value = row[exactIndex];
+                if (value !== undefined && value !== null && value !== '') {
+                  return String(value).trim();
+                }
               }
             }
             // Then try partial matches
             for (const term of searchTerms) {
               const partialIndex = headers.findIndex(h => h.includes(term.toLowerCase()));
-              if (partialIndex !== -1 && row[partialIndex] !== undefined && row[partialIndex] !== null && row[partialIndex] !== '') {
-                return String(row[partialIndex]).trim();
+              if (partialIndex !== -1) {
+                const value = row[partialIndex];
+                if (value !== undefined && value !== null && value !== '') {
+                  return String(value).trim();
+                }
               }
             }
             return '';
@@ -321,35 +333,52 @@ export function JobApplications() {
             // First try exact matches
             for (const term of searchTerms) {
               const exactIndex = headers.findIndex(h => h === term.toLowerCase());
-              if (exactIndex !== -1 && row[exactIndex] !== undefined && row[exactIndex] !== null && row[exactIndex] !== '') {
-                return convertExcelDate(row[exactIndex]);
+              if (exactIndex !== -1) {
+                const value = row[exactIndex];
+                if (value !== undefined && value !== null && value !== '') {
+                  return convertExcelDate(value);
+                }
               }
             }
             // Then try partial matches
             for (const term of searchTerms) {
               const partialIndex = headers.findIndex(h => h.includes(term.toLowerCase()));
-              if (partialIndex !== -1 && row[partialIndex] !== undefined && row[partialIndex] !== null && row[partialIndex] !== '') {
-                return convertExcelDate(row[partialIndex]);
+              if (partialIndex !== -1) {
+                const value = row[partialIndex];
+                if (value !== undefined && value !== null && value !== '') {
+                  return convertExcelDate(value);
+                }
               }
             }
             return '';
           };
 
-          const rawApplyDate = getDateByHeaders(['apply date', 'date applied', 'applied date', 'date', 'applied', 'apply']) || row[3];
-          const rawResponseDate = getDateByHeaders(['response date', 'reply date', 'date response']) || row[8];
+          const rawApplyDate = getDateByHeaders(['applydate', 'apply date', 'date applied', 'applied date', 'date', 'applied', 'apply']) || row[3];
+          const rawResponseDate = getDateByHeaders(['responsedate', 'response date', 'reply date', 'date response']) || row[8];
+
+          // Debug field mapping for first row
+          if (dataRows.indexOf(row) === 0) {
+            console.log('Field mapping for first row:');
+            console.log('credentialsUsed from header search:', getValueByHeaders(['credentialsused', 'credentials used', 'credentials', 'login', 'account']));
+            console.log('credentialsUsed from row[5]:', row[5]);
+            console.log('commentsInformation from header search:', getValueByHeaders(['comments-information', 'comments information', 'comments', 'comment', 'notes', 'note', 'information']));
+            console.log('commentsInformation from row[6]:', row[6]);
+            console.log('whereApplied from header search:', getValueByHeaders(['where applied', 'where', 'source', 'platform', 'site', 'applied via']));
+            console.log('whereApplied from row[4]:', row[4]);
+          }
 
           const application: Partial<InsertJobApplication> = {
-            appliedRoles: getValueByHeaders(['applied roles', 'role', 'position', 'job title', 'job', 'title']) || row[1] || "",
-            company: getValueByHeaders(['company', 'employer', 'organization']) || row[2] || "",
+            appliedRoles: getValueByHeaders(['applied roles', 'role', 'position', 'job title', 'job', 'title']) || String(row[1] || ""),
+            company: getValueByHeaders(['company', 'employer', 'organization']) || String(row[2] || ""),
             applyDate: rawApplyDate ? convertExcelDate(rawApplyDate) : new Date().toISOString().split('T')[0],
-            whereApplied: getValueByHeaders(['where applied', 'where', 'source', 'platform', 'site', 'applied via']) || row[4] || "",
-            credentialsUsed: getValueByHeaders(['credentialsused', 'credentials used', 'credentials', 'login', 'account']) || row[5] || "",
-            commentsInformation: getValueByHeaders(['comments-information', 'comments information', 'comments', 'comment', 'notes', 'note', 'information']) || row[6] || "",
-            response: getValueByHeaders(['response', 'status', 'result', 'outcome']) || row[7] || "No Response",
+            whereApplied: getValueByHeaders(['where applied', 'where', 'source', 'platform', 'site', 'applied via']) || String(row[4] || ""),
+            credentialsUsed: getValueByHeaders(['credentialsused', 'credentials used', 'credentials', 'login', 'account']) || String(row[5] || ""),
+            commentsInformation: getValueByHeaders(['comments-information', 'comments information', 'comments', 'comment', 'notes', 'note', 'information']) || String(row[6] || ""),
+            response: getValueByHeaders(['response', 'status', 'result', 'outcome']) || String(row[7] || "No Response"),
             responseDate: rawResponseDate ? convertExcelDate(rawResponseDate) : "",
-            locationCity: getValueByHeaders(['location city', 'city', 'location']) || row[9] || "",
-            locationCountry: getValueByHeaders(['location country', 'country']) || row[10] || "",
-            interviewComments: getValueByHeaders(['interviewcomments', 'interview comments', 'interview', 'feedback', 'interview notes']) || row[12] || ""
+            locationCity: getValueByHeaders(['locationcity', 'location city', 'city', 'location']) || String(row[9] || ""),
+            locationCountry: getValueByHeaders(['locationcountry', 'location country', 'country']) || String(row[10] || ""),
+            interviewComments: getValueByHeaders(['interviewcomments', 'interview comments', 'interview', 'feedback', 'interview notes']) || String(row[12] || "")
           };
 
           // Validate required fields
@@ -377,25 +406,25 @@ export function JobApplications() {
             application.response = responseMap[normalizedResponse] || application.response;
           }
 
-          // For whereApplied, preserve the original text but validate against allowed values
+          // For whereApplied, try to map to known platforms but preserve original text if no match
           if (application.whereApplied) {
-            const validSources = ["LinkedIn", "Indeed", "Company Website", "Referral", "Other"];
-            if (!validSources.includes(application.whereApplied)) {
-              // Try to map common source variations but preserve if it doesn't match
-              const sourceMap: { [key: string]: string } = {
-                'linkedin': 'LinkedIn',
-                'indeed': 'Indeed',
-                'website': 'Company Website',
-                'company website': 'Company Website',
-                'company': 'Company Website',
-                'direct': 'Company Website',
-                'referral': 'Referral',
-                'reference': 'Referral'
-              };
-              
-              const normalizedSource = application.whereApplied.toLowerCase().trim();
-              application.whereApplied = sourceMap[normalizedSource] || "Other";
+            const sourceMap: { [key: string]: string } = {
+              'linkedin': 'LinkedIn',
+              'indeed': 'Indeed',
+              'website': 'Company Website',
+              'company website': 'Company Website',
+              'company site': 'Company Website',
+              'direct': 'Company Website',
+              'referral': 'Referral',
+              'reference': 'Referral'
+            };
+            
+            const normalizedSource = application.whereApplied.toLowerCase().trim();
+            // Only map if we have an exact match, otherwise preserve original text
+            if (sourceMap[normalizedSource]) {
+              application.whereApplied = sourceMap[normalizedSource];
             }
+            // Keep the original text for things like "site nike", "site CCE", etc.
           } else {
             application.whereApplied = "Other";
           }
@@ -506,7 +535,10 @@ export function JobApplications() {
     const variants: Record<string, string> = {
       "Offer": "bg-green-500 text-white",
       "Interview": "bg-blue-500 text-white", 
+      "Under Interview": "bg-indigo-500 text-white",
+      "Open": "bg-yellow-500 text-black",
       "Rejected": "bg-red-500 text-white",
+      "WithDrawn": "bg-orange-500 text-white",
       "No Response": "bg-gray-500 text-white",
       "Other": "bg-purple-500 text-white"
     };
