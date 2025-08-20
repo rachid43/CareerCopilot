@@ -138,6 +138,10 @@ The application uses four main tables:
 - **January 2025**: Redesigned navigation with login button in header next to language selector for better UX
 - **January 2025**: Implemented comprehensive SEO optimization with meta tags, Open Graph, Twitter cards, and structured data
 - **January 2025**: Added appealing background with subtle geometric pattern and branded color gradients
+- **January 2025**: Enhanced Job Applications Tracker with CSV/Excel import functionality with intelligent column mapping
+- **January 2025**: Added drag-and-drop file upload interface for importing existing job tracking files
+- **January 2025**: Upgraded export capabilities to support both CSV and Excel (.xlsx) formats
+- **January 2025**: Implemented smart field mapping for various column naming conventions during import
 
 ### Superadmin Features
 

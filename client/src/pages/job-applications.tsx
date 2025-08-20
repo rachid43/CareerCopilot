@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,8 +11,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Plus, Edit2, Trash2, Download, Search, Filter, Calendar, Building, MapPin, Eye } from "lucide-react";
+import { Plus, Edit2, Trash2, Download, Upload, Search, Filter, Calendar, Building, MapPin, Eye, FileSpreadsheet } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
+import * as XLSX from 'xlsx';
 import type { JobApplication, InsertJobApplication } from "@shared/schema";
 
 interface DashboardSummary {
@@ -36,11 +37,13 @@ export function JobApplications() {
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingApplication, setEditingApplication] = useState<JobApplication | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterResponse, setFilterResponse] = useState<string>("all");
   const [sortField, setSortField] = useState<keyof JobApplication>("applyDate");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch job applications
   const { data: applications = [], isLoading } = useQuery<JobApplication[]>({
@@ -161,15 +164,15 @@ export function JobApplications() {
     return daysSince >= 60;
   };
 
-  // Export to CSV
-  const exportToCSV = () => {
+  // Export to CSV/Excel
+  const exportData = (format: 'csv' | 'xlsx') => {
     const headers = [
       "ID", "Applied Roles", "Company", "Apply Date", "Where Applied", 
       "Credentials Used", "Comments", "Response", "Response Date", 
       "Location City", "Location Country", "Response Time (Days)", "Interview Comments"
     ];
     
-    const csvData = (applications as JobApplication[]).map((app: JobApplication) => [
+    const data = (applications as JobApplication[]).map((app: JobApplication) => [
       app.id,
       app.appliedRoles,
       app.company,
@@ -185,19 +188,202 @@ export function JobApplications() {
       app.interviewComments || ""
     ]);
 
-    const csvContent = [headers, ...csvData]
-      .map(row => row.map(field => `"${field}"`).join(","))
-      .join("\n");
+    const exportData = [headers, ...data];
+    const filename = `job-applications-${new Date().toISOString().split('T')[0]}`;
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `job-applications-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (format === 'csv') {
+      const csvContent = exportData
+        .map(row => row.map(field => `"${field}"`).join(","))
+        .join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `${filename}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      const ws = XLSX.utils.aoa_to_sheet(exportData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Job Applications");
+      XLSX.writeFile(wb, `${filename}.xlsx`);
+    }
+  };
+
+  // Import from CSV/Excel
+  const handleFileImport = (file: File) => {
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result;
+        let jsonData: any[][] = [];
+
+        if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+          // Parse CSV
+          const text = data as string;
+          const lines = text.split('\n').filter(line => line.trim());
+          jsonData = lines.map(line => {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+              const char = line[i];
+              if (char === '"') {
+                inQuotes = !inQuotes;
+              } else if (char === ',' && !inQuotes) {
+                result.push(current.trim().replace(/^"|"$/g, ''));
+                current = '';
+              } else {
+                current += char;
+              }
+            }
+            result.push(current.trim().replace(/^"|"$/g, ''));
+            return result.filter(cell => cell !== ''); // Remove empty cells
+          }).filter(row => row.length > 1); // Filter out empty rows
+        } else {
+          // Parse Excel
+          const workbook = XLSX.read(data, { type: 'binary' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+        }
+
+        if (jsonData.length < 2) {
+          toast({
+            title: "Import Error",
+            description: "File appears to be empty or has no data rows.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Skip header row and process data with intelligent column mapping
+        const headers = jsonData[0].map((h: string) => h?.toLowerCase().trim() || '');
+        const dataRows = jsonData.slice(1);
+        
+        const importedApplications = dataRows.map(row => {
+          // Smart column mapping based on header names
+          const getValueByHeaders = (searchTerms: string[]) => {
+            for (const term of searchTerms) {
+              const index = headers.findIndex(h => h.includes(term));
+              if (index !== -1 && row[index]) {
+                return String(row[index]).trim();
+              }
+            }
+            return '';
+          };
+
+          const application: Partial<InsertJobApplication> = {
+            appliedRoles: getValueByHeaders(['role', 'position', 'job', 'title']) || row[1] || "",
+            company: getValueByHeaders(['company', 'employer', 'organization']) || row[2] || "",
+            applyDate: getValueByHeaders(['date', 'applied', 'apply']) || row[3] || new Date().toISOString().split('T')[0],
+            whereApplied: getValueByHeaders(['where', 'source', 'platform', 'site']) || row[4] || "Other",
+            credentialsUsed: getValueByHeaders(['credential', 'resume', 'cv']) || row[5] || "",
+            commentsInformation: getValueByHeaders(['comment', 'note', 'information']) || row[6] || "",
+            response: getValueByHeaders(['response', 'status', 'result']) || row[7] || "No Response",
+            responseDate: getValueByHeaders(['response date', 'reply date']) || row[8] || "",
+            locationCity: getValueByHeaders(['city', 'location city']) || row[9] || "",
+            locationCountry: getValueByHeaders(['country', 'location country']) || row[10] || "",
+            interviewComments: getValueByHeaders(['interview', 'feedback']) || row[12] || ""
+          };
+
+          // Validate required fields
+          if (!application.appliedRoles || !application.company) {
+            return null;
+          }
+
+          // Validate response status
+          const validResponses = ["No Response", "Interview", "Offer", "Rejected", "Other"];
+          if (application.response && !validResponses.includes(application.response)) {
+            application.response = "Other";
+          }
+
+          // Validate where applied
+          const validSources = ["LinkedIn", "Indeed", "Company Website", "Referral", "Other"];
+          if (application.whereApplied && !validSources.includes(application.whereApplied)) {
+            application.whereApplied = "Other";
+          }
+
+          return application;
+        }).filter(Boolean) as InsertJobApplication[];
+
+        if (importedApplications.length === 0) {
+          toast({
+            title: "Import Error",
+            description: "No valid applications found. Please ensure your file has 'Applied Roles' and 'Company' columns.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Batch create applications
+        importApplications(importedApplications);
+        
+      } catch (error) {
+        console.error('Import error:', error);
+        toast({
+          title: "Import Error",
+          description: "Failed to parse the file. Please check the format and try again.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+      reader.readAsText(file);
+    } else {
+      reader.readAsBinaryString(file);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setIsImportModalOpen(false);
+  };
+
+  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleFileImport(file);
+    }
+  };
+
+  // Batch import applications
+  const importApplications = async (importData: InsertJobApplication[]) => {
+    try {
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const application of importData) {
+        try {
+          await createMutation.mutateAsync(application);
+          successCount++;
+        } catch (error) {
+          errorCount++;
+          console.error('Failed to import application:', application, error);
+        }
+      }
+
+      toast({
+        title: "Import Complete",
+        description: `Successfully imported ${successCount} applications. ${errorCount > 0 ? `${errorCount} failed.` : ''}`,
+        variant: successCount > 0 ? "default" : "destructive",
+      });
+
+    } catch (error) {
+      toast({
+        title: "Import Failed",
+        description: "Failed to import applications. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Response badge styling
@@ -242,10 +428,94 @@ export function JobApplications() {
           <p className="text-muted-foreground">Track and manage your job applications</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={exportToCSV} variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
+          <div className="flex gap-1">
+            <Button onClick={() => exportData('csv')} variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              CSV
+            </Button>
+            <Button onClick={() => exportData('xlsx')} variant="outline" size="sm">
+              <FileSpreadsheet className="h-4 w-4 mr-2" />
+              Excel
+            </Button>
+          </div>
+          <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Upload className="h-4 w-4 mr-2" />
+                Import
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Import Job Applications</DialogTitle>
+                <DialogDescription>
+                  Upload a CSV or Excel file with your job applications. The file should have columns for: Applied Roles, Company, Apply Date, Where Applied, etc.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="import-file">Select File</Label>
+                  <div className="space-y-4">
+                    <Input
+                      id="import-file"
+                      type="file"
+                      ref={fileInputRef}
+                      accept=".csv,.xlsx,.xls"
+                      onChange={handleFileInputChange}
+                      className="cursor-pointer"
+                    />
+                    <div 
+                      className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-muted-foreground/50 transition-colors"
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.add('border-primary');
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove('border-primary');
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove('border-primary');
+                        const files = Array.from(e.dataTransfer.files);
+                        const file = files[0];
+                        if (file && (file.type === 'text/csv' || file.name.endsWith('.csv') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+                          handleFileImport(file);
+                        } else {
+                          toast({
+                            title: "Invalid File",
+                            description: "Please upload a CSV or Excel file.",
+                            variant: "destructive",
+                          });
+                        }
+                      }}
+                    >
+                      <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        Drag and drop your CSV or Excel file here, or use the file input above
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  <p className="font-medium mb-2">Expected columns:</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Applied Roles (required)</li>
+                    <li>Company (required)</li>
+                    <li>Apply Date</li>
+                    <li>Where Applied</li>
+                    <li>Credentials Used</li>
+                    <li>Comments</li>
+                    <li>Response</li>
+                    <li>Response Date</li>
+                    <li>Location City</li>
+                    <li>Location Country</li>
+                    <li>Interview Comments</li>
+                  </ul>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
           <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
             <DialogTrigger asChild>
               <Button>
