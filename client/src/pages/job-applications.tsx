@@ -581,6 +581,8 @@ export function JobApplications() {
   const getResponseBadge = (response: string) => {
     const variants: Record<string, string> = {
       "Offer": "bg-green-500 text-white",
+      "accepted": "bg-green-500 text-white",
+      "Accepted": "bg-green-500 text-white",
       "Interview": "bg-blue-500 text-white", 
       "Under Interview": "bg-indigo-500 text-white",
       "Open": "bg-yellow-500 text-black",
