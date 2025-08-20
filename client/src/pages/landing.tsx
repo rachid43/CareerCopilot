@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PenTool, Brain, CheckCircle, Sparkles, MessageCircle, Globe, Upload, Download, Star, User } from "lucide-react";
+import { PenTool, Brain, CheckCircle, MessageCircle, Globe, Upload, Download, Star, User } from "lucide-react";
+import careerCopilotIcon from "@assets/ICON_CareerCopilot_1755719130597.png";
 import { LanguageSelector } from "@/components/language-selector";
 import { useLanguage } from "@/lib/i18n";
 import { useState, useEffect } from "react";
@@ -80,7 +81,11 @@ export function Landing() {
       <div className="w-full py-4 px-4">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <Sparkles className="text-primary mr-2" size={24} />
+            <img 
+              src={careerCopilotIcon} 
+              alt="CareerCopilot" 
+              className="w-6 h-6 mr-2"
+            />
             <span className="text-xl font-bold text-gray-900">CareerCopilot</span>
           </div>
           <div className="flex items-center gap-4">
