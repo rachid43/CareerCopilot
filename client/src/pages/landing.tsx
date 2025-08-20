@@ -60,20 +60,30 @@ export function Landing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
-      {/* Top Navigation with Language Selector */}
+      {/* Top Navigation with Language Selector and Login */}
       <div className="w-full py-4 px-4">
-        <div className="container mx-auto flex justify-end">
-          <LanguageSelector />
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center">
+            <Sparkles className="text-primary mr-2" size={24} />
+            <span className="text-xl font-bold text-gray-900">CareerCopilot</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <Button 
+              size="sm" 
+              className="bg-primary hover:bg-orange-600 text-white"
+              onClick={() => window.location.href = '/api/login'}
+            >
+              {t('getStarted')}
+            </Button>
+          </div>
         </div>
       </div>
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-4">
-            <Sparkles className="text-primary mr-3" size={32} />
-            <h1 className="text-4xl font-bold text-gray-900">CareerCopilot</h1>
-          </div>
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">CareerCopilot</h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth
           </p>
