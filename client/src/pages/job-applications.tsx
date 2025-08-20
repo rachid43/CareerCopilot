@@ -927,13 +927,13 @@ export function JobApplications() {
                   </TableHead>
                   <TableHead>Interview Notes</TableHead>
                   <TableHead>Response Time</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="w-[100px] sticky right-0 bg-background">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredApplications.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8">
+                    <TableCell colSpan={11} className="text-center py-8">
                       <div className="text-muted-foreground">
                         {applications.length === 0 
                           ? "No job applications yet. Add your first application!"
@@ -991,7 +991,7 @@ export function JobApplications() {
                         <TableCell>
                           {responseTime !== null ? `${responseTime} days` : '-'}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="w-[100px] sticky right-0 bg-background">
                           <div className="flex gap-1">
                             <Button
                               variant="ghost"
@@ -1000,6 +1000,7 @@ export function JobApplications() {
                                 setEditingApplication(app);
                                 setIsEditModalOpen(true);
                               }}
+                              title="Edit Application"
                             >
                               <Edit2 className="h-3 w-3" />
                             </Button>
@@ -1011,6 +1012,7 @@ export function JobApplications() {
                                   deleteMutation.mutate(app.id);
                                 }
                               }}
+                              title="Delete Application"
                             >
                               <Trash2 className="h-3 w-3" />
                             </Button>
