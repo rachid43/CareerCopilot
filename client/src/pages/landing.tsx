@@ -59,7 +59,13 @@ export function Landing() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div 
+      className="min-h-screen relative"
+      style={{
+        backgroundImage: `linear-gradient(135deg, rgba(240, 138, 93, 0.1) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(240, 138, 93, 0.05) 100%), 
+                         url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F08A5D' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}
+    >
       {/* Top Navigation with Language Selector and Login */}
       <div className="w-full py-4 px-4">
         <div className="container mx-auto flex justify-between items-center">
@@ -84,9 +90,9 @@ export function Landing() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">CareerCopilot</h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
             Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth
-          </p>
+          </h2>
         </div>
 
         {/* Features */}
