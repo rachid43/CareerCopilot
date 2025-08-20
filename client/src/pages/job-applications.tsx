@@ -325,7 +325,7 @@ export function JobApplications() {
                 }
               }
             }
-            return '';
+            return null; // Return null instead of empty string to distinguish from empty values
           };
 
           // Get date values with proper conversion
@@ -367,18 +367,23 @@ export function JobApplications() {
             console.log('whereApplied from row[4]:', row[4]);
           }
 
+          // Use direct column access with proper null handling
+          const credentialsFromHeader = getValueByHeaders(['credentialsused', 'credentials used', 'credentials', 'login', 'account']);
+          const commentsFromHeader = getValueByHeaders(['comments-information', 'comments information', 'comments', 'comment', 'notes', 'note', 'information']);
+          const interviewFromHeader = getValueByHeaders(['interviewcomments', 'interview comments', 'interview', 'feedback', 'interview notes']);
+          
           const application: Partial<InsertJobApplication> = {
             appliedRoles: getValueByHeaders(['applied roles', 'role', 'position', 'job title', 'job', 'title']) || String(row[1] || ""),
             company: getValueByHeaders(['company', 'employer', 'organization']) || String(row[2] || ""),
             applyDate: rawApplyDate ? convertExcelDate(rawApplyDate) : new Date().toISOString().split('T')[0],
             whereApplied: getValueByHeaders(['where applied', 'where', 'source', 'platform', 'site', 'applied via']) || String(row[4] || ""),
-            credentialsUsed: getValueByHeaders(['credentialsused', 'credentials used', 'credentials', 'login', 'account']) || String(row[5] || ""),
-            commentsInformation: getValueByHeaders(['comments-information', 'comments information', 'comments', 'comment', 'notes', 'note', 'information']) || String(row[6] || ""),
+            credentialsUsed: credentialsFromHeader !== null ? credentialsFromHeader : (row[5] !== null && row[5] !== undefined ? String(row[5]) : ""),
+            commentsInformation: commentsFromHeader !== null ? commentsFromHeader : (row[6] !== null && row[6] !== undefined ? String(row[6]) : ""),
             response: getValueByHeaders(['response', 'status', 'result', 'outcome']) || String(row[7] || "No Response"),
             responseDate: rawResponseDate ? convertExcelDate(rawResponseDate) : "",
             locationCity: getValueByHeaders(['locationcity', 'location city', 'city', 'location']) || String(row[9] || ""),
             locationCountry: getValueByHeaders(['locationcountry', 'location country', 'country']) || String(row[10] || ""),
-            interviewComments: getValueByHeaders(['interviewcomments', 'interview comments', 'interview', 'feedback', 'interview notes']) || String(row[12] || "")
+            interviewComments: interviewFromHeader !== null ? interviewFromHeader : (row[12] !== null && row[12] !== undefined ? String(row[12]) : "")
           };
 
           // Validate required fields
@@ -850,6 +855,8 @@ export function JobApplications() {
                     Apply Date {sortField === 'applyDate' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead>Where Applied</TableHead>
+                  <TableHead>Credentials</TableHead>
+                  <TableHead>Comments</TableHead>
                   <TableHead>Location</TableHead>
                   <TableHead className="cursor-pointer" onClick={() => {
                     if (sortField === 'response') {
@@ -861,6 +868,7 @@ export function JobApplications() {
                   }}>
                     Response {sortField === 'response' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
+                  <TableHead>Interview Notes</TableHead>
                   <TableHead>Response Time</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -905,6 +913,12 @@ export function JobApplications() {
                           </div>
                         </TableCell>
                         <TableCell>{app.whereApplied}</TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          {app.credentialsUsed || '-'}
+                        </TableCell>
+                        <TableCell className="max-w-[150px] truncate">
+                          {app.commentsInformation || '-'}
+                        </TableCell>
                         <TableCell>
                           {(app.locationCity || app.locationCountry) && (
                             <div className="flex items-center gap-1">
@@ -914,6 +928,9 @@ export function JobApplications() {
                           )}
                         </TableCell>
                         <TableCell>{getResponseBadge(app.response)}</TableCell>
+                        <TableCell className="max-w-[120px] truncate">
+                          {app.interviewComments || '-'}
+                        </TableCell>
                         <TableCell>
                           {responseTime !== null ? `${responseTime} days` : '-'}
                         </TableCell>
