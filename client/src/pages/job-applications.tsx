@@ -11,7 +11,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Plus, Edit2, Trash2, Download, Upload, Search, Filter, Calendar, Building, MapPin, Eye, FileSpreadsheet } from "lucide-react";
+import { Plus, Edit2, Trash2, Download, Upload, Search, Filter, Calendar, Building, MapPin, Eye, FileSpreadsheet, ChevronDown, TrashIcon } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/lib/i18n";
 import * as XLSX from 'xlsx';
 import type { JobApplication, InsertJobApplication } from "@shared/schema";
@@ -166,6 +167,15 @@ export function JobApplications() {
 
   // Export to CSV/Excel
   const exportData = (format: 'csv' | 'xlsx') => {
+    if (applications.length === 0) {
+      toast({
+        title: "No Data",
+        description: "No job applications to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const headers = [
       "ID", "Applied Roles", "Company", "Apply Date", "Where Applied", 
       "Credentials Used", "Comments", "Response", "Response Date", 
@@ -188,11 +198,11 @@ export function JobApplications() {
       app.interviewComments || ""
     ]);
 
-    const exportData = [headers, ...data];
+    const exportedData = [headers, ...data];
     const filename = `job-applications-${new Date().toISOString().split('T')[0]}`;
 
     if (format === 'csv') {
-      const csvContent = exportData
+      const csvContent = exportedData
         .map(row => row.map(field => `"${field}"`).join(","))
         .join("\n");
 
@@ -206,10 +216,42 @@ export function JobApplications() {
       link.click();
       document.body.removeChild(link);
     } else {
-      const ws = XLSX.utils.aoa_to_sheet(exportData);
+      const ws = XLSX.utils.aoa_to_sheet(exportedData);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Job Applications");
       XLSX.writeFile(wb, `${filename}.xlsx`);
+    }
+
+    toast({
+      title: "Export Successful",
+      description: `Exported ${applications.length} job applications to ${format.toUpperCase()}.`,
+    });
+  };
+
+  const clearAllApplications = () => {
+    if (applications.length === 0) {
+      toast({
+        title: "No Data",
+        description: "No job applications to clear.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete all ${applications.length} job applications? This action cannot be undone.`
+    );
+
+    if (confirmed) {
+      // Delete all applications one by one
+      applications.forEach(app => {
+        deleteMutation.mutate(app.id);
+      });
+
+      toast({
+        title: "All Applications Cleared",
+        description: `Successfully deleted ${applications.length} job applications.`,
+      });
     }
   };
 
@@ -580,16 +622,29 @@ export function JobApplications() {
           <p className="text-muted-foreground">Track and manage your job applications</p>
         </div>
         <div className="flex gap-2">
-          <div className="flex gap-1">
-            <Button onClick={() => exportData('csv')} variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              CSV
-            </Button>
-            <Button onClick={() => exportData('xlsx')} variant="outline" size="sm">
-              <FileSpreadsheet className="h-4 w-4 mr-2" />
-              Excel
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+                <ChevronDown className="h-4 w-4 ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => exportData('csv')}>
+                <Download className="h-4 w-4 mr-2" />
+                Export as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => exportData('xlsx')}>
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                Export as Excel
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button onClick={clearAllApplications} variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+            <TrashIcon className="h-4 w-4 mr-2" />
+            Clear All
+          </Button>
           <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
