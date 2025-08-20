@@ -184,7 +184,7 @@ export function Landing() {
               {t('howItWorksSubtitle')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid md:grid-cols-3 gap-8">
+          <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 1
@@ -210,6 +210,15 @@ export function Landing() {
               <h3 className="font-semibold mb-2">{t('step3Title')}</h3>
               <p className="text-gray-600 text-sm">
                 {t('step3Description')}
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
+                4
+              </div>
+              <h3 className="font-semibold mb-2">{t('step4Title')}</h3>
+              <p className="text-gray-600 text-sm">
+                {t('step4Description')}
               </p>
             </div>
           </CardContent>
