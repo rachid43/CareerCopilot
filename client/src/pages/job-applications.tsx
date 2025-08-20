@@ -267,27 +267,67 @@ export function JobApplications() {
         const headers = jsonData[0].map((h: string) => h?.toLowerCase().trim() || '');
         const dataRows = jsonData.slice(1);
         
+        // Helper function to convert Excel date number to proper date string
+        const convertExcelDate = (excelDate: any): string => {
+          if (!excelDate) return new Date().toISOString().split('T')[0];
+          
+          // If it's already a proper date string, return as is
+          if (typeof excelDate === 'string' && excelDate.includes('-')) {
+            return excelDate;
+          }
+          
+          // If it's an Excel date number (days since 1900-01-01)
+          if (typeof excelDate === 'number' || !isNaN(Number(excelDate))) {
+            const excelEpoch = new Date(1900, 0, 1);
+            const daysOffset = Number(excelDate) - 2; // Excel has a leap year bug for 1900
+            const convertedDate = new Date(excelEpoch.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+            return convertedDate.toISOString().split('T')[0];
+          }
+          
+          // Try to parse as date
+          const parsed = new Date(excelDate);
+          if (!isNaN(parsed.getTime())) {
+            return parsed.toISOString().split('T')[0];
+          }
+          
+          return new Date().toISOString().split('T')[0];
+        };
+        
         const importedApplications = dataRows.map(row => {
           // Smart column mapping based on header names
           const getValueByHeaders = (searchTerms: string[]) => {
             for (const term of searchTerms) {
               const index = headers.findIndex(h => h.includes(term));
-              if (index !== -1 && row[index]) {
+              if (index !== -1 && row[index] !== undefined && row[index] !== null && row[index] !== '') {
                 return String(row[index]).trim();
               }
             }
             return '';
           };
 
+          // Get date values with proper conversion
+          const getDateByHeaders = (searchTerms: string[]) => {
+            for (const term of searchTerms) {
+              const index = headers.findIndex(h => h.includes(term));
+              if (index !== -1 && row[index] !== undefined && row[index] !== null && row[index] !== '') {
+                return convertExcelDate(row[index]);
+              }
+            }
+            return '';
+          };
+
+          const rawApplyDate = getDateByHeaders(['date', 'applied', 'apply']) || row[3];
+          const rawResponseDate = getDateByHeaders(['response date', 'reply date']) || row[8];
+
           const application: Partial<InsertJobApplication> = {
             appliedRoles: getValueByHeaders(['role', 'position', 'job', 'title']) || row[1] || "",
             company: getValueByHeaders(['company', 'employer', 'organization']) || row[2] || "",
-            applyDate: getValueByHeaders(['date', 'applied', 'apply']) || row[3] || new Date().toISOString().split('T')[0],
+            applyDate: rawApplyDate ? convertExcelDate(rawApplyDate) : new Date().toISOString().split('T')[0],
             whereApplied: getValueByHeaders(['where', 'source', 'platform', 'site']) || row[4] || "Other",
             credentialsUsed: getValueByHeaders(['credential', 'resume', 'cv']) || row[5] || "",
             commentsInformation: getValueByHeaders(['comment', 'note', 'information']) || row[6] || "",
             response: getValueByHeaders(['response', 'status', 'result']) || row[7] || "No Response",
-            responseDate: getValueByHeaders(['response date', 'reply date']) || row[8] || "",
+            responseDate: rawResponseDate ? convertExcelDate(rawResponseDate) : "",
             locationCity: getValueByHeaders(['city', 'location city']) || row[9] || "",
             locationCountry: getValueByHeaders(['country', 'location country']) || row[10] || "",
             interviewComments: getValueByHeaders(['interview', 'feedback']) || row[12] || ""
@@ -298,16 +338,47 @@ export function JobApplications() {
             return null;
           }
 
-          // Validate response status
+          // Clean and validate response status
           const validResponses = ["No Response", "Interview", "Offer", "Rejected", "Other"];
           if (application.response && !validResponses.includes(application.response)) {
-            application.response = "Other";
+            // Try to map common response variations
+            const responseMap: { [key: string]: string } = {
+              'no': 'No Response',
+              'none': 'No Response',
+              'pending': 'No Response',
+              'waiting': 'No Response',
+              'interview': 'Interview',
+              'phone': 'Interview',
+              'call': 'Interview',
+              'meeting': 'Interview',
+              'offer': 'Offer',
+              'accepted': 'Offer',
+              'hired': 'Offer',
+              'rejected': 'Rejected',
+              'declined': 'Rejected',
+              'denied': 'Rejected'
+            };
+            
+            const normalizedResponse = application.response.toLowerCase();
+            application.response = responseMap[normalizedResponse] || "Other";
           }
 
-          // Validate where applied
+          // Clean and validate where applied
           const validSources = ["LinkedIn", "Indeed", "Company Website", "Referral", "Other"];
           if (application.whereApplied && !validSources.includes(application.whereApplied)) {
-            application.whereApplied = "Other";
+            // Try to map common source variations
+            const sourceMap: { [key: string]: string } = {
+              'linkedin': 'LinkedIn',
+              'indeed': 'Indeed',
+              'website': 'Company Website',
+              'company': 'Company Website',
+              'direct': 'Company Website',
+              'referral': 'Referral',
+              'reference': 'Referral'
+            };
+            
+            const normalizedSource = application.whereApplied.toLowerCase();
+            application.whereApplied = sourceMap[normalizedSource] || "Other";
           }
 
           return application;
@@ -321,6 +392,8 @@ export function JobApplications() {
           });
           return;
         }
+
+        console.log(`Parsed ${importedApplications.length} applications from file:`, importedApplications.slice(0, 3));
 
         // Batch create applications
         importApplications(importedApplications);
@@ -360,20 +433,42 @@ export function JobApplications() {
     try {
       let successCount = 0;
       let errorCount = 0;
+      const errors: string[] = [];
 
       for (const application of importData) {
         try {
-          await createMutation.mutateAsync(application);
+          // Clean up the application data before sending
+          const cleanApplication: InsertJobApplication = {
+            appliedRoles: application.appliedRoles?.trim() || "",
+            company: application.company?.trim() || "",
+            applyDate: application.applyDate || new Date().toISOString().split('T')[0],
+            whereApplied: application.whereApplied || "Other",
+            credentialsUsed: application.credentialsUsed?.trim() || "",
+            commentsInformation: application.commentsInformation?.trim() || "",
+            response: application.response || "No Response",
+            responseDate: application.responseDate?.trim() || "",
+            locationCity: application.locationCity?.trim() || "",
+            locationCountry: application.locationCountry?.trim() || "",
+            interviewComments: application.interviewComments?.trim() || ""
+          };
+
+          await createMutation.mutateAsync(cleanApplication);
           successCount++;
-        } catch (error) {
+        } catch (error: any) {
           errorCount++;
+          const errorMsg = error?.response?.data?.message || error?.message || 'Unknown error';
+          errors.push(`${application.company}: ${errorMsg}`);
           console.error('Failed to import application:', application, error);
         }
       }
 
+      if (errors.length > 0 && errors.length < 5) {
+        console.log('Import errors:', errors);
+      }
+
       toast({
         title: "Import Complete",
-        description: `Successfully imported ${successCount} applications. ${errorCount > 0 ? `${errorCount} failed.` : ''}`,
+        description: `Successfully imported ${successCount} of ${importData.length} applications. ${errorCount > 0 ? `${errorCount} failed due to validation errors.` : ''}`,
         variant: successCount > 0 ? "default" : "destructive",
       });
 
