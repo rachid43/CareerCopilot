@@ -59,13 +59,23 @@ export function Landing() {
   ];
 
   return (
-    <div 
-      className="min-h-screen relative"
-      style={{
-        backgroundImage: `linear-gradient(135deg, rgba(240, 138, 93, 0.1) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(240, 138, 93, 0.05) 100%), 
-                         url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F08A5D' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }}
-    >
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-white relative overflow-hidden">
+      {/* Background Pattern */}
+      <div 
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F08A5D' fill-opacity='0.1'%3E%3Ccircle cx='50' cy='50' r='2'/%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3Ccircle cx='80' cy='20' r='1'/%3E%3Ccircle cx='20' cy='80' r='1'/%3E%3Ccircle cx='80' cy='80' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: '100px 100px'
+        }}
+      />
+      
+      {/* Floating elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-primary/5 rounded-full blur-xl" />
+      <div className="absolute top-40 right-20 w-24 h-24 bg-orange-300/10 rounded-full blur-xl" />
+      <div className="absolute bottom-40 left-20 w-40 h-40 bg-primary/3 rounded-full blur-2xl" />
+      
+      {/* Content */}
+      <div className="relative z-10">
       {/* Top Navigation with Language Selector and Login */}
       <div className="w-full py-4 px-4">
         <div className="container mx-auto flex justify-between items-center">
@@ -302,6 +312,7 @@ export function Landing() {
         <div className="text-center mt-16 text-gray-500">
           <p>AI powered • Secure • Fast • Professional</p>
         </div>
+      </div>
       </div>
     </div>
   );
