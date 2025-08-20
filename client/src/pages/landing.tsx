@@ -108,6 +108,71 @@ export function Landing() {
           })}
         </div>
 
+        {/* Demo Video Section */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">See CareerCopilot in Action</h2>
+            <p className="text-lg text-gray-600">Watch how our AI transforms your career documents in minutes</p>
+          </div>
+          
+          <Card className="overflow-hidden shadow-xl">
+            <CardContent className="p-0">
+              <div className="relative w-full h-96 bg-gradient-to-br from-primary/10 to-orange-100 flex items-center justify-center">
+                {/* Video placeholder - replace with actual video */}
+                <div className="text-center">
+                  <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:bg-orange-600 transition-colors">
+                    <svg className="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Demo Video Coming Soon</h3>
+                  <p className="text-gray-600">
+                    See how CareerCopilot helps users create professional CVs,<br/>
+                    get detailed feedback, and chat with our AI career mentor
+                  </p>
+                </div>
+                
+                {/* Optional: Add actual video element when ready */}
+                {/* 
+                <video 
+                  className="w-full h-full object-cover" 
+                  controls 
+                  poster="/path-to-video-thumbnail.jpg"
+                >
+                  <source src="/path-to-demo-video.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                */}
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Feature highlights below video */}
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <Upload className="text-white" size={20} />
+              </div>
+              <h4 className="font-semibold mb-2">Smart Upload & Analysis</h4>
+              <p className="text-sm text-gray-600">Upload your CV and watch AI extract and optimize your profile instantly</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <MessageCircle className="text-white" size={20} />
+              </div>
+              <h4 className="font-semibold mb-2">AI Career Conversations</h4>
+              <p className="text-sm text-gray-600">Get personalized career advice through intelligent chat interactions</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <Download className="text-white" size={20} />
+              </div>
+              <h4 className="font-semibold mb-2">Professional Output</h4>
+              <p className="text-sm text-gray-600">Download polished, ATS-friendly documents ready for job applications</p>
+            </div>
+          </div>
+        </div>
+
         {/* Pricing Section */}
         <div className="max-w-2xl mx-auto mb-16">
           <div className="text-center mb-8">
