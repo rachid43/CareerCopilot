@@ -75,7 +75,7 @@ export function Landing() {
             <h1 className="text-4xl font-bold text-gray-900">CareerCopilot</h1>
           </div>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            {t('landingSubtitle')}
+            Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth
           </p>
           <Button 
             size="lg" 
