@@ -158,7 +158,7 @@ export default function Home() {
               />
               <div>
                 <h1 className="text-xl font-bold text-neutral-900">
-                  <span dangerouslySetInnerHTML={{ __html: String(t('appTitle')) }} />
+                  Career<span className="text-primary">Copilot</span>
                 </h1>
                 <p className="text-sm text-secondary">{t('appSubtitle')}</p>
               </div>

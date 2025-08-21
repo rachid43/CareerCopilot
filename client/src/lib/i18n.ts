@@ -7,7 +7,7 @@ export type Language = 'nl' | 'en' | 'ar' | 'tr';
 export const translations = {
   nl: {
     // Header
-    appTitle: 'Career<span className="text-primary">Copilot</span>',
+    appTitle: 'CareerCopilot',
     appSubtitle: 'AI-Aangedreven Carrière Assistent',
     logout: 'Uitloggen',
     
@@ -36,7 +36,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'Kies uw AI Modus',
-    aiModeSubtitle: 'Selecteer hoe u wilt dat Career<span className="text-primary">Copilot</span> u helpt',
+    aiModeSubtitle: 'Selecteer hoe u wilt dat CareerCopilot u helpt',
     createMode: 'Aanmaken',
     reviewMode: 'Beoordelen', 
     assessMode: 'Evalueren',
@@ -170,7 +170,7 @@ export const translations = {
   },
   en: {
     // Header
-    appTitle: 'Career<span className="text-primary">Copilot</span>',
+    appTitle: 'CareerCopilot',
     appSubtitle: 'AI-Powered Career Assistant',
     logout: 'Logout',
     
@@ -199,7 +199,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'Choose Your AI Mode',
-    aiModeSubtitle: 'Select how you want Career<span className="text-primary">Copilot</span> to help you',
+    aiModeSubtitle: 'Select how you want CareerCopilot to help you',
     createMode: 'Create',
     reviewMode: 'Review',
     assessMode: 'Assess',
@@ -333,7 +333,7 @@ export const translations = {
   },
   ar: {
     // Header
-    appTitle: 'Career<span className="text-primary">Copilot</span>',
+    appTitle: 'CareerCopilot',
     appSubtitle: 'مساعد المهنة المدعوم بالذكاء الاصطناعي',
     logout: 'تسجيل الخروج',
     
@@ -362,7 +362,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'اختر وضع الذكاء الاصطناعي',
-    aiModeSubtitle: 'حدد كيف تريد من Career<span className="text-primary">Copilot</span> أن يساعدك',
+    aiModeSubtitle: 'حدد كيف تريد من CareerCopilot أن يساعدك',
     createMode: 'إنشاء',
     reviewMode: 'مراجعة',
     assessMode: 'تقييم',
@@ -496,7 +496,7 @@ export const translations = {
   },
   tr: {
     // Header
-    appTitle: 'Career<span className="text-primary">Copilot</span>',
+    appTitle: 'CareerCopilot',
     appSubtitle: 'AI Destekli Kariyer Asistanı',
     logout: 'Çıkış Yap',
     
@@ -525,7 +525,7 @@ export const translations = {
     
     // AI Modes
     aiModeTitle: 'AI Modunuzu Seçin',
-    aiModeSubtitle: 'Career<span className="text-primary">Copilot</span>\'un size nasıl yardım etmesini istediğinizi seçin',
+    aiModeSubtitle: 'CareerCopilot\'un size nasıl yardım etmesini istediğinizi seçin',
     createMode: 'Oluştur',
     reviewMode: 'İncele',
     assessMode: 'Değerlendir',
