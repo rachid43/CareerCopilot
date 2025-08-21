@@ -138,17 +138,33 @@ export class DatabaseStorage implements IStorage {
   async getDocumentsByUserId(userId: string): Promise<Document[]> {
     console.log('getDocumentsByUserId called with userId:', userId, 'type:', typeof userId);
     
+    // First, let's see all documents in the database
+    const allDocs = await db.select().from(documents);
+    console.log('All documents in database:', allDocs.map(d => ({ id: d.id, filename: d.filename, userId: d.userId, type: typeof d.userId })));
+    
     // Convert to number for consistent querying since database stores as integer
     const userIdNum = parseInt(userId);
     console.log('Converted userId to number:', userIdNum);
     
     const results = await db.select().from(documents).where(eq(documents.userId, userIdNum));
-    console.log('getDocumentsByUserId results:', results.length, 'documents');
+    console.log('getDocumentsByUserId results:', results.length, 'documents for userId:', userIdNum);
+    
+    // Also try alternative queries to debug
+    if (results.length === 0) {
+      console.log('No results found, trying alternative queries...');
+      const stringQuery = await db.select().from(documents).where(eq(documents.userId, userId));
+      console.log('String query results:', stringQuery.length);
+      
+      const allUserDocs = await db.select().from(documents);
+      console.log('All documents with any userId:', allUserDocs.filter(d => d.userId).map(d => ({ id: d.id, userId: d.userId })));
+    }
+    
     return results;
   }
 
   async createDocument(insertDocument: InsertDocument): Promise<Document> {
     console.log('createDocument called with:', insertDocument);
+    console.log('insertDocument.userId type:', typeof insertDocument.userId, 'value:', insertDocument.userId);
     
     // Remove existing document of same type first
     const deleteResult = await db
@@ -165,6 +181,12 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     console.log('Inserted new document:', document);
+    console.log('Inserted document userId type:', typeof document.userId, 'value:', document.userId);
+    
+    // Immediately verify the document was stored correctly
+    const verifyDocs = await db.select().from(documents).where(eq(documents.id, document.id));
+    console.log('Verification query result:', verifyDocs);
+    
     return document;
   }
 
