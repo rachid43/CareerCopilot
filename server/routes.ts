@@ -237,7 +237,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: user.id.toString() // Use the actual user.id as string for consistency
       });
 
+      console.log('About to create document with data:', { 
+        filename: documentData.filename, 
+        type: documentData.type, 
+        userId: documentData.userId,
+        sessionId: documentData.sessionId 
+      });
+      
       const document = await storage.createDocument(documentData);
+      console.log('Created document:', { id: document.id, filename: document.filename, userId: document.userId });
       
       // If this is a CV, extract profile information and update user profile
       if (type === 'cv') {
@@ -313,19 +321,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/documents", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
+      console.log('GET /api/documents - userId from getUserId:', userId);
+      
       if (!userId || userId === 'anonymous') {
         return res.status(401).json({ message: "User not authenticated" });
       }
       
       // Get the actual user ID from the users table to ensure consistency
       const user = await storage.getUserByUsername(userId.toString());
+      console.log('Found user for documents retrieval:', user?.id);
+      
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
       
       const documents = await storage.getDocumentsByUserId(user.id.toString());
+      console.log('Documents retrieved:', documents.length, 'documents:', documents.map(d => ({ id: d.id, filename: d.filename, type: d.type, userId: d.userId })));
+      
       res.json(documents);
     } catch (error) {
+      console.error('Error in GET /api/documents:', error);
       res.status(500).json({ message: "Failed to get documents" });
     }
   });

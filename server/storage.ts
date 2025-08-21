@@ -136,23 +136,30 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getDocumentsByUserId(userId: string): Promise<Document[]> {
-    return await db.select().from(documents).where(eq(documents.userId, userId));
+    console.log('getDocumentsByUserId called with userId:', userId, 'type:', typeof userId);
+    const results = await db.select().from(documents).where(eq(documents.userId, userId));
+    console.log('getDocumentsByUserId results:', results.length, 'documents');
+    return results;
   }
 
   async createDocument(insertDocument: InsertDocument): Promise<Document> {
+    console.log('createDocument called with:', insertDocument);
+    
     // Remove existing document of same type first
-    await db
+    const deleteResult = await db
       .delete(documents)
       .where(and(
         eq(documents.sessionId, insertDocument.sessionId),
         eq(documents.type, insertDocument.type)
       ));
+    console.log('Deleted existing documents of same type');
 
     const [document] = await db
       .insert(documents)
       .values(insertDocument)
       .returning();
     
+    console.log('Inserted new document:', document);
     return document;
   }
 
