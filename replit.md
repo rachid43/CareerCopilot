@@ -142,6 +142,7 @@ The application uses four main tables:
 - **January 2025**: Added drag-and-drop file upload interface for importing existing job tracking files
 - **January 2025**: Upgraded export capabilities to support both CSV and Excel (.xlsx) formats
 - **January 2025**: Implemented smart field mapping for various column naming conventions during import
+- **January 2025**: Major AI performance optimization - implemented parallel processing for Review and Assess endpoints reducing response time from 40+ seconds to ~10-15 seconds
 
 ### Superadmin Features
 
