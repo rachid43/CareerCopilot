@@ -223,12 +223,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const content = await parseDocument(req.file.path, req.file.mimetype);
       
+      // Get the actual user ID from the users table to ensure consistency
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const documentData = insertDocumentSchema.parse({
         filename: req.file.originalname,
         content,
         type,
         sessionId,
-        userId
+        userId: user.id.toString() // Use the actual user.id as string for consistency
       });
 
       const document = await storage.createDocument(documentData);
@@ -311,7 +317,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "User not authenticated" });
       }
       
-      const documents = await storage.getDocumentsByUserId(userId);
+      // Get the actual user ID from the users table to ensure consistency
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const documents = await storage.getDocumentsByUserId(user.id.toString());
       res.json(documents);
     } catch (error) {
       res.status(500).json({ message: "Failed to get documents" });
@@ -338,7 +350,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sessionId = getSessionId(req);
       const userId = getUserId(req);
       const { profile, jobDescription, hasDocuments, language = 'en' } = req.body;
-      const documents = await storage.getDocumentsByUserId(userId);
+      
+      // Get the actual user ID from the users table to ensure consistency
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const documents = await storage.getDocumentsByUserId(user.id.toString());
 
       // Language mapping
       const languageMap = {
@@ -435,7 +453,13 @@ JSON format:
       const userId = getUserId(req);
       const sessionId = getSessionId(req);
       const { language = 'en' } = req.body;
-      const documents = await storage.getDocumentsByUserId(userId);
+      
+      // Get the actual user ID from the users table to ensure consistency
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const documents = await storage.getDocumentsByUserId(user.id.toString());
       
       if (documents.length === 0) {
         return res.status(400).json({ message: "No documents uploaded for review" });
@@ -562,7 +586,13 @@ Be specific, actionable, and constructive in your feedback.`;
       const userId = getUserId(req);
       const sessionId = getSessionId(req);
       const { jobDescription, language = 'en' } = req.body;
-      const documents = await storage.getDocumentsByUserId(userId);
+      
+      // Get the actual user ID from the users table to ensure consistency
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const documents = await storage.getDocumentsByUserId(user.id.toString());
 
       if (!jobDescription) {
         return res.status(400).json({ message: "Job description is required" });
