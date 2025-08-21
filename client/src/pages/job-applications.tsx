@@ -11,11 +11,15 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Plus, Edit2, Trash2, Download, Upload, Search, Filter, Calendar, Building, MapPin, Eye, FileSpreadsheet, ChevronDown, TrashIcon } from "lucide-react";
+import { Plus, Edit2, Trash2, Download, Upload, Search, Filter, Calendar, Building, MapPin, Eye, FileSpreadsheet, ChevronDown, TrashIcon, Home, User } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/lib/i18n";
 import * as XLSX from 'xlsx';
 import type { JobApplication, InsertJobApplication } from "@shared/schema";
+import careerCopilotIcon from "@assets/ICON_CareerCopilot_1755719130597.png";
+import { LanguageSelector } from "@/components/language-selector";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "wouter";
 
 interface DashboardSummary {
   totalApplications: number;
@@ -35,6 +39,7 @@ export function JobApplications() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -616,13 +621,52 @@ export function JobApplications() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Job Applications Tracker</h1>
-          <p className="text-muted-foreground">Track and manage your job applications</p>
+    <div className="min-h-screen bg-neutral-50">
+      {/* Consistent Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-3">
+              <img 
+                src={careerCopilotIcon} 
+                alt="CareerCopilot" 
+                className="w-10 h-10"
+              />
+              <div>
+                <h1 className="text-xl font-bold text-neutral-900">
+                  Career<span className="text-primary">Copilot</span>
+                </h1>
+                <p className="text-sm text-gray-500">Job Applications Tracker</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              {user && (
+                <div className="flex items-center space-x-2 mr-4">
+                  <User size={18} className="text-gray-500" />
+                  <span className="text-sm text-gray-700">
+                    {String((user as any)?.firstName || (user as any)?.email || (user as any)?.username || 'User')}
+                  </span>
+                </div>
+              )}
+              <LanguageSelector />
+              <Link to="/">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Home size={16} />
+                  <span>Home</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
+      </header>
+      
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Page Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Job Applications Tracker</h1>
+            <p className="text-muted-foreground">Track and manage your job applications</p>
+          </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -1046,6 +1090,7 @@ export function JobApplications() {
           )}
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import { Link } from "wouter";
 import { useLanguage } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/language-selector";
 import { Footer } from "@/components/footer";
+import careerCopilotIcon from "@assets/ICON_CareerCopilot_1755719130597.png";
 
 type AIMode = 'create' | 'review' | 'assess';
 
@@ -150,12 +151,14 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Bot className="text-white" size={20} />
-              </div>
+              <img 
+                src={careerCopilotIcon} 
+                alt="CareerCopilot" 
+                className="w-10 h-10"
+              />
               <div>
                 <h1 className="text-xl font-bold text-neutral-900">
-                  <span dangerouslySetInnerHTML={{ __html: t('appTitle') }} />
+                  <span dangerouslySetInnerHTML={{ __html: String(t('appTitle')) }} />
                 </h1>
                 <p className="text-sm text-secondary">{t('appSubtitle')}</p>
               </div>
@@ -165,7 +168,7 @@ export default function Home() {
                 <div className="flex items-center space-x-2 mr-4">
                   <User size={18} className="text-gray-500" />
                   <span className="text-sm text-gray-700">
-                    {(user as any)?.firstName || (user as any)?.email || (user as any)?.username}
+                    {String((user as any)?.firstName || (user as any)?.email || (user as any)?.username || 'User')}
                   </span>
                 </div>
               )}
