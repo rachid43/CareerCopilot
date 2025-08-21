@@ -42,8 +42,9 @@ export function ModeSelector({ activeMode, onModeChange }: ModeSelectorProps) {
       <CardHeader className="border-b border-gray-200">
         <CardTitle>{t('aiModeTitle')}</CardTitle>
         <p className="text-sm text-secondary mt-1">
-          {t('aiModeSubtitle').replace('CareerCopilot', 'Career')}
-          <span className="text-primary">Copilot</span>
+          {t('aiModeSubtitle').split('CareerCopilot')[0]}
+          Career<span className="text-primary">Copilot</span>
+          {t('aiModeSubtitle').split('CareerCopilot')[1]}
         </p>
       </CardHeader>
       <CardContent className="p-0">

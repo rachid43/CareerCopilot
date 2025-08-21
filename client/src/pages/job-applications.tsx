@@ -644,10 +644,7 @@ export function JobApplications() {
                 <div className="flex items-center space-x-2 mr-4">
                   <User size={18} className="text-gray-500" />
                   <span className="text-sm text-gray-700">
-                    {(() => {
-                      const u = user as any;
-                      return String(u?.firstName || u?.email || u?.username || 'User');
-                    })()}
+                    {String((user as Record<string, any>)?.firstName || (user as Record<string, any>)?.email || (user as Record<string, any>)?.username || 'User')}
                   </span>
                 </div>
               )}
