@@ -76,6 +76,10 @@ export const translations = {
     positionPlaceholder: 'Bijvoorbeeld: Senior Software Developer',
     skills: 'Vaardigheden',
     skillsPlaceholder: 'Bijvoorbeeld: JavaScript, React, Node.js, Python',
+    experience: 'Werkervaring',
+    experiencePlaceholder: 'Beschrijf uw belangrijkste werkervaring en prestaties...',
+    languages: 'Talen',
+    languagesPlaceholder: 'Bijvoorbeeld: Nederlands (moedertaal), Engels (vloeiend), Duits (gemiddeld)',
     saveProfile: 'Profiel Opslaan',
     updateProfile: 'Profiel Bijwerken',
     
@@ -239,6 +243,10 @@ export const translations = {
     positionPlaceholder: 'e.g., Senior Software Developer',
     skills: 'Skills',
     skillsPlaceholder: 'e.g., JavaScript, React, Node.js, Python',
+    experience: 'Experience',
+    experiencePlaceholder: 'Describe your key work experience and achievements...',
+    languages: 'Languages',
+    languagesPlaceholder: 'e.g., English (native), Spanish (fluent), French (intermediate)',
     saveProfile: 'Save Profile',
     updateProfile: 'Update Profile',
     
@@ -402,6 +410,10 @@ export const translations = {
     positionPlaceholder: 'مثال: مطور برمجيات أول',
     skills: 'المهارات',
     skillsPlaceholder: 'مثال: JavaScript, React, Node.js, Python',
+    experience: 'الخبرة المهنية',
+    experiencePlaceholder: 'اوصف خبرتك المهنية الأساسية وإنجازاتك...',
+    languages: 'اللغات',
+    languagesPlaceholder: 'مثال: العربية (لغة أم)، الإنجليزية (طلاقة)، الفرنسية (متوسط)',
     saveProfile: 'حفظ الملف الشخصي',
     updateProfile: 'تحديث الملف الشخصي',
     
@@ -565,6 +577,10 @@ export const translations = {
     positionPlaceholder: 'örn., Kıdemli Yazılım Geliştirici',
     skills: 'Yetenekler',
     skillsPlaceholder: 'örn., JavaScript, React, Node.js, Python',
+    experience: 'Deneyim',
+    experiencePlaceholder: 'Temel iş deneyiminizi ve başarılarınızı açıklayın...',
+    languages: 'Diller',
+    languagesPlaceholder: 'örn., Türkçe (ana dil), İngilizce (akıcı), Almanca (orta)',
     saveProfile: 'Profili Kaydet',
     updateProfile: 'Profili Güncelle',
     

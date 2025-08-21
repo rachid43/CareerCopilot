@@ -94,6 +94,8 @@ Extract personal information from this CV/Resume content and return it in JSON f
 - phone: Phone number if found
 - position: Current or desired job title/position
 - skills: Comma-separated list of key skills and technologies
+- experience: Brief summary of key work experience and achievements
+- languages: List of languages with proficiency levels if mentioned
 
 If any information is not found, use null for that field.
 Only return valid JSON, no additional text or explanations.
@@ -254,7 +256,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const extractedProfile = await extractProfileFromCV(content);
           console.log('Extracted profile data:', extractedProfile);
           
-          if (extractedProfile && (extractedProfile.name || extractedProfile.email || extractedProfile.phone || extractedProfile.position || extractedProfile.skills)) {
+          if (extractedProfile && (extractedProfile.name || extractedProfile.email || extractedProfile.phone || extractedProfile.position || extractedProfile.skills || extractedProfile.experience || extractedProfile.languages)) {
             // Check if user already has a profile
             const existingProfile = await storage.getProfileByUserId(userId);
             
@@ -273,7 +275,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               email: extractedProfile.email || (existingProfile?.email || ''),
               phone: extractedProfile.phone || (existingProfile?.phone || ''),
               position: extractedProfile.position || (existingProfile?.position || ''),
-              skills: extractedProfile.skills || (existingProfile?.skills || '')
+              skills: extractedProfile.skills || (existingProfile?.skills || ''),
+              experience: extractedProfile.experience || (existingProfile?.experience || ''),
+              languages: extractedProfile.languages || (existingProfile?.languages || '')
             };
 
             // Remove empty fields to avoid overwriting existing data with empty values, but allow overriding with new extracted data
@@ -289,6 +293,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Ensure extracted skills override existing empty skills
             if (extractedProfile.skills && extractedProfile.skills.trim()) {
               profileData.skills = extractedProfile.skills;
+            }
+            
+            // Add experience and languages if extracted
+            if (extractedProfile.experience && extractedProfile.experience.trim()) {
+              profileData.experience = extractedProfile.experience;
+            }
+            if (extractedProfile.languages && extractedProfile.languages.trim()) {
+              profileData.languages = extractedProfile.languages;
             }
 
             console.log('About to save/update profile with data:', profileData);

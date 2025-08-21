@@ -17,6 +17,8 @@ export function PersonalProfile() {
     phone: '',
     position: '',
     skills: '',
+    experience: '',
+    languages: '',
   });
 
   const queryClient = useQueryClient();
@@ -56,6 +58,8 @@ export function PersonalProfile() {
         phone: (profile as any).phone || '',
         position: (profile as any).position || '',
         skills: (profile as any).skills || '',
+        experience: (profile as any).experience || '',
+        languages: (profile as any).languages || '',
       });
     }
   }, [profile]);
@@ -71,6 +75,8 @@ export function PersonalProfile() {
       phone: '',
       position: '',
       skills: '',
+      experience: '',
+      languages: '',
     });
     toast({
       title: t('success'),
@@ -156,6 +162,28 @@ export function PersonalProfile() {
             value={formData.skills}
             onChange={(e) => handleInputChange('skills', e.target.value)}
             className="mt-1 h-20 resize-none"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="experience">{t('experience')}</Label>
+          <Textarea
+            id="experience"
+            placeholder={t('experiencePlaceholder')}
+            value={formData.experience}
+            onChange={(e) => handleInputChange('experience', e.target.value)}
+            className="mt-1 h-24 resize-none"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="languages">{t('languages')}</Label>
+          <Textarea
+            id="languages"
+            placeholder={t('languagesPlaceholder')}
+            value={formData.languages}
+            onChange={(e) => handleInputChange('languages', e.target.value)}
+            className="mt-1 h-16 resize-none"
           />
         </div>
 
