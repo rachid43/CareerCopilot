@@ -564,5 +564,6 @@ class MemoryStorage implements IStorage {
 }
 
 // Temporarily use memory storage for development due to database connection issues
-export const storage = process.env.NODE_ENV === 'development' ? new MemoryStorage() : new DatabaseStorage();
-// export const storage = new DatabaseStorage(); // Will work when deployed
+// Temporarily using DatabaseStorage in development to debug file upload issue
+export const storage = new DatabaseStorage();
+// export const storage = process.env.NODE_ENV === 'development' ? new MemoryStorage() : new DatabaseStorage();

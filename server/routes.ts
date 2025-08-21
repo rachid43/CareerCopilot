@@ -335,6 +335,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
+      console.log('About to call storage.getDocumentsByUserId with user.id:', user.id.toString());
       const documents = await storage.getDocumentsByUserId(user.id.toString());
       console.log('Documents retrieved:', documents.length, 'documents:', documents.map(d => ({ id: d.id, filename: d.filename, type: d.type, userId: d.userId })));
       
