@@ -131,10 +131,10 @@ export function FileUpload() {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > 100 * 1024 * 1024) {
       toast({
         title: "File too large",
-        description: "Please upload files smaller than 10MB",
+        description: "Please upload files smaller than 100MB",
         variant: "destructive",
       });
       return;

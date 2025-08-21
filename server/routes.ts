@@ -19,7 +19,7 @@ const openai = new OpenAI({
 
 const upload = multer({ 
   dest: 'uploads/',
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit
 });
 
 function getSessionId(req: any): string {

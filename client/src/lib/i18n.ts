@@ -54,7 +54,7 @@ export const translations = {
     dropCvText: 'Sleep uw CV hierheen of',
     dropCoverLetterText: 'Sleep uw motivatiebrief hierheen of',
     browseFiles: 'blader door bestanden',
-    pdfDocxMax: 'PDF of DOCX, max 10MB',
+    pdfDocxMax: 'PDF of DOCX, max 100MB',
     cvOptional: 'CV (Optioneel)',
     coverLetterOptional: 'Motivatiebrief (Optioneel)',
     
@@ -217,7 +217,7 @@ export const translations = {
     dropCvText: 'Drop your CV here or',
     dropCoverLetterText: 'Drop your cover letter here or',
     browseFiles: 'browse files',
-    pdfDocxMax: 'PDF or DOCX, max 10MB',
+    pdfDocxMax: 'PDF or DOCX, max 100MB',
     cvOptional: 'CV (Optional)',
     coverLetterOptional: 'Cover Letter (Optional)',
     
@@ -380,7 +380,7 @@ export const translations = {
     dropCvText: 'اسحب سيرتك الذاتية هنا أو',
     dropCoverLetterText: 'اسحب رسالة التغطية هنا أو',
     browseFiles: 'تصفح الملفات',
-    pdfDocxMax: 'PDF أو DOCX، حد أقصى 10 ميجابايت',
+    pdfDocxMax: 'PDF أو DOCX، حد أقصى 100 ميجابايت',
     cvOptional: 'السيرة الذاتية (اختيارية)',
     coverLetterOptional: 'رسالة التغطية (اختيارية)',
     
@@ -543,7 +543,7 @@ export const translations = {
     dropCvText: 'CV\'nizi buraya sürükleyin veya',
     dropCoverLetterText: 'Ön yazınızı buraya sürükleyin veya',
     browseFiles: 'dosyalara göz atın',
-    pdfDocxMax: 'PDF veya DOCX, maksimum 10MB',
+    pdfDocxMax: 'PDF veya DOCX, maksimum 100MB',
     cvOptional: 'CV (İsteğe Bağlı)',
     coverLetterOptional: 'Ön Yazı (İsteğe Bağlı)',
     
