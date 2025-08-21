@@ -95,7 +95,13 @@ Extract personal information from this CV/Resume content and return it in JSON f
 - position: Current or desired job title/position
 - skills: Comma-separated list of key skills and technologies
 - experience: Brief summary of key work experience and achievements
-- languages: List of languages with proficiency levels if mentioned
+- languages: If languages are found, return as array: [{"language": "English", "proficiency": "Native"}, {"language": "Spanish", "proficiency": "Fluent"}]. If no languages found, return null.
+
+IMPORTANT: For languages field:
+- Only include languages that are clearly mentioned in the CV
+- If proficiency level is not specified, use "Not specified" 
+- If no languages are mentioned at all, return null
+- Never use "undefined" values
 
 If any information is not found, use null for that field.
 Only return valid JSON, no additional text or explanations.
@@ -306,12 +312,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
               } else if (Array.isArray(extractedProfile.languages)) {
                 // Convert array of language objects to string format
                 const languageString = extractedProfile.languages
+                  .filter((lang: any) => lang && lang.language && lang.language !== 'undefined' && lang.proficiency && lang.proficiency !== 'undefined')
                   .map((lang: any) => `${lang.language} (${lang.proficiency})`)
                   .join(', ');
                 if (languageString) {
                   profileData.languages = languageString;
+                } else {
+                  profileData.languages = "not found";
                 }
               }
+            } else {
+              profileData.languages = "not found";
             }
 
             console.log('About to save/update profile with data:', profileData);
