@@ -296,11 +296,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
             
             // Add experience and languages if extracted
-            if (extractedProfile.experience && extractedProfile.experience.trim()) {
+            if (extractedProfile.experience && typeof extractedProfile.experience === 'string' && extractedProfile.experience.trim()) {
               profileData.experience = extractedProfile.experience;
             }
-            if (extractedProfile.languages && extractedProfile.languages.trim()) {
-              profileData.languages = extractedProfile.languages;
+            if (extractedProfile.languages) {
+              // Handle languages - could be string or array
+              if (typeof extractedProfile.languages === 'string' && extractedProfile.languages.trim()) {
+                profileData.languages = extractedProfile.languages;
+              } else if (Array.isArray(extractedProfile.languages)) {
+                // Convert array of language objects to string format
+                const languageString = extractedProfile.languages
+                  .map((lang: any) => `${lang.language} (${lang.proficiency})`)
+                  .join(', ');
+                if (languageString) {
+                  profileData.languages = languageString;
+                }
+              }
             }
 
             console.log('About to save/update profile with data:', profileData);
