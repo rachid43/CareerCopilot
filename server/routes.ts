@@ -373,7 +373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const documents = await storage.getDocumentsByUserId(user.id.toString());
+      const documents = await storage.getDocumentsByUserId(userId);
 
       // Language mapping
       const languageMap = {
@@ -476,7 +476,7 @@ JSON format:
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const documents = await storage.getDocumentsByUserId(user.id.toString());
+      const documents = await storage.getDocumentsByUserId(userId);
       
       if (documents.length === 0) {
         return res.status(400).json({ message: "No documents uploaded for review" });
@@ -609,7 +609,7 @@ Be specific, actionable, and constructive in your feedback.`;
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const documents = await storage.getDocumentsByUserId(user.id.toString());
+      const documents = await storage.getDocumentsByUserId(userId);
 
       if (!jobDescription) {
         return res.status(400).json({ message: "Job description is required" });
