@@ -433,9 +433,17 @@ class MemoryStorage implements IStorage {
   }
 
   async getDocumentsByUserId(userId: string): Promise<Document[]> {
+    console.log('MemoryStorage.getDocumentsByUserId called with userId:', userId);
     const user = await this.getUserByUsername(userId);
-    if (!user) return [];
-    return this.documents.filter(d => d.userId === user.id);
+    if (!user) {
+      console.log('User not found for userId:', userId);
+      return [];
+    }
+    console.log('Found user with id:', user.id);
+    console.log('All documents:', this.documents.map(d => ({ id: d.id, filename: d.filename, userId: d.userId })));
+    const userDocs = this.documents.filter(d => d.userId === user.id);
+    console.log('Filtered documents for user:', userDocs.length);
+    return userDocs;
   }
 
   async updateProfileByUserId(userId: string, updates: Partial<InsertProfile>): Promise<Profile | undefined> {
@@ -456,8 +464,11 @@ class MemoryStorage implements IStorage {
   }
 
   async createDocument(document: InsertDocument): Promise<Document> {
+    console.log('MemoryStorage.createDocument called with:', document);
     const newDocument = { ...document, id: this.nextId++, uploadDate: new Date() } as Document;
     this.documents.push(newDocument);
+    console.log('Created document in memory:', newDocument);
+    console.log('Total documents in memory:', this.documents.length);
     return newDocument;
   }
 
@@ -564,6 +575,6 @@ class MemoryStorage implements IStorage {
 }
 
 // Temporarily use memory storage for development due to database connection issues
-// Temporarily using DatabaseStorage in development to debug file upload issue
-export const storage = new DatabaseStorage();
+// Use memory storage for development to avoid database connection issues
+export const storage = new MemoryStorage();
 // export const storage = process.env.NODE_ENV === 'development' ? new MemoryStorage() : new DatabaseStorage();
