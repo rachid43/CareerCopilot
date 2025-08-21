@@ -234,7 +234,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content,
         type,
         sessionId,
-        userId: user.id.toString() // Use the actual user.id as string for consistency
+        userId: user.id // Use the actual user.id as number for consistency with database schema
       });
 
       console.log('About to create document with data:', { 

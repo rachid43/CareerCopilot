@@ -55,7 +55,7 @@ export const documents = pgTable("documents", {
   content: text("content").notNull(),
   type: text("type").notNull(), // 'cv' | 'cover-letter'
   sessionId: text("session_id").notNull(),
-  userId: text("user_id"),
+  userId: integer("user_id").references(() => users.id),
 });
 
 export const aiResults = pgTable("ai_results", {

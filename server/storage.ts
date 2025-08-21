@@ -137,7 +137,12 @@ export class DatabaseStorage implements IStorage {
 
   async getDocumentsByUserId(userId: string): Promise<Document[]> {
     console.log('getDocumentsByUserId called with userId:', userId, 'type:', typeof userId);
-    const results = await db.select().from(documents).where(eq(documents.userId, userId));
+    
+    // Convert to number for consistent querying since database stores as integer
+    const userIdNum = parseInt(userId);
+    console.log('Converted userId to number:', userIdNum);
+    
+    const results = await db.select().from(documents).where(eq(documents.userId, userIdNum));
     console.log('getDocumentsByUserId results:', results.length, 'documents');
     return results;
   }
