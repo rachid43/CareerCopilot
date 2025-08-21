@@ -434,9 +434,11 @@ class MemoryStorage implements IStorage {
 
   async getDocumentsByUserId(userId: string): Promise<Document[]> {
     console.log('MemoryStorage.getDocumentsByUserId called with userId:', userId);
+    console.log('All users:', this.users.map(u => ({ id: u.id, username: u.username })));
     const user = await this.getUserByUsername(userId);
     if (!user) {
       console.log('User not found for userId:', userId);
+      console.log('Looking for username:', userId);
       return [];
     }
     console.log('Found user with id:', user.id);
