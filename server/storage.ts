@@ -578,5 +578,6 @@ class MemoryStorage implements IStorage {
 
 // Temporarily use memory storage for development due to database connection issues
 // Use memory storage for development to avoid database connection issues
+// TODO: Fix Supabase connection authentication issues
 export const storage = new MemoryStorage();
-// export const storage = process.env.NODE_ENV === 'development' ? new MemoryStorage() : new DatabaseStorage();
+// export const storage = new DatabaseStorage(); // Uncomment when database connection is fixed
