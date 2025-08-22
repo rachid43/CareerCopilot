@@ -152,7 +152,7 @@ export class DatabaseStorage implements IStorage {
     // Also try alternative queries to debug
     if (results.length === 0) {
       console.log('No results found, trying alternative queries...');
-      const stringQuery = await db.select().from(documents).where(eq(documents.userId, userId));
+      const stringQuery = await db.select().from(documents).where(sql`user_id = ${userId}`);
       console.log('String query results:', stringQuery.length);
       
       const allUserDocs = await db.select().from(documents);
