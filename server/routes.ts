@@ -1578,6 +1578,15 @@ USER MESSAGE: ${content}`;
       // Use OpenAI Whisper for audio transcription
       const syncFs = await import('fs');
       
+      // Check file extension and handle accordingly
+      const fileExtension = req.file.originalname.split('.').pop()?.toLowerCase();
+      const supportedFormats = ['flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm'];
+      
+      if (!supportedFormats.includes(fileExtension || '')) {
+        // If not a supported format, treat as webm audio
+        req.file.originalname = 'recording.webm';
+      }
+
       const transcription = await openai.audio.transcriptions.create({
         file: syncFs.createReadStream(req.file.path),
         model: "whisper-1",

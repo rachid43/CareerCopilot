@@ -67,9 +67,12 @@ export default function MockInterview() {
 
   // Avatar mode state
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioRecorder, setAudioRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
+  const [audioBlobs, setAudioBlobs] = useState<Blob[]>([]);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [videoPermissionGranted, setVideoPermissionGranted] = useState(false);
 
@@ -307,11 +310,19 @@ export default function MockInterview() {
   // Avatar mode functions
   const initializeMedia = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      // Get video and audio streams
+      const videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
+        audio: false
+      });
+      
+      const audioStream = await navigator.mediaDevices.getUserMedia({
+        video: false,
         audio: true
       });
-      setMediaStream(stream);
+      
+      setMediaStream(videoStream);
+      setAudioStream(audioStream);
       setVideoPermissionGranted(true);
       
       toast({
@@ -328,55 +339,55 @@ export default function MockInterview() {
   };
 
   const startRecording = () => {
-    if (!mediaStream) return;
+    if (!mediaStream || !audioStream) return;
 
     try {
-      // Try different codecs in order of preference
-      const supportedTypes = [
-        'video/webm;codecs=vp9',
-        'video/webm;codecs=vp8',
-        'video/webm',
-        'video/mp4'
-      ];
+      // Start audio recording for transcription
+      const audioOptions = MediaRecorder.isTypeSupported('audio/webm') 
+        ? { mimeType: 'audio/webm' } 
+        : {};
       
-      let options = {};
-      for (const type of supportedTypes) {
-        if (MediaRecorder.isTypeSupported(type)) {
-          options = { mimeType: type };
-          break;
-        }
-      }
-
-      const recorder = new MediaRecorder(mediaStream, options);
+      const audioRec = new MediaRecorder(audioStream, audioOptions);
+      const audioChunks: Blob[] = [];
       
-      const blobs: Blob[] = [];
-      
-      recorder.ondataavailable = (event) => {
+      audioRec.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          blobs.push(event.data);
+          audioChunks.push(event.data);
         }
       };
       
-      recorder.onstop = () => {
-        setRecordedBlobs(blobs);
-        if (blobs.length > 0) {
-          transcribeAudio(blobs);
+      audioRec.onstop = () => {
+        setAudioBlobs(audioChunks);
+        if (audioChunks.length > 0) {
+          transcribeAudio(audioChunks);
         }
       };
       
-      recorder.onerror = (event: any) => {
-        console.error('MediaRecorder error:', event);
-        setIsRecording(false);
-        toast({
-          title: 'Recording Error' as any,
-          description: 'Failed to record. Please try again.' as any,
-          variant: 'destructive'
-        });
+      // Start video recording for visual feedback
+      const videoOptions = MediaRecorder.isTypeSupported('video/webm') 
+        ? { mimeType: 'video/webm' } 
+        : {};
+      
+      const videoRec = new MediaRecorder(mediaStream, videoOptions);
+      const videoChunks: Blob[] = [];
+      
+      videoRec.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          videoChunks.push(event.data);
+        }
       };
       
-      setMediaRecorder(recorder);
+      videoRec.onstop = () => {
+        setRecordedBlobs(videoChunks);
+      };
+      
+      setAudioRecorder(audioRec);
+      setMediaRecorder(videoRec);
+      setAudioBlobs([]);
       setRecordedBlobs([]);
-      recorder.start(1000); // Record in 1-second chunks
+      
+      audioRec.start(1000);
+      videoRec.start(1000);
       setIsRecording(true);
       
     } catch (error: any) {
@@ -390,9 +401,10 @@ export default function MockInterview() {
   };
 
   const stopRecording = () => {
-    if (mediaRecorder && isRecording) {
+    if ((mediaRecorder || audioRecorder) && isRecording) {
       try {
-        mediaRecorder.stop();
+        if (audioRecorder) audioRecorder.stop();
+        if (mediaRecorder) mediaRecorder.stop();
         setIsRecording(false);
       } catch (error) {
         console.error('Error stopping recording:', error);
@@ -406,10 +418,10 @@ export default function MockInterview() {
     }
   };
 
-  const transcribeAudio = async (blobs: Blob[]) => {
-    if (!blobs || blobs.length === 0) {
+  const transcribeAudio = async (audioBlobs: Blob[]) => {
+    if (!audioBlobs || audioBlobs.length === 0) {
       toast({
-        title: 'No Recording Found' as any,
+        title: 'No Audio Found' as any,
         description: 'Please record your answer first' as any,
         variant: 'destructive'
       });
@@ -419,16 +431,16 @@ export default function MockInterview() {
     setIsTranscribing(true);
     
     try {
-      // Create video blob
-      const videoBlob = new Blob(blobs, { type: 'video/webm' });
+      // Create audio blob
+      const audioBlob = new Blob(audioBlobs, { type: 'audio/webm' });
       
       // Check if blob has content
-      if (videoBlob.size === 0) {
+      if (audioBlob.size === 0) {
         throw new Error('Recording is empty');
       }
       
       const formData = new FormData();
-      formData.append('audio', videoBlob, 'recording.webm');
+      formData.append('audio', audioBlob, 'recording.webm');
       
       const response = await fetch('/api/transcribe-audio', {
         method: 'POST',
@@ -468,8 +480,12 @@ export default function MockInterview() {
     if (mediaStream) {
       mediaStream.getTracks().forEach(track => track.stop());
       setMediaStream(null);
-      setVideoPermissionGranted(false);
     }
+    if (audioStream) {
+      audioStream.getTracks().forEach(track => track.stop());
+      setAudioStream(null);
+    }
+    setVideoPermissionGranted(false);
   };
 
   return (
@@ -866,7 +882,7 @@ export default function MockInterview() {
                               ref={(video) => {
                                 if (video && mediaStream) {
                                   video.srcObject = mediaStream;
-                                  video.play();
+                                  video.play().catch(err => console.log('Video play error:', err));
                                 }
                               }}
                               className="w-full h-full object-cover"
