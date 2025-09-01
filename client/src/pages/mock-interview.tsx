@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -34,6 +34,64 @@ interface InterviewQA {
   feedback?: string;
   suggestions?: string;
 }
+
+// Avatar options with diverse representation
+const avatarOptions = [
+  {
+    id: 'sarah',
+    name: 'Sarah Chen',
+    gender: 'female',
+    ethnicity: 'Asian',
+    voice: 'female-professional',
+    image: '👩🏻‍💼',
+    description: 'Senior Tech Recruiter'
+  },
+  {
+    id: 'marcus',
+    name: 'Marcus Johnson',
+    gender: 'male',
+    ethnicity: 'African American',
+    voice: 'male-authoritative',
+    image: '👨🏿‍💼',
+    description: 'Head of Talent Acquisition'
+  },
+  {
+    id: 'elena',
+    name: 'Elena Rodriguez',
+    gender: 'female',
+    ethnicity: 'Hispanic',
+    voice: 'female-warm',
+    image: '👩🏽‍💼',
+    description: 'HR Director'
+  },
+  {
+    id: 'raj',
+    name: 'Raj Patel',
+    gender: 'male',
+    ethnicity: 'South Asian',
+    voice: 'male-professional',
+    image: '👨🏽‍💼',
+    description: 'Technical Lead'
+  },
+  {
+    id: 'anna',
+    name: 'Anna Kowalski',
+    gender: 'female',
+    ethnicity: 'European',
+    voice: 'female-confident',
+    image: '👩🏼‍💼',
+    description: 'Executive Recruiter'
+  },
+  {
+    id: 'james',
+    name: 'James Wilson',
+    gender: 'male',
+    ethnicity: 'Caucasian',
+    voice: 'male-friendly',
+    image: '👨🏻‍💼',
+    description: 'Hiring Manager'
+  }
+];
 
 export default function MockInterview() {
   const { t } = useLanguage();
@@ -75,6 +133,9 @@ export default function MockInterview() {
   const [audioBlobs, setAudioBlobs] = useState<Blob[]>([]);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [videoPermissionGranted, setVideoPermissionGranted] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<any>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
 
   const handleStartInterview = async () => {
     if (!setupForm.jobTitle || !setupForm.company) {
@@ -303,6 +364,24 @@ export default function MockInterview() {
   const removeCVImport = () => {
     setImportedCV(null);
   };
+
+  // Initialize speech synthesis and set default avatar
+  useEffect(() => {
+    initializeSpeechSynthesis();
+    if (!selectedAvatar) {
+      setSelectedAvatar(avatarOptions[0]); // Default to first avatar
+    }
+  }, [selectedAvatar]);
+
+  // Auto-speak question when it changes in avatar mode
+  useEffect(() => {
+    if (setupForm.interviewMode === 'avatar' && currentQuestion && isInterviewActive && selectedAvatar) {
+      // Small delay to ensure UI is ready
+      setTimeout(() => {
+        speakQuestion(currentQuestion.question);
+      }, 1000);
+    }
+  }, [currentQuestion, isInterviewActive, selectedAvatar, setupForm.interviewMode]);
 
   const downloadInterviewReport = async () => {
     if (!finalFeedback || !sessionData) return;
@@ -534,6 +613,68 @@ export default function MockInterview() {
     setVideoPermissionGranted(false);
   };
 
+  // Initialize speech synthesis
+  const initializeSpeechSynthesis = () => {
+    if ('speechSynthesis' in window) {
+      setSpeechSynthesis(window.speechSynthesis);
+    }
+  };
+
+  // Speak the question using text-to-speech
+  const speakQuestion = (text: string) => {
+    if (!speechSynthesis || !selectedAvatar) return;
+
+    // Stop any ongoing speech
+    speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Configure voice based on selected avatar
+    const voices = speechSynthesis.getVoices();
+    
+    // Try to find appropriate voice based on avatar characteristics
+    let selectedVoice = null;
+    
+    if (selectedAvatar.gender === 'female') {
+      selectedVoice = voices.find(voice => 
+        voice.name.toLowerCase().includes('female') || 
+        voice.name.toLowerCase().includes('woman') ||
+        voice.name.toLowerCase().includes('samantha') ||
+        voice.name.toLowerCase().includes('karen')
+      ) || voices.find(voice => voice.name.toLowerCase().includes('en'));
+    } else {
+      selectedVoice = voices.find(voice => 
+        voice.name.toLowerCase().includes('male') || 
+        voice.name.toLowerCase().includes('man') ||
+        voice.name.toLowerCase().includes('alex') ||
+        voice.name.toLowerCase().includes('daniel')
+      ) || voices.find(voice => voice.name.toLowerCase().includes('en'));
+    }
+    
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+    
+    // Configure speech parameters
+    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.pitch = selectedAvatar.gender === 'female' ? 1.1 : 0.9;
+    utterance.volume = 0.8;
+    
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    
+    speechSynthesis.speak(utterance);
+  };
+
+  // Stop speaking
+  const stopSpeaking = () => {
+    if (speechSynthesis) {
+      speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
@@ -734,29 +875,84 @@ export default function MockInterview() {
             </div>
             
             {setupForm.interviewMode === 'avatar' && (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <div className="flex items-start space-x-3">
-                  <Video className="h-5 w-5 text-purple-600 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-purple-800">Avatar Mode Features</p>
-                    <ul className="text-xs text-purple-700 mt-1 space-y-1">
-                      <li>• AI avatar presents questions</li>
-                      <li>• Record video/audio responses</li>
-                      <li>• Automatic speech-to-text transcription</li>
-                      <li>• More realistic interview experience</li>
-                    </ul>
-                    {!videoPermissionGranted && (
-                      <Button 
-                        onClick={initializeMedia}
-                        size="sm" 
-                        className="mt-3 bg-purple-600 hover:bg-purple-700"
-                        data-testid="button-enable-camera"
-                      >
-                        <Video className="h-4 w-4 mr-1" />
-                        Enable Camera & Microphone
-                      </Button>
-                    )}
+              <div className="space-y-4">
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <Video className="h-5 w-5 text-purple-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-purple-800">Avatar Mode Features</p>
+                      <ul className="text-xs text-purple-700 mt-1 space-y-1">
+                        <li>• AI avatar presents questions</li>
+                        <li>• Record video/audio responses</li>
+                        <li>• Automatic speech-to-text transcription</li>
+                        <li>• More realistic interview experience</li>
+                      </ul>
+                      {!videoPermissionGranted && (
+                        <Button 
+                          onClick={initializeMedia}
+                          size="sm" 
+                          className="mt-3 bg-purple-600 hover:bg-purple-700"
+                          data-testid="button-enable-camera"
+                        >
+                          <Video className="h-4 w-4 mr-1" />
+                          Enable Camera & Microphone
+                        </Button>
+                      )}
+                    </div>
                   </div>
+                </div>
+
+                {/* Avatar Selection */}
+                <div>
+                  <label className="block text-sm font-medium mb-3">
+                    Choose Your AI Interviewer
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {avatarOptions.map((avatar) => (
+                      <Card 
+                        key={avatar.id}
+                        className={`cursor-pointer transition-all hover:shadow-md ${
+                          selectedAvatar?.id === avatar.id 
+                            ? 'ring-2 ring-blue-500 bg-blue-50' 
+                            : 'hover:bg-gray-50'
+                        }`}
+                        onClick={() => setSelectedAvatar(avatar)}
+                        data-testid={`avatar-${avatar.id}`}
+                      >
+                        <CardContent className="p-4 text-center">
+                          <div className="text-3xl mb-2">{avatar.image}</div>
+                          <h4 className="font-semibold text-sm">{avatar.name}</h4>
+                          <p className="text-xs text-gray-600 mb-1">{avatar.description}</p>
+                          <div className="flex justify-center space-x-1">
+                            <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">
+                              {avatar.ethnicity}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  
+                  {selectedAvatar && (
+                    <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-2xl">{selectedAvatar.image}</span>
+                        <div>
+                          <p className="font-medium">{selectedAvatar.name}</p>
+                          <p className="text-sm text-gray-600">{selectedAvatar.description}</p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => speakQuestion("Hello! I'm your AI interviewer. Let's begin when you're ready.")}
+                          disabled={isSpeaking}
+                          data-testid="button-test-voice"
+                        >
+                          {isSpeaking ? '🔊 Speaking...' : '🔊 Test Voice'}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -904,12 +1100,43 @@ export default function MockInterview() {
                 <Card className="bg-purple-50 border-purple-200">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-4">
-                      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
-                        <User className="w-8 h-8 text-purple-600" />
+                      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-3xl">
+                        {selectedAvatar?.image || '👨🏻‍💼'}
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold text-purple-800">AI Recruiter</h4>
-                        <p className="text-sm text-purple-700">Ready to hear your response</p>
+                        <h4 className="font-semibold text-purple-800">
+                          {selectedAvatar?.name || 'AI Recruiter'}
+                        </h4>
+                        <p className="text-sm text-purple-700">
+                          {selectedAvatar?.description || 'Ready to hear your response'}
+                        </p>
+                        {isSpeaking && (
+                          <div className="flex items-center space-x-2 mt-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-green-700">Speaking...</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => speakQuestion(currentQuestion?.question || "")}
+                          disabled={isSpeaking || !currentQuestion}
+                          data-testid="button-replay-question"
+                        >
+                          {isSpeaking ? '🔊' : '🔄'}
+                        </Button>
+                        {isSpeaking && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={stopSpeaking}
+                            data-testid="button-stop-speaking"
+                          >
+                            🛑
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </CardContent>

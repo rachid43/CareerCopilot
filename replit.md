@@ -155,6 +155,9 @@ The application uses four main tables:
 - **January 2025**: Added video recording capabilities with MediaRecorder API for avatar interview mode
 - **January 2025**: Integrated OpenAI Whisper API for real-time speech-to-text transcription in avatar interviews
 - **January 2025**: Enhanced UI with camera permissions, recording controls, and video preview for immersive interview experience
+- **January 2025**: NEW - Avatar Selection & Text-to-Speech: 6 diverse AI interviewer personas (different genders, ethnicities) with browser-based speech synthesis
+- **January 2025**: Enhanced avatar mode with personalized AI recruiters speaking questions aloud and voice test functionality
+- **January 2025**: Added stop interview buttons for both text and avatar modes with consistent DOCX report generation including full transcripts
 
 ### Superadmin Features
 
