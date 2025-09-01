@@ -1384,10 +1384,17 @@ USER MESSAGE: ${content}`;
     }
   });
 
-  // Mock Interview routes (placeholder for future implementation)
+  // Mock Interview routes
   app.get("/api/interviews/sessions", isAuthenticated, async (req, res) => {
     try {
-      // Placeholder - return empty sessions for now
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // For now, return empty sessions - this will be expanded when we add session persistence
       res.json([]);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch interview sessions" });
@@ -1396,13 +1403,146 @@ USER MESSAGE: ${content}`;
 
   app.post("/api/interviews/start", isAuthenticated, async (req, res) => {
     try {
-      // Placeholder - return coming soon message
-      res.status(501).json({ 
-        message: "Mock Interview feature coming soon!",
-        eta: "Next update"
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { jobTitle, company, jobDescription, interviewType, difficultyLevel, recruiterPersona, language } = req.body;
+      
+      // Validate required fields
+      if (!jobTitle || !company || !interviewType || !difficultyLevel || !recruiterPersona) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      // Import InterviewAI dynamically
+      const { InterviewAI } = await import('./interview-ai');
+      const interviewAI = new InterviewAI();
+
+      // Generate first question
+      const context = {
+        jobTitle,
+        company,
+        jobDescription: jobDescription || '',
+        interviewType,
+        difficultyLevel,
+        recruiterPersona,
+        language: language || 'en',
+        currentQuestionIndex: 0,
+        previousQuestions: [],
+        previousAnswers: []
+      };
+
+      const firstQuestion = await interviewAI.generateQuestion(context);
+
+      // Create interview session data
+      const sessionData = {
+        id: Date.now().toString(),
+        userId: user.id,
+        jobTitle,
+        company,
+        jobDescription,
+        interviewType,
+        difficultyLevel,
+        recruiterPersona,
+        language: language || 'en',
+        status: 'active',
+        startedAt: new Date().toISOString(),
+        currentQuestionIndex: 0,
+        questions: [firstQuestion],
+        answers: [],
+        context
+      };
+
+      res.json({
+        session: sessionData,
+        currentQuestion: firstQuestion
       });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to start interview session" });
+    } catch (error: any) {
+      console.error('Error starting interview:', error);
+      res.status(500).json({ message: `Failed to start interview: ${error.message}` });
+    }
+  });
+
+  app.post("/api/interviews/:sessionId/answer", isAuthenticated, async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { answer, questionIndex } = req.body;
+      
+      if (!answer) {
+        return res.status(400).json({ message: "Answer is required" });
+      }
+
+      // For now, we'll work with session data in memory
+      // In a full implementation, this would be stored in database
+      
+      // Import InterviewAI
+      const { InterviewAI } = await import('./interview-ai');
+      const interviewAI = new InterviewAI();
+
+      // Mock session context - in real app this would be retrieved from database
+      const context = {
+        jobTitle: req.body.jobTitle || 'Software Engineer',
+        company: req.body.company || 'Tech Company',
+        jobDescription: req.body.jobDescription || '',
+        interviewType: req.body.interviewType || 'behavioral',
+        difficultyLevel: req.body.difficultyLevel || 'mid',
+        recruiterPersona: req.body.recruiterPersona || 'friendly',
+        language: req.body.language || 'en',
+        currentQuestionIndex: questionIndex + 1,
+        previousQuestions: req.body.previousQuestions || [],
+        previousAnswers: [...(req.body.previousAnswers || []), answer]
+      };
+
+      // Evaluate the answer
+      const evaluation = await interviewAI.evaluateAnswer(
+        context,
+        req.body.previousQuestions?.[questionIndex] || 'Tell me about yourself',
+        answer
+      );
+
+      // Check if interview should continue (max 10 questions)
+      let nextQuestion = null;
+      if (context.currentQuestionIndex < 10) {
+        nextQuestion = await interviewAI.generateQuestion(context);
+      }
+
+      res.json({
+        evaluation,
+        nextQuestion,
+        isComplete: context.currentQuestionIndex >= 10,
+        questionIndex: context.currentQuestionIndex
+      });
+
+    } catch (error: any) {
+      console.error('Error processing interview answer:', error);
+      res.status(500).json({ message: `Failed to process answer: ${error.message}` });
+    }
+  });
+
+  app.post("/api/interviews/:sessionId/complete", isAuthenticated, async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { questions, answers, context } = req.body;
+
+      // Import InterviewAI
+      const { InterviewAI } = await import('./interview-ai');
+      const interviewAI = new InterviewAI();
+
+      // Generate final feedback
+      const finalFeedback = await interviewAI.generateFinalFeedback(context, questions, answers);
+
+      res.json({
+        feedback: finalFeedback,
+        sessionId,
+        completedAt: new Date().toISOString()
+      });
+
+    } catch (error: any) {
+      console.error('Error completing interview:', error);
+      res.status(500).json({ message: `Failed to complete interview: ${error.message}` });
     }
   });
 

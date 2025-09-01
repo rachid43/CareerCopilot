@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PlayCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { PlayCircle, MessageCircle, Send, RotateCcw, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/lib/i18n';
+import { apiRequest } from '@/lib/queryClient';
 
 interface InterviewSession {
   id: number;
@@ -46,20 +48,136 @@ export default function MockInterview() {
     recruiterPersona: 'friendly'
   });
 
-  const handleStartInterview = () => {
-    if (!setupForm.jobTitle || !setupForm.company || !setupForm.jobDescription) {
+  // Interview state
+  const [isInterviewActive, setIsInterviewActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [sessionData, setSessionData] = useState<any>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
+  const [currentAnswer, setCurrentAnswer] = useState('');
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [previousQA, setPreviousQA] = useState<any[]>([]);
+  const [finalFeedback, setFinalFeedback] = useState<any>(null);
+
+  const handleStartInterview = async () => {
+    if (!setupForm.jobTitle || !setupForm.company) {
       toast({
         title: 'Error' as any,
-        description: 'Please fill all required fields' as any,
+        description: 'Please fill in the job title and company name' as any,
         variant: 'destructive'
       });
       return;
     }
+
+    setIsLoading(true);
     
-    toast({
-      title: 'Coming Soon' as any,
-      description: 'Mock Interview feature will be available in the next update!' as any
-    });
+    try {
+      const response = await apiRequest('POST', '/api/interviews/start', {
+        ...setupForm,
+        language: 'en'
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to start interview');
+      }
+      
+      setSessionData(data.session);
+      setCurrentQuestion(data.currentQuestion);
+      setIsInterviewActive(true);
+      setCurrentQuestionIndex(0);
+      setPreviousQA([]);
+      setFinalFeedback(null);
+      
+      toast({
+        title: 'Interview Started!' as any,
+        description: 'Good luck with your mock interview!' as any,
+      });
+      
+    } catch (error: any) {
+      toast({
+        title: 'Error' as any,
+        description: error.message || 'Failed to start interview' as any,
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmitAnswer = async () => {
+    if (!currentAnswer.trim()) return;
+    setIsProcessing(true);
+
+    try {
+      const response = await apiRequest('POST', `/api/interviews/${sessionData?.id}/answer`, {
+        answer: currentAnswer,
+        questionIndex: currentQuestionIndex,
+        jobTitle: setupForm.jobTitle,
+        company: setupForm.company,
+        jobDescription: setupForm.jobDescription,
+        interviewType: setupForm.interviewType,
+        difficultyLevel: setupForm.difficultyLevel,
+        recruiterPersona: setupForm.recruiterPersona,
+        language: 'en',
+        previousQuestions: previousQA.map(qa => qa.question),
+        previousAnswers: previousQA.map(qa => qa.answer)
+      });
+
+      const data = await response.json();
+
+      const newQA = {
+        question: currentQuestion.question,
+        answer: currentAnswer,
+        evaluation: data.evaluation
+      };
+      
+      setPreviousQA(prev => [...prev, newQA]);
+
+      if (data.isComplete || currentQuestionIndex >= 9) {
+        const finalResponse = await apiRequest('POST', `/api/interviews/${sessionData?.id}/complete`, {
+          questions: [...previousQA.map(qa => qa.question), currentQuestion.question],
+          answers: [...previousQA.map(qa => qa.answer), currentAnswer],
+          context: {
+            jobTitle: setupForm.jobTitle,
+            company: setupForm.company,
+            jobDescription: setupForm.jobDescription,
+            interviewType: setupForm.interviewType,
+            difficultyLevel: setupForm.difficultyLevel,
+            recruiterPersona: setupForm.recruiterPersona,
+            language: 'en'
+          }
+        });
+
+        const finalData = await finalResponse.json();
+        setFinalFeedback(finalData.feedback);
+      } else {
+        setCurrentQuestion(data.nextQuestion);
+        setCurrentQuestionIndex(prev => prev + 1);
+      }
+
+      setCurrentAnswer('');
+
+    } catch (error: any) {
+      toast({
+        title: 'Error' as any,
+        description: error.message || 'Failed to process answer' as any,
+        variant: 'destructive'
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleResetInterview = () => {
+    setIsInterviewActive(false);
+    setSessionData(null);
+    setCurrentQuestion(null);
+    setCurrentAnswer('');
+    setCurrentQuestionIndex(0);
+    setPreviousQA([]);
+    setFinalFeedback(null);
   };
 
   return (
@@ -71,22 +189,27 @@ export default function MockInterview() {
         <p className="text-gray-600 dark:text-gray-400">
           Practice with an AI recruiter for realistic interview training
         </p>
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4">
-          <p className="text-amber-800 dark:text-amber-200">
-            🚧 <strong>Coming Soon!</strong> The Mock Interview feature is being developed and will be available in the next update.
-          </p>
-        </div>
+        {isInterviewActive && (
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mt-4">
+            <p className="text-green-800 dark:text-green-200">
+              🎯 <strong>Interview Active!</strong> Answer the questions below to practice your interview skills.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Interview Setup Preview */}
+      {/* Interview Setup or Active Interview */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <PlayCircle className="h-5 w-5" />
-            Interview Setup (Preview)
+            {isInterviewActive ? 'Mock Interview' : 'Interview Setup'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          
+        {!isInterviewActive ? (
+          <div className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
@@ -186,10 +309,217 @@ export default function MockInterview() {
             className="w-full"
             size="lg"
             data-testid="button-start-interview"
+            disabled={!setupForm.jobTitle || !setupForm.company || isLoading}
           >
-            <PlayCircle className="h-5 w-5 mr-2" />
-            Start Mock Interview (Coming Soon)
+            {isLoading ? (
+              <>
+                <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                Starting...
+              </>
+            ) : (
+              <>
+                <PlayCircle className="h-5 w-5 mr-2" />
+                Start Mock Interview
+              </>
+            )}
           </Button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Interview Progress */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">
+                  Question {currentQuestionIndex + 1} / 10
+                </span>
+                <Badge variant="secondary">
+                  {sessionData?.interviewType} - {sessionData?.difficultyLevel}
+                </Badge>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${((currentQuestionIndex + 1) / 10) * 100}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Current Question */}
+            {currentQuestion && (
+              <Card className="border-l-4 border-l-green-500">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-green-100 p-2 rounded-full">
+                      <MessageCircle className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        AI Interviewer
+                      </h4>
+                      <p className="text-gray-700 leading-relaxed">
+                        {currentQuestion.question}
+                      </p>
+                      {currentQuestion.expectedTopics && currentQuestion.expectedTopics.length > 0 && (
+                        <div className="mt-3">
+                          <p className="text-xs text-gray-500 mb-1">Key topics to address:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {currentQuestion.expectedTopics.map((topic: string, index: number) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {topic}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Answer Input */}
+            {!finalFeedback && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Answer
+                  </label>
+                  <Textarea
+                    value={currentAnswer}
+                    onChange={(e) => setCurrentAnswer(e.target.value)}
+                    placeholder="Type your answer here..."
+                    className="min-h-32 resize-none"
+                    rows={6}
+                    data-testid="textarea-answer"
+                  />
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-gray-500">
+                    {currentAnswer.length} characters
+                  </div>
+                  <Button
+                    onClick={handleSubmitAnswer}
+                    disabled={isProcessing || !currentAnswer.trim()}
+                    className="bg-green-600 hover:bg-green-700"
+                    data-testid="button-submit-answer"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        {currentQuestionIndex >= 9 ? 'Finish Interview' : 'Next Question'}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Previous Q&A */}
+            {previousQA.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="font-semibold text-gray-900">Previous Questions</h4>
+                {previousQA.map((qa: any, index: number) => (
+                  <Card key={index} className="bg-gray-50">
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div>
+                          <p className="font-medium text-sm text-gray-700 mb-1">
+                            Q{index + 1}:
+                          </p>
+                          <p className="text-sm text-gray-800">{qa.question}</p>
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm text-gray-700 mb-1">
+                            Your Answer:
+                          </p>
+                          <p className="text-sm text-gray-600">{qa.answer}</p>
+                        </div>
+                        {qa.evaluation && (
+                          <div className="bg-white p-3 rounded border">
+                            <p className="font-medium text-sm text-gray-700 mb-1">
+                              Feedback:
+                            </p>
+                            <p className="text-sm text-gray-600">{qa.evaluation.feedback}</p>
+                            {qa.evaluation.score && (
+                              <p className="text-xs text-green-600 mt-1">
+                                Score: {qa.evaluation.score}/10
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Final Feedback */}
+            {finalFeedback && (
+              <Card className="border-green-200 bg-green-50">
+                <CardContent className="p-6">
+                  <h4 className="font-bold text-lg text-green-800 mb-4">
+                    🎉 Interview Complete!
+                  </h4>
+                  <div className="space-y-4">
+                    <div>
+                      <h5 className="font-semibold text-green-700 mb-2">Overall Performance</h5>
+                      <p className="text-green-800">{finalFeedback.overallFeedback}</p>
+                    </div>
+                    
+                    {finalFeedback.strengths && finalFeedback.strengths.length > 0 && (
+                      <div>
+                        <h5 className="font-semibold text-green-700 mb-2">Strengths</h5>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {finalFeedback.strengths.map((strength: string, index: number) => (
+                            <li key={index} className="text-green-700">{strength}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {finalFeedback.improvements && finalFeedback.improvements.length > 0 && (
+                      <div>
+                        <h5 className="font-semibold text-green-700 mb-2">Areas for Improvement</h5>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {finalFeedback.improvements.map((improvement: string, index: number) => (
+                            <li key={index} className="text-green-700">{improvement}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {finalFeedback.score && (
+                      <div className="bg-white p-4 rounded border">
+                        <h5 className="font-semibold text-green-700 mb-2">Final Score</h5>
+                        <div className="text-2xl font-bold text-green-800">
+                          {finalFeedback.score}/100
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <Button
+                      onClick={handleResetInterview}
+                      variant="outline"
+                      className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                    >
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Start New Interview
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
         </CardContent>
       </Card>
     </div>
