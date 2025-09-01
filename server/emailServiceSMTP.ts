@@ -12,6 +12,7 @@ interface EmailParams {
 export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
   try {
     console.log('Sending email with Hostinger SMTP...');
+    console.log('Email params:', JSON.stringify(params, null, 2));
     console.log('From:', params.from);
     console.log('To:', params.to);
     console.log('Subject:', params.subject);

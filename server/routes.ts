@@ -1901,17 +1901,18 @@ USER MESSAGE: ${content}`;
       });
       
       // Send invitation email
-      const invitationLink = `${req.protocol}://${req.get('host')}/signup?token=${token}`;
-      const emailContent = generateInvitationEmail(email, invitationLink);
+      const invitationLink = `${req.protocol}://${req.get('host')}/invite/${token}`;
+      const emailContent = generateInvitationEmail(email, token, 'CareerCopilot Admin');
+      
+      console.log('Generated email content:', JSON.stringify(emailContent, null, 2));
       
       try {
-        await sendEmailWithFallback(
-          email,
-          'You\'re invited to CareerCopilot - AI Career Assistant',
-          emailContent.text,
-          emailContent.html
-        );
-        console.log(`✅ Invitation email sent to ${email}`);
+        const emailSent = await sendEmailWithFallback(emailContent);
+        if (emailSent) {
+          console.log(`✅ Invitation email sent to ${email}`);
+        } else {
+          console.log(`❌ Failed to send invitation email to ${email}`);
+        }
       } catch (emailError) {
         console.error('Failed to send invitation email:', emailError);
         // Continue anyway - admin can manually share the token

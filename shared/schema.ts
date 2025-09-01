@@ -94,7 +94,8 @@ export const userInvitations = pgTable("user_invitations", {
   token: text("token").notNull().unique(),
   expiresAt: timestamp("expires_at").notNull(),
   isUsed: boolean("is_used").notNull().default(false),
-  invitedBy: integer("invited_by").notNull().references(() => users.id),
+  invitedBy: integer("invited_by").references(() => users.id),
+  subscriptionExpiresAt: timestamp("subscription_expires_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
