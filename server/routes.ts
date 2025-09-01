@@ -1548,6 +1548,26 @@ USER MESSAGE: ${content}`;
     }
   });
 
+  // Simple CV upload for Mock Interview feature
+  app.post("/api/upload", isAuthenticated, upload.single('file'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      // Parse the CV content
+      const content = await parseDocument(req.file.path, req.file.mimetype);
+      
+      res.json({
+        filename: req.file.originalname,
+        content: content
+      });
+    } catch (error: any) {
+      console.error('Error uploading CV for interview:', error);
+      res.status(500).json({ message: `Failed to process CV: ${error.message}` });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
