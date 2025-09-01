@@ -1527,19 +1527,26 @@ USER MESSAGE: ${content}`;
   app.post("/api/interviews/:sessionId/complete", isAuthenticated, async (req, res) => {
     try {
       const { sessionId } = req.params;
-      const { questions, answers, context } = req.body;
+      const { questions, answers, context, forcedStop, currentProgress } = req.body;
 
       // Import InterviewAI
       const { InterviewAI } = await import('./interview-ai');
       const interviewAI = new InterviewAI();
 
-      // Generate final feedback
-      const finalFeedback = await interviewAI.generateFinalFeedback(context, questions, answers);
+      // Generate final feedback (accounting for forced stop)
+      const finalFeedback = await interviewAI.generateFinalFeedback(
+        context, 
+        questions, 
+        answers, 
+        forcedStop, 
+        currentProgress
+      );
 
       res.json({
         feedback: finalFeedback,
         sessionId,
-        completedAt: new Date().toISOString()
+        completedAt: new Date().toISOString(),
+        forcedStop: forcedStop || false
       });
 
     } catch (error: any) {

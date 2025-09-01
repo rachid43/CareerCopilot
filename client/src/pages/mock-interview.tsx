@@ -189,6 +189,52 @@ export default function MockInterview() {
     }
   };
 
+  const handleStopInterview = async () => {
+    if (!sessionData) return;
+    
+    try {
+      // Prepare the interview data for completion
+      const questions = previousQA.map(qa => qa.question);
+      const answers = previousQA.map(qa => qa.answer);
+      const context = {
+        jobTitle: sessionData.jobTitle,
+        company: sessionData.company,
+        interviewType: sessionData.interviewType,
+        difficultyLevel: sessionData.difficultyLevel,
+        language: 'en' // Default to English for now
+      };
+      
+      // Call the complete interview endpoint with current progress
+      const response = await apiRequest('POST', `/api/interviews/${sessionData.id}/complete`, {
+        questions,
+        answers,
+        context,
+        forcedStop: true,
+        currentProgress: {
+          questionsAnswered: previousQA.length,
+          totalQuestions: 10
+        }
+      });
+      
+      const result = await response.json();
+      setFinalFeedback(result.feedback);
+      stopMediaStream();
+      setIsRecording(false);
+      
+      toast({
+        title: 'Interview Stopped' as any,
+        description: 'Interview ended early. You can review your feedback below.' as any,
+      });
+      
+    } catch (error: any) {
+      toast({
+        title: 'Error' as any,
+        description: 'Failed to stop interview properly' as any,
+        variant: 'destructive'
+      });
+    }
+  };
+
   const handleResetInterview = () => {
     setIsInterviewActive(false);
     setSessionData(null);
@@ -988,24 +1034,36 @@ export default function MockInterview() {
                   <div className="text-sm text-gray-500">
                     {currentAnswer.length} characters
                   </div>
-                  <Button
-                    onClick={handleSubmitAnswer}
-                    disabled={isProcessing || !currentAnswer.trim()}
-                    className="bg-green-600 hover:bg-green-700"
-                    data-testid="button-submit-answer"
-                  >
-                    {isProcessing ? (
-                      <>
-                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        {currentQuestionIndex >= 9 ? 'Finish Interview' : 'Next Question'}
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={handleStopInterview}
+                      variant="destructive"
+                      size="sm"
+                      data-testid="button-stop-interview"
+                    >
+                      <X className="h-4 w-4 mr-1" />
+                      Stop Interview
+                    </Button>
+                    
+                    <Button
+                      onClick={handleSubmitAnswer}
+                      disabled={isProcessing || !currentAnswer.trim()}
+                      className="bg-green-600 hover:bg-green-700"
+                      data-testid="button-submit-answer"
+                    >
+                      {isProcessing ? (
+                        <>
+                          <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 mr-2" />
+                          {currentQuestionIndex >= 9 ? 'Finish Interview' : 'Next Question'}
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}

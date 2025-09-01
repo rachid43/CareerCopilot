@@ -203,7 +203,13 @@ Provide JSON response:
     }
   }
 
-  async generateFinalFeedback(context: InterviewContext, questions: string[], answers: string[]): Promise<{
+  async generateFinalFeedback(
+    context: InterviewContext, 
+    questions: string[], 
+    answers: string[], 
+    forcedStop?: boolean, 
+    currentProgress?: { questionsAnswered: number; totalQuestions: number }
+  ): Promise<{
     overallScore: number;
     summary: string;
     categoryScores: {
@@ -227,11 +233,15 @@ Provide JSON response:
     const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
 
     const qaText = questions.map((q, i) => `Q${i+1}: ${q}\nA${i+1}: ${answers[i] || 'No answer provided'}`).join('\n\n');
+    
+    const stopInfo = forcedStop && currentProgress 
+      ? `\n\nNOTE: Interview was stopped early after ${currentProgress.questionsAnswered} out of ${currentProgress.totalQuestions} questions.`
+      : '';
 
     const prompt = `Provide comprehensive interview feedback for ${jobTitle} at ${company}.
 
 INTERVIEW TRANSCRIPT:
-${qaText}
+${qaText}${stopInfo}
 
 POSITION LEVEL: ${difficultyLevel}
 LANGUAGE: Respond in ${responseLanguage}
