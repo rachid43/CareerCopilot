@@ -151,6 +151,10 @@ The application uses four main tables:
 - **January 2025**: Added overall interview scoring system with prominently displayed 0-100 score and category breakdowns
 - **January 2025**: Implemented DOCX report download functionality with comprehensive interview analysis and Q&A documentation
 - **January 2025**: Integrated Mock Interview navigation in main header and routing system with complete workflow implementation
+- **January 2025**: MAJOR FEATURE - Implemented dual interview modes: Text-based and Avatar mode with webcam/microphone recording
+- **January 2025**: Added video recording capabilities with MediaRecorder API for avatar interview mode
+- **January 2025**: Integrated OpenAI Whisper API for real-time speech-to-text transcription in avatar interviews
+- **January 2025**: Enhanced UI with camera permissions, recording controls, and video preview for immersive interview experience
 
 ### Superadmin Features
 

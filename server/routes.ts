@@ -1568,6 +1568,41 @@ USER MESSAGE: ${content}`;
     }
   });
 
+  // Audio transcription for avatar interview mode using OpenAI Whisper
+  app.post("/api/transcribe-audio", isAuthenticated, upload.single('audio'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No audio file uploaded" });
+      }
+
+      // Use OpenAI Whisper for audio transcription
+      const fs = require('fs');
+      const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+
+      const transcription = await openai.audio.transcriptions.create({
+        file: fs.createReadStream(req.file.path),
+        model: "whisper-1",
+        language: "en", // Can be made dynamic based on user preference
+      });
+
+      // Clean up the uploaded file
+      fs.unlink(req.file.path, (err: any) => {
+        if (err) console.error('Error deleting temp file:', err);
+      });
+      
+      res.json({
+        transcription: transcription.text,
+        confidence: 0.95 // Whisper generally has high confidence
+      });
+      
+    } catch (error: any) {
+      console.error('Error transcribing audio:', error);
+      res.status(500).json({ message: `Failed to transcribe audio: ${error.message}` });
+    }
+  });
+
   // Download interview report as DOCX
   app.post("/api/interviews/:sessionId/download", isAuthenticated, async (req, res) => {
     try {

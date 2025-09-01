@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X, Download } from 'lucide-react';
+import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X, Download, Video, Mic, MicOff, VideoOff, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/lib/i18n';
 import { apiRequest } from '@/lib/queryClient';
@@ -46,7 +46,8 @@ export default function MockInterview() {
     jobDescription: '',
     interviewType: 'mixed',
     difficultyLevel: 'mid',
-    recruiterPersona: 'friendly'
+    recruiterPersona: 'friendly',
+    interviewMode: 'text' // 'text' or 'avatar'
   });
 
   // CV import state
@@ -63,6 +64,14 @@ export default function MockInterview() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [previousQA, setPreviousQA] = useState<any[]>([]);
   const [finalFeedback, setFinalFeedback] = useState<any>(null);
+
+  // Avatar mode state
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [videoPermissionGranted, setVideoPermissionGranted] = useState(false);
 
   const handleStartInterview = async () => {
     if (!setupForm.jobTitle || !setupForm.company) {
@@ -186,6 +195,9 @@ export default function MockInterview() {
     setPreviousQA([]);
     setFinalFeedback(null);
     setImportedCV(null);
+    stopMediaStream();
+    setIsRecording(false);
+    setRecordedBlobs([]);
   };
 
   const handleCVImport = async (files: FileList) => {
@@ -289,6 +301,110 @@ export default function MockInterview() {
         description: error.message || 'Failed to download interview report' as any,
         variant: 'destructive'
       });
+    }
+  };
+
+  // Avatar mode functions
+  const initializeMedia = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+      setMediaStream(stream);
+      setVideoPermissionGranted(true);
+      
+      toast({
+        title: 'Camera & Microphone Ready!' as any,
+        description: 'You can now start the avatar interview' as any,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Media Access Denied' as any,
+        description: 'Please allow camera and microphone access for avatar mode' as any,
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const startRecording = () => {
+    if (!mediaStream) return;
+
+    const recorder = new MediaRecorder(mediaStream, {
+      mimeType: 'video/webm;codecs=vp9'
+    });
+    
+    const blobs: Blob[] = [];
+    
+    recorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        blobs.push(event.data);
+      }
+    };
+    
+    recorder.onstop = () => {
+      setRecordedBlobs(blobs);
+      transcribeAudio(blobs);
+    };
+    
+    setMediaRecorder(recorder);
+    setRecordedBlobs([]);
+    recorder.start();
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const transcribeAudio = async (blobs: Blob[]) => {
+    setIsTranscribing(true);
+    
+    try {
+      // Create video blob
+      const videoBlob = new Blob(blobs, { type: 'video/webm' });
+      
+      // For now, we'll extract audio from video using browser APIs
+      // In a full implementation, this would use speech-to-text API
+      const formData = new FormData();
+      formData.append('audio', videoBlob, 'recording.webm');
+      
+      const response = await fetch('/api/transcribe-audio', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Transcription failed');
+      }
+      
+      const data = await response.json();
+      setCurrentAnswer(data.transcription || '');
+      
+      toast({
+        title: 'Speech Transcribed!' as any,
+        description: 'Your answer has been converted to text' as any,
+      });
+      
+    } catch (error: any) {
+      toast({
+        title: 'Transcription Failed' as any,
+        description: 'Please type your answer manually' as any,
+        variant: 'destructive'
+      });
+    } finally {
+      setIsTranscribing(false);
+    }
+  };
+
+  const stopMediaStream = () => {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+      setMediaStream(null);
+      setVideoPermissionGranted(false);
     }
   };
 
@@ -452,6 +568,74 @@ export default function MockInterview() {
             )}
           </div>
 
+          {/* Interview Mode Selection */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium mb-2">
+              Interview Mode
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div 
+                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                  setupForm.interviewMode === 'text' 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setSetupForm({ ...setupForm, interviewMode: 'text' })}
+                data-testid="mode-text"
+              >
+                <div className="text-center space-y-2">
+                  <MessageCircle className="h-8 w-8 mx-auto text-blue-600" />
+                  <h3 className="font-semibold">Text Interview</h3>
+                  <p className="text-xs text-gray-600">Type your answers to interview questions</p>
+                </div>
+              </div>
+              
+              <div 
+                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                  setupForm.interviewMode === 'avatar' 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setSetupForm({ ...setupForm, interviewMode: 'avatar' })}
+                data-testid="mode-avatar"
+              >
+                <div className="text-center space-y-2">
+                  <Video className="h-8 w-8 mx-auto text-purple-600" />
+                  <h3 className="font-semibold">Avatar Interview</h3>
+                  <p className="text-xs text-gray-600">AI avatar asks questions, record video answers</p>
+                </div>
+              </div>
+            </div>
+            
+            {setupForm.interviewMode === 'avatar' && (
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <Video className="h-5 w-5 text-purple-600 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-purple-800">Avatar Mode Features</p>
+                    <ul className="text-xs text-purple-700 mt-1 space-y-1">
+                      <li>• AI avatar presents questions</li>
+                      <li>• Record video/audio responses</li>
+                      <li>• Automatic speech-to-text transcription</li>
+                      <li>• More realistic interview experience</li>
+                    </ul>
+                    {!videoPermissionGranted && (
+                      <Button 
+                        onClick={initializeMedia}
+                        size="sm" 
+                        className="mt-3 bg-purple-600 hover:bg-purple-700"
+                        data-testid="button-enable-camera"
+                      >
+                        <Video className="h-4 w-4 mr-1" />
+                        Enable Camera & Microphone
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
@@ -508,7 +692,12 @@ export default function MockInterview() {
             className="w-full"
             size="lg"
             data-testid="button-start-interview"
-            disabled={!setupForm.jobTitle || !setupForm.company || isLoading}
+            disabled={
+              !setupForm.jobTitle || 
+              !setupForm.company || 
+              isLoading ||
+              (setupForm.interviewMode === 'avatar' && !videoPermissionGranted)
+            }
           >
             {isLoading ? (
               <>
@@ -518,10 +707,16 @@ export default function MockInterview() {
             ) : (
               <>
                 <PlayCircle className="h-5 w-5 mr-2" />
-                Start Mock Interview
+                Start {setupForm.interviewMode === 'avatar' ? 'Avatar' : 'Text'} Interview
               </>
             )}
           </Button>
+          
+          {setupForm.interviewMode === 'avatar' && !videoPermissionGranted && (
+            <p className="text-sm text-orange-600 text-center">
+              Please enable camera & microphone to start avatar interview
+            </p>
+          )}
           </div>
         ) : (
           <div className="space-y-6">
@@ -576,8 +771,124 @@ export default function MockInterview() {
               </Card>
             )}
 
-            {/* Answer Input */}
-            {!finalFeedback && (
+            {/* Answer Input - Avatar Mode */}
+            {!finalFeedback && setupForm.interviewMode === 'avatar' && (
+              <div className="space-y-4">
+                {/* AI Avatar Section */}
+                <Card className="bg-purple-50 border-purple-200">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                        <User className="w-8 h-8 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-purple-800">AI Recruiter</h4>
+                        <p className="text-sm text-purple-700">Ready to hear your response</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Video Recording Interface */}
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {/* User Video Feed */}
+                      <div>
+                        <h4 className="font-semibold mb-3">Your Video</h4>
+                        <div className="relative bg-gray-900 rounded-lg overflow-hidden aspect-video">
+                          {mediaStream ? (
+                            <video
+                              ref={(video) => {
+                                if (video && mediaStream) {
+                                  video.srcObject = mediaStream;
+                                  video.play();
+                                }
+                              }}
+                              className="w-full h-full object-cover"
+                              muted
+                              autoPlay
+                              playsInline
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <div className="text-center text-gray-400">
+                                <VideoOff className="w-8 h-8 mx-auto mb-2" />
+                                <p className="text-sm">Camera not enabled</p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Recording Indicator */}
+                          {isRecording && (
+                            <div className="absolute top-4 left-4 flex items-center space-x-2">
+                              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                              <span className="text-white text-sm font-medium">Recording</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Recording Controls */}
+                        <div className="flex justify-center space-x-3 mt-4">
+                          {!isRecording ? (
+                            <Button 
+                              onClick={startRecording}
+                              disabled={!mediaStream}
+                              className="bg-red-600 hover:bg-red-700"
+                              data-testid="button-start-recording"
+                            >
+                              <Mic className="w-4 h-4 mr-2" />
+                              Start Recording
+                            </Button>
+                          ) : (
+                            <Button 
+                              onClick={stopRecording}
+                              variant="outline"
+                              className="border-red-600 text-red-600 hover:bg-red-50"
+                              data-testid="button-stop-recording"
+                            >
+                              <MicOff className="w-4 h-4 mr-2" />
+                              Stop Recording
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Transcribed Answer */}
+                      <div>
+                        <h4 className="font-semibold mb-3">Transcribed Answer</h4>
+                        <div className="space-y-3">
+                          {isTranscribing && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                              <div className="flex items-center space-x-3">
+                                <div className="animate-spin w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                                <span className="text-blue-800">Transcribing your response...</span>
+                              </div>
+                            </div>
+                          )}
+                          
+                          <Textarea
+                            value={currentAnswer}
+                            onChange={(e) => setCurrentAnswer(e.target.value)}
+                            placeholder="Your answer will appear here after recording, or you can type manually..."
+                            className="min-h-32 resize-none"
+                            rows={6}
+                            data-testid="textarea-answer"
+                          />
+                          
+                          <p className="text-xs text-gray-500">
+                            You can edit the transcribed text before submitting your answer
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Answer Input - Text Mode */}
+            {!finalFeedback && setupForm.interviewMode === 'text' && (
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
