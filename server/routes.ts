@@ -151,6 +151,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   await setupAuth(app);
 
+  // Initialize dev user as superadmin with 12-month subscription
+  try {
+    let devUser = await storage.getUserByUsername('dev-user-123');
+    if (!devUser) {
+      const expiryDate = new Date();
+      expiryDate.setFullYear(expiryDate.getFullYear() + 1); // 12 months
+      
+      devUser = await storage.createUser({
+        username: 'dev-user-123',
+        email: 'dev@example.com',
+        firstName: 'Development',
+        lastName: 'User',
+        role: 'superadmin',
+        isActive: true,
+        subscriptionStatus: 'active',
+        subscriptionExpiresAt: expiryDate
+      });
+      console.log('✅ Created dev-user-123 as superadmin with 12-month subscription');
+    } else {
+      await storage.makeUserSuperadmin('dev-user-123');
+      console.log('✅ Made existing dev-user-123 a superadmin');
+    }
+  } catch (error) {
+    console.log('Note: Could not initialize dev-user-123 superadmin');
+  }
+
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
@@ -1789,6 +1815,122 @@ USER MESSAGE: ${content}`;
     } catch (error: any) {
       console.error('Error generating interview report:', error);
       res.status(500).json({ message: `Failed to generate report: ${error.message}` });
+    }
+  });
+
+  // Admin API routes - must be protected with superadmin middleware
+  app.get('/api/admin/users', isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ message: 'Failed to fetch users' });
+    }
+  });
+
+  app.put('/api/admin/users/:id/subscription', isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { subscriptionStatus, subscriptionExpiresAt } = req.body;
+      
+      if (!['active', 'hold', 'cancelled'].includes(subscriptionStatus)) {
+        return res.status(400).json({ message: 'Invalid subscription status' });
+      }
+      
+      const updatedUser = await storage.updateUserSubscription(
+        userId, 
+        subscriptionStatus, 
+        subscriptionExpiresAt ? new Date(subscriptionExpiresAt) : undefined
+      );
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error updating subscription:', error);
+      res.status(500).json({ message: 'Failed to update subscription' });
+    }
+  });
+
+  app.put('/api/admin/users/:id/status', isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { isActive, accountExpiresAt } = req.body;
+      
+      const updatedUser = await storage.updateUser(userId, {
+        isActive,
+        accountExpiresAt: accountExpiresAt ? new Date(accountExpiresAt) : undefined
+      });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      res.status(500).json({ message: 'Failed to update user status' });
+    }
+  });
+
+  app.post('/api/admin/invitations', isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+      }
+      
+      const token = generateToken();
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 30); // 30 days expiry
+      
+      // Set default 12-month subscription
+      const subscriptionExpiresAt = new Date();
+      subscriptionExpiresAt.setFullYear(subscriptionExpiresAt.getFullYear() + 1); // 12 months
+      
+      const invitation = await storage.createInvitation({
+        email,
+        token,
+        expiresAt,
+        isUsed: false,
+        subscriptionExpiresAt
+      });
+      
+      // Send invitation email
+      const invitationLink = `${req.protocol}://${req.get('host')}/signup?token=${token}`;
+      const emailContent = generateInvitationEmail(email, invitationLink);
+      
+      try {
+        await sendEmailWithFallback(
+          email,
+          'You\'re invited to CareerCopilot - AI Career Assistant',
+          emailContent.text,
+          emailContent.html
+        );
+        console.log(`✅ Invitation email sent to ${email}`);
+      } catch (emailError) {
+        console.error('Failed to send invitation email:', emailError);
+        // Continue anyway - admin can manually share the token
+      }
+      
+      res.json({ invitation, invitationLink });
+    } catch (error) {
+      console.error('Error creating invitation:', error);
+      res.status(500).json({ message: 'Failed to create invitation' });
+    }
+  });
+
+  app.get('/api/admin/invitations', isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const invitations = await storage.getActiveInvitations();
+      res.json(invitations);
+    } catch (error) {
+      console.error('Error fetching invitations:', error);
+      res.status(500).json({ message: 'Failed to fetch invitations' });
     }
   });
 

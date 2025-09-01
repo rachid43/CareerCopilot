@@ -8,6 +8,8 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined>;
+  updateUserSubscription(id: number, subscriptionStatus: string, subscriptionExpiresAt?: Date): Promise<User | undefined>;
+  makeUserSuperadmin(username: string): Promise<User | undefined>;
   
   getProfile(sessionId: string): Promise<Profile | undefined>;
   getProfileByUserId(userId: string): Promise<Profile | undefined>;
@@ -225,7 +227,37 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users);
+    return await db.select().from(users).orderBy(desc(users.createdAt));
+  }
+
+  async updateUserSubscription(id: number, subscriptionStatus: string, subscriptionExpiresAt?: Date): Promise<User | undefined> {
+    const updates: any = { 
+      subscriptionStatus,
+      updatedAt: new Date()
+    };
+    
+    if (subscriptionExpiresAt !== undefined) {
+      updates.subscriptionExpiresAt = subscriptionExpiresAt;
+    }
+    
+    const [user] = await db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async makeUserSuperadmin(username: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ 
+        role: 'superadmin',
+        updatedAt: new Date()
+      })
+      .where(eq(users.username, username))
+      .returning();
+    return user || undefined;
   }
 
   async updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined> {
@@ -389,7 +421,19 @@ class MemoryStorage implements IStorage {
   }
 
   async createUser(user: InsertUser): Promise<User> {
-    const newUser = { ...user, id: this.nextId++, role: user.role || 'user', isActive: user.isActive ?? true } as User;
+    const defaultExpiry = new Date();
+    defaultExpiry.setFullYear(defaultExpiry.getFullYear() + 1); // 12 months default
+    
+    const newUser = { 
+      ...user, 
+      id: this.nextId++, 
+      role: user.role || 'user', 
+      isActive: user.isActive ?? true,
+      subscriptionStatus: user.subscriptionStatus || 'active',
+      subscriptionExpiresAt: user.subscriptionExpiresAt || defaultExpiry,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } as User;
     this.users.push(newUser);
     return newUser;
   }
@@ -573,6 +617,29 @@ class MemoryStorage implements IStorage {
     if (index === -1) return false;
     this.jobApplications.splice(index, 1);
     return true;
+  }
+
+  async updateUserSubscription(id: number, subscriptionStatus: string, subscriptionExpiresAt?: Date): Promise<User | undefined> {
+    const user = this.users.find(u => u.id === id);
+    if (!user) return undefined;
+    
+    user.subscriptionStatus = subscriptionStatus as any;
+    if (subscriptionExpiresAt !== undefined) {
+      user.subscriptionExpiresAt = subscriptionExpiresAt;
+    }
+    user.updatedAt = new Date();
+    
+    return user;
+  }
+
+  async makeUserSuperadmin(username: string): Promise<User | undefined> {
+    const user = this.users.find(u => u.username === username);
+    if (!user) return undefined;
+    
+    user.role = 'superadmin';
+    user.updatedAt = new Date();
+    
+    return user;
   }
 }
 

@@ -206,14 +206,14 @@ export default function Home() {
                 </Button>
               </Link>
               {(user as any)?.role === 'superadmin' && (
-                <Link to="/admin">
+                <Link to="/admin-dashboard">
                   <Button
                     variant="outline"
                     size="sm"
                     className="flex items-center space-x-2 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white"
                   >
                     <Shield size={16} />
-                    <span>{t('adminPanel')}</span>
+                    <span>Admin Dashboard</span>
                   </Button>
                 </Link>
               )}

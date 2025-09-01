@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import ChatPage from "@/pages/chat";
 import { Landing } from "@/pages/landing";
 import AdminPanel from "@/pages/admin";
+import { AdminDashboard } from "@/pages/admin-dashboard";
 import InvitePage from "@/pages/invite";
 import { JobApplications } from "@/pages/job-applications";
 import MockInterview from "@/pages/mock-interview";
@@ -30,6 +31,7 @@ function Router() {
           <Route path="/job-applications" component={JobApplications} />
           <Route path="/mock-interview" component={MockInterview} />
           <Route path="/admin" component={AdminPanel} />
+          <Route path="/admin-dashboard" component={AdminDashboard} />
         </>
       )}
       <Route component={NotFound} />

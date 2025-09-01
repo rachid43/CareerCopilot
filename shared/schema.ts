@@ -34,6 +34,8 @@ export const users = pgTable("users", {
   role: text("role").notNull().default("user"), // 'user' | 'superadmin'
   isActive: boolean("is_active").notNull().default(true),
   accountExpiresAt: timestamp("account_expires_at"),
+  subscriptionStatus: text("subscription_status").notNull().default("active"), // 'active' | 'hold' | 'cancelled'
+  subscriptionExpiresAt: timestamp("subscription_expires_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
