@@ -254,9 +254,26 @@ export default function MockInterview() {
     if (!sessionData) return;
     
     try {
+      setIsProcessing(true);
+      
+      // Stop any ongoing speech and media
+      stopSpeaking();
+      stopMediaStream();
+      setIsRecording(false);
+      
+      // Save current answer if there is one
+      let allQA = [...previousQA];
+      if (currentAnswer.trim() && currentQuestion) {
+        allQA.push({
+          question: currentQuestion.question,
+          answer: currentAnswer.trim(),
+          evaluation: null // No evaluation for the current answer since interview stopped
+        });
+      }
+      
       // Prepare the interview data for completion
-      const questions = previousQA.map(qa => qa.question);
-      const answers = previousQA.map(qa => qa.answer);
+      const questions = allQA.map(qa => qa.question);
+      const answers = allQA.map(qa => qa.answer);
       const context = {
         jobTitle: sessionData.jobTitle,
         company: sessionData.company,
@@ -265,22 +282,26 @@ export default function MockInterview() {
         language: 'en' // Default to English for now
       };
       
-      // Call the complete interview endpoint with current progress
+      // Call the complete interview endpoint with current progress including current answer
       const response = await apiRequest('POST', `/api/interviews/${sessionData.id}/complete`, {
         questions,
         answers,
         context,
         forcedStop: true,
         currentProgress: {
-          questionsAnswered: previousQA.length,
+          questionsAnswered: allQA.length,
           totalQuestions: 10
         }
       });
       
       const result = await response.json();
+      
+      // Update previousQA to include current answer for display
+      setPreviousQA(allQA);
       setFinalFeedback(result.feedback);
-      stopMediaStream();
-      setIsRecording(false);
+      setIsInterviewActive(false);
+      setCurrentAnswer(''); // Clear current answer
+      setIsProcessing(false);
       
       toast({
         title: 'Interview Stopped' as any,
@@ -293,6 +314,7 @@ export default function MockInterview() {
         description: 'Failed to stop interview properly' as any,
         variant: 'destructive'
       });
+      setIsProcessing(false);
     }
   };
 
