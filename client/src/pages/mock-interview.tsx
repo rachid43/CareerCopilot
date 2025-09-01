@@ -1006,6 +1006,38 @@ export default function MockInterview() {
                             You can edit the transcribed text before submitting your answer
                           </p>
                         </div>
+                        
+                        {/* Submit & Stop Buttons for Avatar Mode */}
+                        <div className="flex justify-end space-x-2 mt-4">
+                          <Button
+                            onClick={handleStopInterview}
+                            variant="destructive"
+                            size="sm"
+                            data-testid="button-stop-interview-avatar"
+                          >
+                            <X className="h-4 w-4 mr-1" />
+                            Stop Interview
+                          </Button>
+                          
+                          <Button
+                            onClick={handleSubmitAnswer}
+                            disabled={isProcessing || !currentAnswer.trim()}
+                            className="bg-green-600 hover:bg-green-700"
+                            data-testid="button-submit-answer-avatar"
+                          >
+                            {isProcessing ? (
+                              <>
+                                <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                                Processing...
+                              </>
+                            ) : (
+                              <>
+                                <Send className="w-4 h-4 mr-2" />
+                                {currentQuestionIndex >= 9 ? 'Finish Interview' : 'Next Question'}
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
