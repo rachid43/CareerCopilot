@@ -330,45 +330,103 @@ export default function MockInterview() {
   const startRecording = () => {
     if (!mediaStream) return;
 
-    const recorder = new MediaRecorder(mediaStream, {
-      mimeType: 'video/webm;codecs=vp9'
-    });
-    
-    const blobs: Blob[] = [];
-    
-    recorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
-        blobs.push(event.data);
+    try {
+      // Try different codecs in order of preference
+      const supportedTypes = [
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm',
+        'video/mp4'
+      ];
+      
+      let options = {};
+      for (const type of supportedTypes) {
+        if (MediaRecorder.isTypeSupported(type)) {
+          options = { mimeType: type };
+          break;
+        }
       }
-    };
-    
-    recorder.onstop = () => {
-      setRecordedBlobs(blobs);
-      transcribeAudio(blobs);
-    };
-    
-    setMediaRecorder(recorder);
-    setRecordedBlobs([]);
-    recorder.start();
-    setIsRecording(true);
+
+      const recorder = new MediaRecorder(mediaStream, options);
+      
+      const blobs: Blob[] = [];
+      
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          blobs.push(event.data);
+        }
+      };
+      
+      recorder.onstop = () => {
+        setRecordedBlobs(blobs);
+        if (blobs.length > 0) {
+          transcribeAudio(blobs);
+        }
+      };
+      
+      recorder.onerror = (event: any) => {
+        console.error('MediaRecorder error:', event);
+        setIsRecording(false);
+        toast({
+          title: 'Recording Error' as any,
+          description: 'Failed to record. Please try again.' as any,
+          variant: 'destructive'
+        });
+      };
+      
+      setMediaRecorder(recorder);
+      setRecordedBlobs([]);
+      recorder.start(1000); // Record in 1-second chunks
+      setIsRecording(true);
+      
+    } catch (error: any) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: 'Recording Failed' as any,
+        description: 'Unable to start recording. Please check your permissions.' as any,
+        variant: 'destructive'
+      });
+    }
   };
 
   const stopRecording = () => {
     if (mediaRecorder && isRecording) {
-      mediaRecorder.stop();
-      setIsRecording(false);
+      try {
+        mediaRecorder.stop();
+        setIsRecording(false);
+      } catch (error) {
+        console.error('Error stopping recording:', error);
+        setIsRecording(false);
+        toast({
+          title: 'Recording Error' as any,
+          description: 'Failed to stop recording properly' as any,
+          variant: 'destructive'
+        });
+      }
     }
   };
 
   const transcribeAudio = async (blobs: Blob[]) => {
+    if (!blobs || blobs.length === 0) {
+      toast({
+        title: 'No Recording Found' as any,
+        description: 'Please record your answer first' as any,
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setIsTranscribing(true);
     
     try {
       // Create video blob
       const videoBlob = new Blob(blobs, { type: 'video/webm' });
       
-      // For now, we'll extract audio from video using browser APIs
-      // In a full implementation, this would use speech-to-text API
+      // Check if blob has content
+      if (videoBlob.size === 0) {
+        throw new Error('Recording is empty');
+      }
+      
       const formData = new FormData();
       formData.append('audio', videoBlob, 'recording.webm');
       
@@ -378,21 +436,27 @@ export default function MockInterview() {
       });
       
       if (!response.ok) {
-        throw new Error('Transcription failed');
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || 'Transcription failed');
       }
       
       const data = await response.json();
-      setCurrentAnswer(data.transcription || '');
       
-      toast({
-        title: 'Speech Transcribed!' as any,
-        description: 'Your answer has been converted to text' as any,
-      });
+      if (data.transcription && data.transcription.trim()) {
+        setCurrentAnswer(data.transcription.trim());
+        toast({
+          title: 'Speech Transcribed!' as any,
+          description: 'Your answer has been converted to text' as any,
+        });
+      } else {
+        throw new Error('No speech detected in recording');
+      }
       
     } catch (error: any) {
+      console.error('Transcription error:', error);
       toast({
         title: 'Transcription Failed' as any,
-        description: 'Please type your answer manually' as any,
+        description: error.message || 'Please type your answer manually' as any,
         variant: 'destructive'
       });
     } finally {

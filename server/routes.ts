@@ -1576,20 +1576,17 @@ USER MESSAGE: ${content}`;
       }
 
       // Use OpenAI Whisper for audio transcription
-      const fs = require('fs');
-      const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-      });
-
+      const syncFs = await import('fs');
+      
       const transcription = await openai.audio.transcriptions.create({
-        file: fs.createReadStream(req.file.path),
+        file: syncFs.createReadStream(req.file.path),
         model: "whisper-1",
         language: "en", // Can be made dynamic based on user preference
       });
 
       // Clean up the uploaded file
-      fs.unlink(req.file.path, (err: any) => {
-        if (err) console.error('Error deleting temp file:', err);
+      await fs.unlink(req.file.path).catch((err: any) => {
+        console.error('Error deleting temp file:', err);
       });
       
       res.json({
