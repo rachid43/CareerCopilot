@@ -1384,6 +1384,28 @@ USER MESSAGE: ${content}`;
     }
   });
 
+  // Mock Interview routes (placeholder for future implementation)
+  app.get("/api/interviews/sessions", isAuthenticated, async (req, res) => {
+    try {
+      // Placeholder - return empty sessions for now
+      res.json([]);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch interview sessions" });
+    }
+  });
+
+  app.post("/api/interviews/start", isAuthenticated, async (req, res) => {
+    try {
+      // Placeholder - return coming soon message
+      res.status(501).json({ 
+        message: "Mock Interview feature coming soon!",
+        eta: "Next update"
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to start interview session" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User, Shield } from "lucide-react";
+import { Bot, HelpCircle, Settings, Trash2, Wand2, LogOut, User, Shield, Users } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/language-selector";
@@ -193,6 +193,16 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                   </svg>
                   <span>Job Tracker</span>
+                </Button>
+              </Link>
+              <Link to="/mock-interview">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+                >
+                  <Users size={16} />
+                  <span>Mock Interview</span>
                 </Button>
               </Link>
               {(user as any)?.role === 'superadmin' && (

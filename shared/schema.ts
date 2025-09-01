@@ -115,6 +115,53 @@ export const jobApplications = pgTable("job_applications", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Mock Interview Sessions table
+export const interviewSessions = pgTable("interview_sessions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  jobTitle: text("job_title").notNull(),
+  company: text("company").notNull(),
+  jobDescription: text("job_description").notNull(),
+  interviewType: text("interview_type").notNull(), // 'behavioral' | 'technical' | 'situational' | 'mixed'
+  difficultyLevel: text("difficulty_level").notNull().default("mid"), // 'junior' | 'mid' | 'senior'
+  recruiterPersona: text("recruiter_persona").notNull().default("friendly"), // 'friendly' | 'formal' | 'challenging'
+  status: text("status").notNull().default("active"), // 'active' | 'completed' | 'paused'
+  totalQuestions: integer("total_questions").notNull().default(0),
+  currentQuestionIndex: integer("current_question_index").notNull().default(0),
+  overallScore: integer("overall_score"), // 1-100 scale
+  duration: integer("duration"), // in minutes
+  language: text("language").notNull().default("en"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Interview Questions and Answers table
+export const interviewQA = pgTable("interview_qa", {
+  id: serial("id").primaryKey(),
+  sessionId: integer("session_id").notNull().references(() => interviewSessions.id),
+  questionNumber: integer("question_number").notNull(),
+  question: text("question").notNull(),
+  questionType: text("question_type").notNull(), // 'opening' | 'behavioral' | 'technical' | 'situational' | 'closing'
+  userAnswer: text("user_answer").notNull(),
+  answerScore: integer("answer_score"), // 1-10 scale
+  feedback: text("feedback"), // AI feedback on the answer
+  suggestions: text("suggestions"), // Improvement suggestions
+  responseTime: integer("response_time"), // in seconds
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Interview Feedback and Analytics table
+export const interviewFeedback = pgTable("interview_feedback", {
+  id: serial("id").primaryKey(),
+  sessionId: integer("session_id").notNull().references(() => interviewSessions.id),
+  category: text("category").notNull(), // 'communication' | 'content' | 'confidence' | 'technical' | 'overall'
+  score: integer("score").notNull(), // 1-10 scale
+  strengths: text("strengths"), // JSON array of strengths
+  improvements: text("improvements"), // JSON array of improvement areas
+  detailedFeedback: text("detailed_feedback"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -155,6 +202,22 @@ export const insertJobApplicationSchema = createInsertSchema(jobApplications).om
   updatedAt: true,
 });
 
+export const insertInterviewSessionSchema = createInsertSchema(interviewSessions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertInterviewQASchema = createInsertSchema(interviewQA).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertInterviewFeedbackSchema = createInsertSchema(interviewFeedback).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Profile = typeof profiles.$inferSelect;
@@ -171,3 +234,9 @@ export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
 export type JobApplication = typeof jobApplications.$inferSelect;
 export type InsertJobApplication = z.infer<typeof insertJobApplicationSchema>;
+export type InterviewSession = typeof interviewSessions.$inferSelect;
+export type InsertInterviewSession = z.infer<typeof insertInterviewSessionSchema>;
+export type InterviewQA = typeof interviewQA.$inferSelect;
+export type InsertInterviewQA = z.infer<typeof insertInterviewQASchema>;
+export type InterviewFeedback = typeof interviewFeedback.$inferSelect;
+export type InsertInterviewFeedback = z.infer<typeof insertInterviewFeedbackSchema>;
