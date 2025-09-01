@@ -1578,25 +1578,36 @@ USER MESSAGE: ${content}`;
       // Use OpenAI Whisper for audio transcription
       const syncFs = await import('fs');
       
-      // Check file extension and handle accordingly
-      const fileExtension = req.file.originalname.split('.').pop()?.toLowerCase();
-      const supportedFormats = ['flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm'];
+      // Debug the file details
+      console.log('File details:', {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        path: req.file.path
+      });
+
+      // Copy file with proper extension for Whisper
+      const path = await import('path');
+      const newPath = req.file.path + '.webm';
       
-      if (!supportedFormats.includes(fileExtension || '')) {
-        // If not a supported format, treat as webm audio
-        req.file.originalname = 'recording.webm';
-      }
+      await fs.copyFile(req.file.path, newPath);
 
       const transcription = await openai.audio.transcriptions.create({
-        file: syncFs.createReadStream(req.file.path),
+        file: syncFs.createReadStream(newPath),
         model: "whisper-1",
-        language: "en", // Can be made dynamic based on user preference
+        language: "en",
       });
 
-      // Clean up the uploaded file
+      // Clean up both files
       await fs.unlink(req.file.path).catch((err: any) => {
-        console.error('Error deleting temp file:', err);
+        console.error('Error deleting original temp file:', err);
       });
+      
+      await fs.unlink(newPath).catch((err: any) => {
+        console.error('Error deleting webm temp file:', err);
+      });
+
+      // Files already cleaned up above
       
       res.json({
         transcription: transcription.text,
