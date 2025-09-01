@@ -1568,6 +1568,171 @@ USER MESSAGE: ${content}`;
     }
   });
 
+  // Download interview report as DOCX
+  app.post("/api/interviews/:sessionId/download", isAuthenticated, async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { feedback, questions, answers, sessionData } = req.body;
+      
+      if (!feedback || !questions || !answers || !sessionData) {
+        return res.status(400).json({ message: "Missing interview data" });
+      }
+
+      const { Document, Paragraph, TextRun, Packer, AlignmentType, HeadingLevel } = await import('docx');
+
+      // Create document
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            // Header
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: "CareerCopilot Mock Interview Report",
+                  bold: true,
+                  size: 32
+                })
+              ]
+            }),
+            new Paragraph({ text: "" }),
+            
+            // Interview Details
+            new Paragraph({
+              heading: HeadingLevel.HEADING_1,
+              children: [new TextRun({ text: "Interview Details", bold: true })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Position: ${sessionData.jobTitle}` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Company: ${sessionData.company}` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Interview Type: ${sessionData.interviewType}` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Difficulty Level: ${sessionData.difficultyLevel}` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Date: ${new Date(sessionData.startedAt).toLocaleDateString()}` })]
+            }),
+            new Paragraph({ text: "" }),
+
+            // Overall Score
+            new Paragraph({
+              heading: HeadingLevel.HEADING_1,
+              children: [new TextRun({ text: "Overall Performance", bold: true })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ 
+                text: `Overall Score: ${feedback.overallScore}/100`, 
+                bold: true, 
+                size: 24 
+              })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: feedback.summary })]
+            }),
+            new Paragraph({ text: "" }),
+
+            // Category Scores
+            new Paragraph({
+              heading: HeadingLevel.HEADING_2,
+              children: [new TextRun({ text: "Category Scores", bold: true })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Communication: ${feedback.categoryScores.communication}/10` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Technical: ${feedback.categoryScores.technical}/10` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Cultural Fit: ${feedback.categoryScores.cultural}/10` })]
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: `Experience: ${feedback.categoryScores.experience}/10` })]
+            }),
+            new Paragraph({ text: "" }),
+
+            // Q&A Section
+            new Paragraph({
+              heading: HeadingLevel.HEADING_1,
+              children: [new TextRun({ text: "Interview Questions & Answers", bold: true })]
+            }),
+            
+            ...questions.flatMap((question: string, index: number) => [
+              new Paragraph({
+                heading: HeadingLevel.HEADING_2,
+                children: [new TextRun({ text: `Question ${index + 1}`, bold: true })]
+              }),
+              new Paragraph({
+                children: [new TextRun({ text: question })]
+              }),
+              new Paragraph({
+                children: [new TextRun({ text: "Answer:", bold: true })]
+              }),
+              new Paragraph({
+                children: [new TextRun({ text: answers[index] || "No answer provided" })]
+              }),
+              new Paragraph({ text: "" })
+            ]),
+
+            // Strengths
+            new Paragraph({
+              heading: HeadingLevel.HEADING_1,
+              children: [new TextRun({ text: "Strengths", bold: true })]
+            }),
+            ...feedback.strengths.map((strength: string) => 
+              new Paragraph({
+                children: [new TextRun({ text: `• ${strength}` })]
+              })
+            ),
+            new Paragraph({ text: "" }),
+
+            // Improvements
+            new Paragraph({
+              heading: HeadingLevel.HEADING_1,
+              children: [new TextRun({ text: "Areas for Improvement", bold: true })]
+            }),
+            ...feedback.improvements.map((improvement: string) => 
+              new Paragraph({
+                children: [new TextRun({ text: `• ${improvement}` })]
+              })
+            ),
+            new Paragraph({ text: "" }),
+
+            // Recommendations
+            new Paragraph({
+              heading: HeadingLevel.HEADING_1,
+              children: [new TextRun({ text: "Recommendations", bold: true })]
+            }),
+            ...feedback.recommendations.map((recommendation: string) => 
+              new Paragraph({
+                children: [new TextRun({ text: `• ${recommendation}` })]
+              })
+            )
+          ]
+        }]
+      });
+
+      // Generate buffer
+      const buffer = await Packer.toBuffer(doc);
+      
+      // Set response headers for download
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      res.setHeader('Content-Disposition', `attachment; filename="Interview_Report_${sessionData.jobTitle}_${Date.now()}.docx"`);
+      res.setHeader('Content-Length', buffer.length);
+      
+      res.send(buffer);
+      
+    } catch (error: any) {
+      console.error('Error generating interview report:', error);
+      res.status(500).json({ message: `Failed to generate report: ${error.message}` });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

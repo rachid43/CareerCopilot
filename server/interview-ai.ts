@@ -203,7 +203,7 @@ Provide JSON response:
     }
   }
 
-  async generateFinalFeedback(context: InterviewContext, allQA: Array<{question: string, answer: string, score: number}>): Promise<{
+  async generateFinalFeedback(context: InterviewContext, questions: string[], answers: string[]): Promise<{
     overallScore: number;
     summary: string;
     categoryScores: {
@@ -226,7 +226,7 @@ Provide JSON response:
     };
     const responseLanguage = languageMap[language as keyof typeof languageMap] || 'English';
 
-    const qaText = allQA.map((qa, i) => `Q${i+1}: ${qa.question}\nA${i+1}: ${qa.answer}\nScore: ${qa.score}/10`).join('\n\n');
+    const qaText = questions.map((q, i) => `Q${i+1}: ${q}\nA${i+1}: ${answers[i] || 'No answer provided'}`).join('\n\n');
 
     const prompt = `Provide comprehensive interview feedback for ${jobTitle} at ${company}.
 

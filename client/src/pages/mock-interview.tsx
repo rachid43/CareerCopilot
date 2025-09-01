@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X } from 'lucide-react';
+import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/lib/i18n';
 import { apiRequest } from '@/lib/queryClient';
@@ -241,6 +241,55 @@ export default function MockInterview() {
 
   const removeCVImport = () => {
     setImportedCV(null);
+  };
+
+  const downloadInterviewReport = async () => {
+    if (!finalFeedback || !sessionData) return;
+    
+    try {
+      const response = await fetch(`/api/interviews/${sessionData.id}/download`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          feedback: finalFeedback,
+          questions: previousQA.map(qa => qa.question),
+          answers: previousQA.map(qa => qa.answer),
+          sessionData: sessionData
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download report');
+      }
+
+      // Get the filename from response headers
+      const contentDisposition = response.headers.get('content-disposition');
+      const filename = contentDisposition?.split('filename=')[1]?.replace(/"/g, '') || 'Interview_Report.docx';
+
+      // Create blob and download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: 'Download Complete!' as any,
+        description: 'Interview report downloaded successfully' as any,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Download Failed' as any,
+        description: error.message || 'Failed to download interview report' as any,
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -617,11 +666,50 @@ export default function MockInterview() {
                   <h4 className="font-bold text-lg text-green-800 mb-4">
                     🎉 Interview Complete!
                   </h4>
-                  <div className="space-y-4">
-                    <div>
-                      <h5 className="font-semibold text-green-700 mb-2">Overall Performance</h5>
-                      <p className="text-green-800">{finalFeedback.overallFeedback}</p>
+                  
+                  {/* Overall Score - Prominently displayed */}
+                  <div className="bg-white p-6 rounded-lg border-2 border-green-300 mb-6 text-center">
+                    <h5 className="font-semibold text-gray-700 mb-2">Overall Interview Score</h5>
+                    <div className="text-4xl font-bold text-green-600 mb-2">
+                      {finalFeedback.overallScore || finalFeedback.score || 'N/A'}<span className="text-2xl">/100</span>
                     </div>
+                    {finalFeedback.summary && (
+                      <p className="text-gray-600 mt-2">{finalFeedback.summary}</p>
+                    )}
+                  </div>
+
+                  {/* Category Scores */}
+                  {finalFeedback.categoryScores && (
+                    <div className="bg-white p-4 rounded-lg border mb-4">
+                      <h5 className="font-semibold text-green-700 mb-3">Category Breakdown</h5>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-gray-700">{finalFeedback.categoryScores.communication}/10</div>
+                          <div className="text-sm text-gray-600">Communication</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-gray-700">{finalFeedback.categoryScores.technical}/10</div>
+                          <div className="text-sm text-gray-600">Technical</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-gray-700">{finalFeedback.categoryScores.cultural}/10</div>
+                          <div className="text-sm text-gray-600">Cultural Fit</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-semibold text-gray-700">{finalFeedback.categoryScores.experience}/10</div>
+                          <div className="text-sm text-gray-600">Experience</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="space-y-4">
+                    {finalFeedback.overallFeedback && (
+                      <div>
+                        <h5 className="font-semibold text-green-700 mb-2">Overall Performance</h5>
+                        <p className="text-green-800">{finalFeedback.overallFeedback}</p>
+                      </div>
+                    )}
                     
                     {finalFeedback.strengths && finalFeedback.strengths.length > 0 && (
                       <div>
@@ -645,21 +733,32 @@ export default function MockInterview() {
                       </div>
                     )}
 
-                    {finalFeedback.score && (
-                      <div className="bg-white p-4 rounded border">
-                        <h5 className="font-semibold text-green-700 mb-2">Final Score</h5>
-                        <div className="text-2xl font-bold text-green-800">
-                          {finalFeedback.score}/100
-                        </div>
+                    {finalFeedback.recommendations && finalFeedback.recommendations.length > 0 && (
+                      <div>
+                        <h5 className="font-semibold text-green-700 mb-2">Recommendations</h5>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {finalFeedback.recommendations.map((recommendation: string, index: number) => (
+                            <li key={index} className="text-green-700">{recommendation}</li>
+                          ))}
+                        </ul>
                       </div>
                     )}
                   </div>
 
                   <div className="mt-6 flex gap-3">
                     <Button
+                      onClick={downloadInterviewReport}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      data-testid="button-download-report"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Report (DOCX)
+                    </Button>
+                    <Button
                       onClick={handleResetInterview}
                       variant="outline"
                       className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                      data-testid="button-new-interview"
                     >
                       <RotateCcw className="w-4 h-4 mr-2" />
                       Start New Interview
