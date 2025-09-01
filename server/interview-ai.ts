@@ -13,6 +13,7 @@ export interface InterviewContext {
   currentQuestionIndex: number;
   previousQuestions: string[];
   previousAnswers: string[];
+  cvContent?: string | null;
 }
 
 export class InterviewAI {
@@ -22,7 +23,7 @@ export class InterviewAI {
     questionType: string;
     expectedTopics: string[];
   }> {
-    const { jobTitle, company, jobDescription, interviewType, difficultyLevel, recruiterPersona, language, currentQuestionIndex, previousQuestions } = context;
+    const { jobTitle, company, jobDescription, interviewType, difficultyLevel, recruiterPersona, language, currentQuestionIndex, previousQuestions, cvContent } = context;
     
     // Language mapping
     const languageMap = {
@@ -85,6 +86,11 @@ CONTEXT:
 JOB REQUIREMENTS:
 ${jobDescription.substring(0, 1000)}
 
+${cvContent ? `CANDIDATE CV SUMMARY:
+${cvContent.substring(0, 800)}
+
+PERSONALIZATION: Use the candidate's CV to create targeted questions about their specific experience, skills, and achievements. Reference their background when relevant.` : ''}
+
 DIFFICULTY FOCUS:
 ${difficultyContext[difficultyLevel]}
 
@@ -97,6 +103,7 @@ Generate a ${questionType} interview question that:
 3. Matches your ${recruiterPersona} persona
 4. Follows natural interview progression
 5. Is different from previous questions
+${cvContent ? '6. References or builds upon the candidate\'s CV experience when relevant' : ''}
 
 Respond in JSON format:
 {

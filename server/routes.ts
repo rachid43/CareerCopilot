@@ -1410,7 +1410,7 @@ USER MESSAGE: ${content}`;
         return res.status(404).json({ message: "User not found" });
       }
 
-      const { jobTitle, company, jobDescription, interviewType, difficultyLevel, recruiterPersona, language } = req.body;
+      const { jobTitle, company, jobDescription, interviewType, difficultyLevel, recruiterPersona, language, cvContent } = req.body;
       
       // Validate required fields
       if (!jobTitle || !company || !interviewType || !difficultyLevel || !recruiterPersona) {
@@ -1432,7 +1432,8 @@ USER MESSAGE: ${content}`;
         language: language || 'en',
         currentQuestionIndex: 0,
         previousQuestions: [],
-        previousAnswers: []
+        previousAnswers: [],
+        cvContent: cvContent || null
       };
 
       const firstQuestion = await interviewAI.generateQuestion(context);
@@ -1493,7 +1494,8 @@ USER MESSAGE: ${content}`;
         language: req.body.language || 'en',
         currentQuestionIndex: questionIndex + 1,
         previousQuestions: req.body.previousQuestions || [],
-        previousAnswers: [...(req.body.previousAnswers || []), answer]
+        previousAnswers: [...(req.body.previousAnswers || []), answer],
+        cvContent: req.body.cvContent || null
       };
 
       // Evaluate the answer

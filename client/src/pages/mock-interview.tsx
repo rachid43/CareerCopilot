@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { PlayCircle, MessageCircle, Send, RotateCcw, Play } from 'lucide-react';
+import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/lib/i18n';
 import { apiRequest } from '@/lib/queryClient';
+// FileUpload component will be inline
 
 interface InterviewSession {
   id: number;
@@ -48,6 +49,10 @@ export default function MockInterview() {
     recruiterPersona: 'friendly'
   });
 
+  // CV import state
+  const [importedCV, setImportedCV] = useState<any>(null);
+  const [isImporting, setIsImporting] = useState(false);
+
   // Interview state
   const [isInterviewActive, setIsInterviewActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +79,7 @@ export default function MockInterview() {
     try {
       const response = await apiRequest('POST', '/api/interviews/start', {
         ...setupForm,
+        cvContent: importedCV?.content || null,
         language: 'en'
       });
       
@@ -121,6 +127,7 @@ export default function MockInterview() {
         difficultyLevel: setupForm.difficultyLevel,
         recruiterPersona: setupForm.recruiterPersona,
         language: 'en',
+        cvContent: importedCV?.content || null,
         previousQuestions: previousQA.map(qa => qa.question),
         previousAnswers: previousQA.map(qa => qa.answer)
       });
@@ -178,6 +185,62 @@ export default function MockInterview() {
     setCurrentQuestionIndex(0);
     setPreviousQA([]);
     setFinalFeedback(null);
+    setImportedCV(null);
+  };
+
+  const handleCVImport = async (files: FileList) => {
+    if (!files || files.length === 0) return;
+    
+    const file = files[0];
+    if (!file.name.match(/\.(pdf|docx?)$/i)) {
+      toast({
+        title: 'Invalid File Type' as any,
+        description: 'Please upload a PDF or Word document' as any,
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsImporting(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to upload CV');
+      }
+      
+      setImportedCV({
+        filename: file.name,
+        content: data.content
+      });
+      
+      toast({
+        title: 'CV Imported Successfully!' as any,
+        description: 'Your CV will be used to personalize interview questions' as any,
+      });
+      
+    } catch (error: any) {
+      toast({
+        title: 'Import Failed' as any,
+        description: error.message || 'Failed to import CV' as any,
+        variant: 'destructive'
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const removeCVImport = () => {
+    setImportedCV(null);
   };
 
   return (
@@ -251,6 +314,93 @@ export default function MockInterview() {
               placeholder="Paste the full job description here..."
               data-testid="textarea-job-description"
             />
+          </div>
+
+          {/* CV Import Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-medium">
+                Import Your CV (Optional)
+              </label>
+              {importedCV && (
+                <Button
+                  onClick={removeCVImport}
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700"
+                  data-testid="button-remove-cv"
+                >
+                  <X className="h-4 w-4 mr-1" />
+                  Remove
+                </Button>
+              )}
+            </div>
+            
+            {!importedCV ? (
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <div className="space-y-3">
+                  <Upload className="h-8 w-8 text-gray-400 mx-auto" />
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Upload your CV to get personalized interview questions
+                    </p>
+                    <div>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={(e) => e.target.files && handleCVImport(e.target.files)}
+                        className="hidden"
+                        id="cv-upload"
+                        data-testid="file-input-cv"
+                      />
+                      <label htmlFor="cv-upload">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={isImporting}
+                          data-testid="button-upload-cv"
+                          asChild
+                        >
+                          <span style={{ cursor: 'pointer' }}>
+                            {isImporting ? (
+                              <>
+                                <div className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full mr-2" />
+                                Importing...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Choose CV File
+                              </>
+                            )}
+                          </span>
+                        </Button>
+                      </label>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    PDF or Word documents only, max 100MB
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <FileText className="h-5 w-5 text-green-600" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-green-800">
+                      CV Imported Successfully
+                    </p>
+                    <p className="text-xs text-green-600">
+                      {importedCV.filename}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xs text-green-700 mt-2">
+                  Your interview questions will be personalized based on your CV content
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="grid md:grid-cols-3 gap-4">
