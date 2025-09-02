@@ -1093,7 +1093,7 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         return res.status(400).json({ message: "User already exists" });
       }
       
-      // Create user account
+      // Create user account with subscription from invitation
       const accountExpiry = new Date();
       accountExpiry.setDate(accountExpiry.getDate() + 30); // 30 days active
       
@@ -1104,7 +1104,14 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         lastName: lastName || null,
         role: 'user',
         isActive: true,
-        accountExpiresAt: accountExpiry
+        accountExpiresAt: accountExpiry,
+        subscriptionStatus: 'active',
+        subscriptionExpiresAt: invitation.subscriptionExpiresAt || (() => {
+          // Fallback: set 12-month subscription if not set in invitation
+          const fallbackExpiry = new Date();
+          fallbackExpiry.setFullYear(fallbackExpiry.getFullYear() + 1);
+          return fallbackExpiry;
+        })()
       });
       
       // Mark invitation as used
