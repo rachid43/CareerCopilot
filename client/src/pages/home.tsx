@@ -149,7 +149,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center min-h-20 py-3">
             <div className="flex items-center space-x-3">
               <img 
                 src={careerCopilotIcon} 
@@ -163,69 +163,75 @@ export default function Home() {
                 <p className="text-sm text-secondary">{t('appSubtitle')}</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col items-end space-y-3">
               {user && (
-                <div className="flex items-center space-x-2 mr-4">
+                <div className="flex items-center space-x-2">
                   <User size={18} className="text-gray-500" />
                   <span className="text-sm text-gray-700">
                     {String((user as any)?.firstName || (user as any)?.email || (user as any)?.username || 'User')}
                   </span>
+                  <LanguageSelector />
                 </div>
               )}
-              <LanguageSelector />
-              <Link to="/chat">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white"
-                >
-                  <Bot size={16} />
-                  <span>{t('aiCareerMentor')}</span>
-                </Button>
-              </Link>
-              <Link to="/job-applications">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                  </svg>
-                  <span>Job Tracker</span>
-                </Button>
-              </Link>
-              <Link to="/mock-interview">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
-                >
-                  <Users size={16} />
-                  <span>Mock Interview</span>
-                </Button>
-              </Link>
-              {(user as any)?.role === 'superadmin' && (
-                <Link to="/admin-dashboard">
+              
+              {/* 2x2 Grid for navigation buttons */}
+              <div className="grid grid-cols-2 gap-2">
+                <Link to="/chat">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center space-x-2 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white"
+                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
                   >
-                    <Shield size={16} />
-                    <span>Admin Dashboard</span>
+                    <Bot size={16} />
+                    <span>{t('aiCareerMentor')}</span>
                   </Button>
                 </Link>
-              )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.location.href = '/api/logout'}
-                className="flex items-center space-x-2"
-              >
-                <LogOut size={16} />
-                <span>{t('logout')}</span>
-              </Button>
+                <Link to="/job-applications">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white w-full"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <span>Job Tracker</span>
+                  </Button>
+                </Link>
+                <Link to="/mock-interview">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white w-full"
+                  >
+                    <Users size={16} />
+                    <span>Mock Interview</span>
+                  </Button>
+                </Link>
+                <div className="flex space-x-1">
+                  {(user as any)?.role === 'superadmin' && (
+                    <Link to="/admin-dashboard">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center space-x-1 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white text-xs px-2"
+                      >
+                        <Shield size={14} />
+                        <span>Admin</span>
+                      </Button>
+                    </Link>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.location.href = '/api/logout'}
+                    className="flex items-center space-x-1 text-xs px-2"
+                  >
+                    <LogOut size={14} />
+                    <span>{t('logout')}</span>
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
