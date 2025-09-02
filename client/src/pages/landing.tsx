@@ -110,7 +110,7 @@ export function Landing() {
               alt="CareerCopilot" 
               className="w-10 h-10 mr-3"
             />
-            <span className="text-xl font-bold text-gray-900">Career<span className="text-primary">Copilot</span></span>
+            <span className="text-xl font-bold text-gray-900">Career<span className="text-primary">Copilot</span> <span className="text-xs text-gray-500">AI Assistant</span></span>
           </div>
           <div className="flex items-center gap-4">
             <LanguageSelector />
@@ -129,8 +129,9 @@ export function Landing() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
+          <p className="text-sm text-primary font-semibold mb-2">🤖 AI-Powered Career Assistant</p>
           <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
-            Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters, Mock Interviews & Career Growth
+            Get Hired, Get Ahead — Professional AI Help with Resumes, Cover Letters, Mock Interviews & Career Growth
           </h2>
         </div>
 
@@ -535,7 +536,8 @@ export function Landing() {
 
         {/* Footer */}
         <div className="text-center mt-16 text-gray-500">
-          <p>AI powered • Secure • Fast • Professional</p>
+          <p>🤖 AI-Powered Career Assistant • Secure • Fast • Professional</p>
+          <p className="text-xs mt-2">CareerCopilot: Your Intelligent Career Growth Partner</p>
         </div>
       </div>
       </div>

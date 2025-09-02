@@ -146,9 +146,9 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
     req.user = {
       claims: {
         sub: 'dev-user-123',
-        email: 'dev@example.com',
-        first_name: 'Development',
-        last_name: 'User'
+        email: 'admin@careercopilot.demo',
+        first_name: 'Demo',
+        last_name: 'Administrator'
       }
     };
     req.isAuthenticated = () => true as any;
@@ -159,9 +159,9 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
       if (!existingUser) {
         await storage.createUser({
           username: 'dev-user-123',
-          email: 'dev@example.com',
-          firstName: 'Development',
-          lastName: 'User',
+          email: 'admin@careercopilot.demo',
+          firstName: 'Demo',
+          lastName: 'Administrator',
           profileImageUrl: null,
         });
       }

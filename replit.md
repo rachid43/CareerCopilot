@@ -1,7 +1,7 @@
 # CareerCopilot - AI-Powered Career Assistant
 
 ## Overview
-CareerCopilot is a comprehensive web application designed to assist users with resume and cover letter creation, review, and assessment using AI. It provides an AI Career Mentor chatbot and a Mock Interview system. The project aims to leverage AI for career growth, offering advanced tools for job seekers.
+CareerCopilot is a comprehensive AI-powered career assistant web application designed to help users with resume and cover letter creation, review, and assessment. It provides an AI Career Mentor chatbot and a Mock Interview system. The project serves as an intelligent career growth partner, offering advanced AI tools for job seekers to enhance their career prospects.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
