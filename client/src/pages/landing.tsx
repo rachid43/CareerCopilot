@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PenTool, Brain, CheckCircle, MessageCircle, Globe, Upload, Download, Star, User } from "lucide-react";
+import { PenTool, Brain, CheckCircle, MessageCircle, Globe, Upload, Download, Star, User, Video } from "lucide-react";
 import careerCopilotIcon from "@assets/ICON_CareerCopilot_1755719130597.png";
 import { LanguageSelector } from "@/components/language-selector";
 import { useLanguage } from "@/lib/i18n";
@@ -75,6 +75,12 @@ export function Landing() {
       description: t('careerMentorDescription'),
       color: "bg-green-500",
     },
+    {
+      icon: Video,
+      title: 'Mock Interview',
+      description: 'Practice interviews with AI recruiters, get personalized feedback, and improve your performance with comprehensive scoring and reports.',
+      color: "bg-blue-500",
+    },
   ];
 
   return (
@@ -124,12 +130,12 @@ export function Landing() {
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
           <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
-            Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth
+            Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters, Mock Interviews & Career Growth
           </h2>
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -170,7 +176,7 @@ export function Landing() {
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">Demo Video Coming Soon</h3>
                   <p className="text-gray-600">
                     See how Career<span className="text-primary">Copilot</span> helps users create professional CVs,<br/>
-                    get detailed feedback, and chat with our AI career mentor
+                    practice mock interviews, get detailed feedback, and chat with our AI career mentor
                   </p>
                 </div>
                 
@@ -190,7 +196,7 @@ export function Landing() {
           </Card>
           
           {/* Feature highlights below video */}
-          <div className="grid md:grid-cols-3 gap-6 mt-8">
+          <div className="grid md:grid-cols-4 gap-6 mt-8">
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Upload className="text-white" size={20} />
@@ -207,10 +213,103 @@ export function Landing() {
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <Video className="text-white" size={20} />
+              </div>
+              <h4 className="font-semibold mb-2">Mock Interviews</h4>
+              <p className="text-sm text-gray-600">Practice with AI recruiters, record responses, and get detailed feedback scores</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Download className="text-white" size={20} />
               </div>
               <h4 className="font-semibold mb-2">Professional Output</h4>
               <p className="text-sm text-gray-600">Download polished, ATS-friendly documents ready for job applications</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Mock Interview Section */}
+        <div className="max-w-6xl mx-auto mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">AI-Powered Mock Interviews</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Practice interviews with realistic AI recruiters, record your responses, and receive comprehensive feedback 
+              with detailed scoring to improve your interview performance.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <Card className="border-2 border-blue-200">
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Video className="text-white" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-lg mb-2">Realistic Interview Experience</h4>
+                        <p className="text-gray-600">
+                          Choose from diverse AI interviewer personas and practice with questions tailored to your field and experience level.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-4">
+                      <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="text-white" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-lg mb-2">Comprehensive Scoring</h4>
+                        <p className="text-gray-600">
+                          Get detailed feedback on your responses with scoring across multiple categories including clarity, relevance, and confidence.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-4">
+                      <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Download className="text-white" size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-lg mb-2">Detailed Reports</h4>
+                        <p className="text-gray-600">
+                          Download comprehensive interview reports with full transcripts, scores, and improvement recommendations.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div>
+              <Card className="bg-gradient-to-br from-blue-50 to-purple-50">
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Video className="text-white" size={32} />
+                    </div>
+                    <h3 className="text-xl font-bold mb-4">Two Interview Modes</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-lg p-4 shadow-sm">
+                        <h4 className="font-semibold mb-2">Text-Based Mode</h4>
+                        <p className="text-sm text-gray-600">
+                          Practice answering questions through text input for quick feedback and scoring.
+                        </p>
+                      </div>
+                      
+                      <div className="bg-white rounded-lg p-4 shadow-sm">
+                        <h4 className="font-semibold mb-2">Avatar Mode</h4>
+                        <p className="text-sm text-gray-600">
+                          Use webcam and microphone for realistic video interviews with AI avatars and voice transcription.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
@@ -266,6 +365,10 @@ export function Landing() {
                 <div className="flex items-center">
                   <User className="text-indigo-500 mr-3" size={20} />
                   <span>{t('profileManagement')}</span>
+                </div>
+                <div className="flex items-center">
+                  <Video className="text-blue-500 mr-3" size={20} />
+                  <span>AI Mock Interviews with Video Recording</span>
                 </div>
               </div>
               
