@@ -958,15 +958,18 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
       );
       
-      // Send invitation immediately without blocking
-      sendEmailWithFallback(emailParams).then(emailSent => {
-        if (emailSent) {
-          console.log(`Invitation email sent successfully to ${email}`);
-        } else {
-          console.error(`Failed to send invitation email to ${email}`);
+      // Send email in background without blocking response
+      setImmediate(async () => {
+        try {
+          const emailSent = await sendEmailWithFallback(emailParams);
+          if (emailSent) {
+            console.log(`✅ Invitation email sent to ${email}`);
+          } else {
+            console.error(`❌ Failed to send invitation email to ${email}`);
+          }
+        } catch (error: any) {
+          console.error(`❌ Email error for ${email}:`, error.message);
         }
-      }).catch(error => {
-        console.error(`Error sending invitation email to ${email}:`, error.message);
       });
       
       // Return immediately after creating the invitation

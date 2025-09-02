@@ -34,13 +34,11 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
       tls: {
         rejectUnauthorized: false
       },
-      pool: true,               // Use connection pooling
-      maxConnections: 5,        // Max 5 concurrent connections
-      maxMessages: 100,         // Max 100 messages per connection
+      pool: false,              // Disable connection pooling to prevent loops
     });
     
-    // Add timeout wrapper for the entire operation
-    const emailPromise = transporter.sendMail({
+    // Send email with simple timeout
+    const result = await transporter.sendMail({
       from: process.env.SMTP_USER,
       to: params.to,
       subject: params.subject,
@@ -48,12 +46,8 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
       html: params.html,
     });
 
-    // Race against timeout
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Email timeout after 20 seconds')), 20000)
-    );
-
-    await Promise.race([emailPromise, timeoutPromise]);
+    // Close transporter to prevent hanging connections
+    transporter.close();
 
     console.log('Email sent successfully via Hostinger SMTP');
     return true;
