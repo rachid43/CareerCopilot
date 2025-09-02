@@ -102,25 +102,74 @@ export function Landing() {
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mx-auto mb-4`}>
-                    <Icon className="text-white" size={24} />
-                  </div>
-                  <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-600">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="max-w-4xl mx-auto mb-16">
+          {/* First row - 2 features */}
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {features.slice(0, 2).map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mx-auto mb-4`}>
+                      <Icon className="text-white" size={24} />
+                    </div>
+                    <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-gray-600">
+                      {feature.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+          
+          {/* Second row - 2 features */}
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {features.slice(2, 4).map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={index + 2} className="text-center hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mx-auto mb-4`}>
+                      <Icon className="text-white" size={24} />
+                    </div>
+                    <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-gray-600">
+                      {feature.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+          
+          {/* Third row - 1 centered feature (Mock Interview) */}
+          <div className="flex justify-center">
+            <div className="w-full max-w-md">
+              {features.slice(4, 5).map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <Card key={index + 4} className="text-center hover:shadow-lg transition-shadow border-2 border-primary/20">
+                    <CardHeader>
+                      <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mx-auto mb-4`}>
+                        <Icon className="text-white" size={24} />
+                      </div>
+                      <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-gray-600">
+                        {feature.description}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Demo Video Section */}
