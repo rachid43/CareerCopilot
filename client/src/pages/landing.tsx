@@ -424,7 +424,7 @@ export function Landing() {
                   className="w-full bg-primary hover:bg-orange-600 text-white py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
-                  {t('startFreeTrial')}
+                  Get Pro Access
                 </Button>
               </CardContent>
             </Card>
