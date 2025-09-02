@@ -55,10 +55,10 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
   }
 }
 
-// Email service using only Hostinger SMTP
+// Email service temporarily disabled to prevent loops
 export async function sendEmailWithFallback(params: EmailParams): Promise<boolean> {
-  console.log('Using Hostinger SMTP for email delivery...');
-  return await sendEmailSMTP(params);
+  console.log('Email service disabled - preventing loops');
+  return false; // Always return false to indicate email was not sent
 }
 
 export function generateInvitationEmail(email: string, token: string, inviterName: string): EmailParams {
