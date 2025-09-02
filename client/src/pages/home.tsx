@@ -189,6 +189,29 @@ export default function Home() {
                     <span>Job Tracker</span>
                   </Button>
                 </Link>
+                <div className="flex justify-end space-x-2">
+                  {(user as any)?.role === 'superadmin' && (
+                    <Link to="/admin-dashboard">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center space-x-1 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white text-xs px-2"
+                      >
+                        <Shield size={14} />
+                        <span>Admin</span>
+                      </Button>
+                    </Link>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.location.href = '/api/logout'}
+                    className="flex items-center space-x-1 text-xs px-2"
+                  >
+                    <LogOut size={14} />
+                    <span>{t('logout')}</span>
+                  </Button>
+                </div>
                 <Link to="/chat">
                   <Button
                     variant="outline"
@@ -209,31 +232,6 @@ export default function Home() {
                     <span>Mock Interview</span>
                   </Button>
                 </Link>
-              </div>
-              
-              {/* Admin and Logout buttons in a separate row */}
-              <div className="flex justify-end space-x-2">
-                {(user as any)?.role === 'superadmin' && (
-                  <Link to="/admin-dashboard">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center space-x-1 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white text-xs px-2"
-                    >
-                      <Shield size={14} />
-                      <span>Admin</span>
-                    </Button>
-                  </Link>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.location.href = '/api/logout'}
-                  className="flex items-center space-x-1 text-xs px-2"
-                >
-                  <LogOut size={14} />
-                  <span>{t('logout')}</span>
-                </Button>
               </div>
             </div>
           </div>
