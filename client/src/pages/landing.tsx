@@ -77,8 +77,8 @@ export function Landing() {
     },
     {
       icon: Video,
-      title: 'Mock Interview',
-      description: 'Practice interviews with AI recruiters, get personalized feedback, and improve your performance with comprehensive scoring and reports.',
+      title: t('mockInterview'),
+      description: t('mockInterviewDescription'),
       color: "bg-blue-500",
     },
   ];
@@ -129,9 +129,9 @@ export function Landing() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
-          <p className="text-sm text-primary font-semibold mb-2">🤖 AI-Powered Career Assistant</p>
+          <p className="text-sm text-primary font-semibold mb-2">🤖 {t('appSubtitle')}</p>
           <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
-            Get Hired, Get Ahead — Professional AI Help with Resumes, Cover Letters, Mock Interviews & Career Growth
+            {t('landingSubtitle')}
           </h2>
         </div>
 
@@ -318,8 +318,8 @@ export function Landing() {
         {/* Pricing Section */}
         <div className="max-w-7xl mx-auto mb-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
-            <p className="text-lg text-gray-600">Select the plan that matches your job search journey</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('choosePlan')}</h2>
+            <p className="text-lg text-gray-600">{t('choosePlanSubtitle')}</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -480,9 +480,9 @@ export function Landing() {
         {/* How it works */}
         <Card className="max-w-6xl mx-auto">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold mb-2">How It Works</CardTitle>
+            <CardTitle className="text-2xl font-bold mb-2">{t('howItWorks')}</CardTitle>
             <CardDescription className="text-lg">
-              Your complete journey from CV creation to interview success
+              {t('howItWorksSubtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -490,45 +490,45 @@ export function Landing() {
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 1
               </div>
-              <h3 className="font-semibold mb-2">Upload & Create</h3>
+              <h3 className="font-semibold mb-2">{t('step1Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Upload your existing CV or create one from scratch using our AI-powered generation tools
+                {t('step1Description')}
               </p>
             </div>
             <div className="text-center">
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 2
               </div>
-              <h3 className="font-semibold mb-2">Review & Enhance</h3>
+              <h3 className="font-semibold mb-2">{t('step2Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Get detailed feedback and suggestions to improve your CV and cover letter content
+                {t('step2Description')}
               </p>
             </div>
             <div className="text-center">
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 3
               </div>
-              <h3 className="font-semibold mb-2">Score & Match</h3>
+              <h3 className="font-semibold mb-2">{t('step3Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Compare your documents against job descriptions and get matching scores with improvement tips
+                {t('step3Description')}
               </p>
             </div>
             <div className="text-center">
               <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 4
               </div>
-              <h3 className="font-semibold mb-2">Track Applications</h3>
+              <h3 className="font-semibold mb-2">{t('step4Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Organize and track your job applications with our comprehensive application management system
+                {t('step4Description')}
               </p>
             </div>
             <div className="text-center">
               <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
                 5
               </div>
-              <h3 className="font-semibold mb-2">Practice Interviews</h3>
+              <h3 className="font-semibold mb-2">{t('step5Title')}</h3>
               <p className="text-gray-600 text-sm">
-                Master your interview skills with AI mock interviews, get feedback, and download detailed reports
+                {t('step5Description')}
               </p>
             </div>
           </CardContent>
