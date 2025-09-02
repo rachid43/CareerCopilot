@@ -958,8 +958,15 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
       );
       
-      // Temporarily disable email sending to stop the loop
-      console.log(`✅ Invitation created for ${email} (email sending temporarily disabled to prevent loops)`);
+      // Send email
+      const emailSent = await sendEmailWithFallback(emailParams);
+      
+      if (!emailSent) {
+        console.error(`Failed to send invitation email to ${email}`);
+        // Don't fail the invitation creation if email fails
+      } else {
+        console.log(`Invitation email sent successfully to ${email}`);
+      }
       
       // Return immediately after creating the invitation
       res.json({ 

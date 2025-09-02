@@ -10,59 +10,55 @@ interface EmailParams {
 
 // SMTP Email Service using Hostinger SMTP
 export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
-  let transporter = null;
   try {
-    console.log(`📧 Sending email to: ${params.to}`);
+    console.log('Sending email with Hostinger SMTP...');
+    console.log('To:', params.to);
+    console.log('Subject:', params.subject);
 
     if (!process.env.SMTP_PASSWORD || !process.env.SMTP_HOST) {
-      console.error('❌ SMTP credentials not configured');
+      console.error('Hostinger SMTP credentials not configured');
       return false;
     }
+
+    console.log('SMTP Host:', process.env.SMTP_HOST);
+    console.log('SMTP Port:', process.env.SMTP_PORT);
+    console.log('SMTP User:', process.env.SMTP_USER);
     
-    transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false, // Use TLS
+      secure: parseInt(process.env.SMTP_PORT || '587') === 465, // true for 465 (SSL), false for 587 (TLS)
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
       },
-      connectionTimeout: 5000,  // 5 seconds
-      socketTimeout: 10000,     // 10 seconds
       tls: {
+        // Don't fail on invalid certs
         rejectUnauthorized: false
       }
     });
     
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: process.env.SMTP_USER, // Use SMTP user as sender
       to: params.to,
       subject: params.subject,
       text: params.text,
       html: params.html,
     });
 
-    console.log('✅ Email sent successfully');
+    console.log('Email sent successfully via Hostinger SMTP');
     return true;
   } catch (error: any) {
-    console.error('❌ Email error:', error.message);
+    console.error('Hostinger SMTP email error:', error);
+    console.error('Error message:', error.message);
     return false;
-  } finally {
-    // Always close the transporter
-    if (transporter) {
-      try {
-        transporter.close();
-      } catch (closeError) {
-        // Ignore close errors
-      }
-    }
   }
 }
 
 // Email service using only Hostinger SMTP
 export async function sendEmailWithFallback(params: EmailParams): Promise<boolean> {
-  console.log('Email service temporarily disabled to prevent loops');
-  return true; // Return true to prevent errors, but don't actually send
+  console.log('Using Hostinger SMTP for email delivery...');
+  return await sendEmailSMTP(params);
 }
 
 export function generateInvitationEmail(email: string, token: string, inviterName: string): EmailParams {
