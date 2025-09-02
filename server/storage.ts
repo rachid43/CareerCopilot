@@ -140,26 +140,18 @@ export class DatabaseStorage implements IStorage {
   async getDocumentsByUserId(userId: string): Promise<Document[]> {
     console.log('getDocumentsByUserId called with userId:', userId, 'type:', typeof userId);
     
-    // First, let's see all documents in the database
-    const allDocs = await db.select().from(documents);
-    console.log('All documents in database:', allDocs.map(d => ({ id: d.id, filename: d.filename, userId: d.userId, type: typeof d.userId })));
-    
-    // Convert to number for consistent querying since database stores as integer
-    const userIdNum = parseInt(userId);
-    console.log('Converted userId to number:', userIdNum);
-    
-    const results = await db.select().from(documents).where(eq(documents.userId, userIdNum));
-    console.log('getDocumentsByUserId results:', results.length, 'documents for userId:', userIdNum);
-    
-    // Also try alternative queries to debug
-    if (results.length === 0) {
-      console.log('No results found, trying alternative queries...');
-      const stringQuery = await db.select().from(documents).where(sql`user_id = ${userId}`);
-      console.log('String query results:', stringQuery.length);
-      
-      const allUserDocs = await db.select().from(documents);
-      console.log('All documents with any userId:', allUserDocs.filter(d => d.userId).map(d => ({ id: d.id, userId: d.userId })));
+    // First get the user by username to get the actual numeric user ID
+    const user = await this.getUserByUsername(userId);
+    if (!user) {
+      console.log('No user found with username:', userId);
+      return [];
     }
+    
+    console.log('Found user for documents retrieval:', user.id);
+    
+    // Query documents using the actual numeric user ID
+    const results = await db.select().from(documents).where(eq(documents.userId, user.id));
+    console.log('getDocumentsByUserId results:', results.length, 'documents for user ID:', user.id);
     
     return results;
   }
