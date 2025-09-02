@@ -16,34 +16,36 @@ export function Landing() {
   useEffect(() => {
     const detectLocation = async () => {
       try {
-        // Use a timeout to prevent hanging requests
+        // Use a shorter timeout and more robust error handling
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
         
         const response = await fetch('https://ipapi.co/json/', {
           signal: controller.signal,
           headers: {
             'Accept': 'application/json',
           }
-        });
+        }).catch(() => null);
         
         clearTimeout(timeoutId);
         
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
+        if (!response || !response.ok) {
+          // Silently fail without throwing
+          return;
         }
         
-        const data = await response.json();
+        const data = await response.json().catch(() => null);
+        if (!data || !data.country_code) return;
+        
         const europeanCountries = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
         
-        if (data.country_code && europeanCountries.includes(data.country_code)) {
+        if (europeanCountries.includes(data.country_code)) {
           setIsEuropean(true);
           setCurrency('€');
           setPrice('8.97');
         }
       } catch (error) {
-        // Silently default to USD without logging to console to avoid runtime errors
-        // Currency detection failed - this is expected in some environments
+        // Silently handle all errors to prevent runtime failures
       }
     };
     
