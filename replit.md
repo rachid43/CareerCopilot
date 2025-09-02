@@ -23,7 +23,7 @@ Deployment preference: Supabase for database and Vercel for hosting instead of c
 - **AI Integration**: Utilizes OpenAI API (GPT-4o model) for document processing, career mentoring, and mock interviews.
 - **File Processing**: Multer for uploads, pdf-parse for PDFs, and mammoth for DOCX files.
 - **Speech Processing**: OpenAI Whisper API for speech-to-text transcription in mock interviews.
-- **Email Service**: Hostinger SMTP for user invitations.
+- **Email Service**: Hostinger SMTP for user invitations with 10-second timeout protection to prevent hanging connections.
 
 ### Feature Specifications
 - **AI Processing Modes**: Create (generates documents), Review (feedback on documents), Assess (compares documents to job descriptions with scoring).
