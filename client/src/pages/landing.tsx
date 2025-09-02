@@ -315,75 +315,165 @@ export function Landing() {
         </div>
 
         {/* Pricing Section */}
-        <div className="max-w-2xl mx-auto mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('pricing')}</h2>
-            <p className="text-lg text-gray-600">{t('pricingSubtitle')}</p>
+        <div className="max-w-7xl mx-auto mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
+            <p className="text-lg text-gray-600">Select the plan that matches your job search journey</p>
           </div>
           
-          <Card className="relative border-2 border-primary shadow-xl">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
-                {t('mostPopular')}
-              </span>
-            </div>
-            
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl font-bold">{t('professionalPlan')}</CardTitle>
-              <div className="text-4xl font-bold text-primary mt-4">
-                {currency}{price}
-                <span className="text-lg text-gray-500 font-normal">/{t('month')}</span>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="pt-0">
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center">
-                  <CheckCircle className="text-green-500 mr-3" size={20} />
-                  <span>{t('unlimitedAccess')}</span>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Essential Plan */}
+            <Card className="relative border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-bold">Essential</CardTitle>
+                <div className="text-3xl font-bold text-gray-700 mt-4">
+                  €15
+                  <span className="text-lg text-gray-500 font-normal">/month</span>
                 </div>
-                <div className="flex items-center">
-                  <Globe className="text-blue-500 mr-3" size={20} />
-                  <span>{t('multiLanguageSupport')}</span>
+                <p className="text-sm text-gray-500 mt-2">or €39 for 3 months</p>
+                <p className="text-sm font-medium text-gray-700 mt-3">Get Started Right</p>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-8 text-sm">
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>CV + cover letter AI generation/enhancement</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Matching score analysis vs job descriptions (5 jobs/month)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>AI mentor chatbot (basic Q&A)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Job application tracker (basic manual tracking)</span>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Upload className="text-purple-500 mr-3" size={20} />
-                  <span>{t('unlimitedUploads')}</span>
-                </div>
-                <div className="flex items-center">
-                  <Download className="text-orange-500 mr-3" size={20} />
-                  <span>{t('editableOutput')}</span>
-                </div>
-                <div className="flex items-center">
-                  <MessageCircle className="text-green-500 mr-3" size={20} />
-                  <span>{t('unlimitedChatbot')}</span>
-                </div>
-                <div className="flex items-center">
-                  <Star className="text-yellow-500 mr-3" size={20} />
-                  <span>{t('matchScoring')}</span>
-                </div>
-                <div className="flex items-center">
-                  <User className="text-indigo-500 mr-3" size={20} />
-                  <span>{t('profileManagement')}</span>
-                </div>
-                <div className="flex items-center">
-                  <Video className="text-blue-500 mr-3" size={20} />
-                  <span>AI Mock Interviews with Video Recording</span>
-                </div>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="w-full border-gray-300 hover:bg-gray-50 py-3"
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Get Started
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Professional Plan */}
+            <Card className="relative border-2 border-primary shadow-xl scale-105">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
+                  Most Popular
+                </span>
               </div>
               
-              <Button 
-                size="lg" 
-                className="w-full bg-primary hover:bg-orange-600 text-white py-3"
-                onClick={() => window.location.href = '/api/login'}
-              >
-                {t('startFreeTrial')}
-              </Button>
-              <p className="text-center text-sm text-gray-500 mt-2">
-                {t('noCommitment')}
-              </p>
-            </CardContent>
-          </Card>
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-bold">Professional</CardTitle>
+                <div className="text-3xl font-bold text-primary mt-4">
+                  €29
+                  <span className="text-lg text-gray-500 font-normal">/month</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">or €75 for 3 months</p>
+                <p className="text-sm font-medium text-primary mt-3">Track, Apply & Practice</p>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-8 text-sm">
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Everything in Essential</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Unlimited CV + cover letter scoring vs job descriptions</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Full job application tracker (status updates, reporting dashboard)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>AI mentor chatbot (career tips, CV + application insights)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Unlimited text-based mock interviews (with feedback & scoring, contextualized by CV + job)</span>
+                  </div>
+                </div>
+                
+                <Button 
+                  size="lg" 
+                  className="w-full bg-primary hover:bg-orange-600 text-white py-3"
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Start Free Trial
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Elite Plan */}
+            <Card className="relative border-2 border-purple-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-bold">Elite</CardTitle>
+                <div className="text-3xl font-bold text-purple-600 mt-4">
+                  €45
+                  <span className="text-lg text-gray-500 font-normal">/month</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">or €115 for 3 months</p>
+                <p className="text-sm font-medium text-purple-600 mt-3">Simulate the Real Interview</p>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-8 text-sm">
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Everything in Professional</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Unlimited avatar recruiter simulations (voice/video interview practice)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Advanced feedback: tone, clarity, confidence, STAR framework analysis</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Personalized improvement reports (PDF)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Industry/role-specific interview question banks</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
+                    <span>Priority updates & support</span>
+                  </div>
+                </div>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="w-full border-purple-300 hover:bg-purple-50 text-purple-600 py-3"
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Get Elite Access
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="text-center mt-8">
+            <p className="text-sm text-gray-500">
+              All plans include multilingual support and secure data handling
+            </p>
+          </div>
         </div>
 
         {/* How it works */}
