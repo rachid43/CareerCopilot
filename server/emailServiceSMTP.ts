@@ -55,10 +55,29 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
   }
 }
 
-// Email service temporarily disabled to prevent loops
 export async function sendEmailWithFallback(params: EmailParams): Promise<boolean> {
-  console.log('Email service disabled - preventing loops');
-  return false; // Always return false to indicate email was not sent
+  try {
+    console.log('Attempting to send email via Hostinger SMTP...');
+    
+    // Add timeout and connection limits to prevent hanging
+    const success = await Promise.race([
+      sendEmailSMTP(params),
+      new Promise<boolean>((_, reject) => 
+        setTimeout(() => reject(new Error('Email timeout after 10 seconds')), 10000)
+      )
+    ]);
+    
+    if (success) {
+      console.log('✅ Email sent successfully');
+      return true;
+    } else {
+      console.log('❌ Email sending failed');
+      return false;
+    }
+  } catch (error: any) {
+    console.error('Email service error:', error.message);
+    return false;
+  }
 }
 
 export function generateInvitationEmail(email: string, token: string, inviterName: string): EmailParams {

@@ -958,8 +958,17 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
       );
       
-      // Email sending disabled to prevent loops
-      console.log(`Invitation created for ${email} - email sending disabled`);
+      // Send email with timeout protection
+      try {
+        const emailSent = await sendEmailWithFallback(emailParams);
+        if (emailSent) {
+          console.log(`✅ Invitation email sent to ${email}`);
+        } else {
+          console.log(`❌ Failed to send invitation email to ${email}`);
+        }
+      } catch (emailError) {
+        console.error('Email sending error:', emailError);
+      }
       
       // Return immediately after creating the invitation
       res.json({ 
@@ -996,9 +1005,11 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         text: 'Testing Hostinger SMTP email delivery.',
       };
       
+      const emailSent = await sendEmailWithFallback(testEmailParams);
+      
       res.json({ 
-        success: false,
-        message: "Email service disabled to prevent loops"
+        success: emailSent,
+        message: emailSent ? "Email sent successfully" : "Email failed - check logs"
       });
     } catch (error: any) {
       console.error('Email test error:', error);
@@ -1902,8 +1913,17 @@ USER MESSAGE: ${content}`;
       
       console.log('Generated email content:', JSON.stringify(emailContent, null, 2));
       
-      // Email sending disabled to prevent loops
-      console.log(`Invitation created for ${email} - email service disabled`);
+      // Send invitation email with timeout protection
+      try {
+        const emailSent = await sendEmailWithFallback(emailContent);
+        if (emailSent) {
+          console.log(`✅ Invitation email sent to ${email}`);
+        } else {
+          console.log(`❌ Failed to send invitation email to ${email}`);
+        }
+      } catch (emailError) {
+        console.error('Failed to send invitation email:', emailError);
+      }
       
       res.json({ invitation, invitationLink });
     } catch (error) {
