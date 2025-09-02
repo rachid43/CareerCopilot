@@ -643,6 +643,5 @@ class MemoryStorage implements IStorage {
   }
 }
 
-// Temporarily use memory storage due to authentication issue
-export const storage = new MemoryStorage();
-// export const storage = new DatabaseStorage(); // Will enable after fixing auth
+// Use Supabase PostgreSQL database for production
+export const storage = new DatabaseStorage();

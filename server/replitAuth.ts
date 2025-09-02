@@ -71,9 +71,9 @@ async function upsertUser(claims: any) {
     await storage.createUser({
       username: claims["sub"],
       email: claims["email"] || null,
-      firstName: claims["first_name"] || null,
-      lastName: claims["last_name"] || null,
-      profileImageUrl: claims["profile_image_url"] || null,
+      firstName: claims["firstName"] || null,
+      lastName: claims["lastName"] || null,
+      profileImageUrl: claims["profileImageUrl"] || null,
     });
   }
 }

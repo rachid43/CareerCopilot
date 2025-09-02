@@ -1,218 +1,60 @@
 # CareerCopilot - AI-Powered Career Assistant
 
 ## Overview
-
-CareerCopilot is a comprehensive web application that helps users create, review, and assess resumes and cover letters using AI technology. The application features a modern React frontend with a Node.js/Express backend, utilizing OpenAI's GPT models for intelligent document processing and career guidance.
+CareerCopilot is a comprehensive web application designed to assist users with resume and cover letter creation, review, and assessment using AI. It provides an AI Career Mentor chatbot and a Mock Interview system. The project aims to leverage AI for career growth, offering advanced tools for job seekers.
 
 ## User Preferences
-
 Preferred communication style: Simple, everyday language.
 Color scheme: Using #F08A5D (coral orange) as primary color instead of blue.
 Deployment preference: Supabase for database and Vercel for hosting instead of current Replit/Neon setup.
 
 ## System Architecture
 
-### Frontend Architecture
-- **Framework**: React with TypeScript
-- **UI Library**: Shadcn/ui components built on Radix UI primitives
-- **Styling**: Tailwind CSS with custom design system
-- **State Management**: TanStack Query for server state, React hooks for local state
-- **Routing**: Wouter for client-side routing
-- **Build Tool**: Vite with custom configuration for development and production
+### UI/UX Decisions
+- **Color Scheme**: Primary color is #F08A5D (coral orange).
+- **UI Library**: Shadcn/ui components built on Radix UI primitives.
+- **Styling**: Tailwind CSS with a custom design system.
+- **Internationalization**: Supports Dutch and English, with Dutch as default for users and English for superadmins.
 
-### Backend Architecture
-- **Runtime**: Node.js with Express.js framework
-- **Language**: TypeScript with ES modules
-- **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Supabase (serverless PostgreSQL)
-- **File Processing**: Multer for file uploads, pdf-parse for PDFs, mammoth for DOCX files
-- **AI Integration**: OpenAI API using GPT-4o model
+### Technical Implementations
+- **Frontend**: React with TypeScript, Wouter for routing, TanStack Query for server state, and Vite as build tool.
+- **Backend**: Node.js with Express.js, TypeScript, and ES modules.
+- **Database**: PostgreSQL with Drizzle ORM, hosted on Supabase.
+- **AI Integration**: Utilizes OpenAI API (GPT-4o model) for document processing, career mentoring, and mock interviews.
+- **File Processing**: Multer for uploads, pdf-parse for PDFs, and mammoth for DOCX files.
+- **Speech Processing**: OpenAI Whisper API for speech-to-text transcription in mock interviews.
+- **Email Service**: Hostinger SMTP for user invitations.
 
-### Data Storage Solutions
-- **Primary Database**: PostgreSQL via Neon Database (recently migrated from in-memory storage)
-- **ORM**: Drizzle ORM with TypeScript schema definitions
-- **Session Storage**: PostgreSQL-based storage with session-based user identification
-- **File Storage**: Temporary local storage for uploaded documents (cleaned after processing)
+### Feature Specifications
+- **AI Processing Modes**: Create (generates documents), Review (feedback on documents), Assess (compares documents to job descriptions with scoring).
+- **AI Career Mentor**: Chatbot with conversation history and multi-language support.
+- **Mock Interview System**:
+    - AI recruiter personas with dynamic question generation and answer evaluation.
+    - Text-based and Avatar modes (webcam/microphone recording).
+    - CV import for personalized questions.
+    - Overall scoring (0-100) and category breakdowns.
+    - DOCX report download with full transcripts.
+    - Avatar selection with 6 diverse AI interviewer personas and text-to-speech.
+- **User Management**:
+    - Session-based user identification (migrated from `sessionId` to `userId`).
+    - Superadmin role for user management (activate/deactivate, extend validity, subscription management).
+    - Email-based user invitations (12-month default subscription).
+    - Role-based access control.
+- **Document Handling**: Upload, parse (PDF/DOCX), and store document content.
+- **Job Applications Tracker**: CSV/Excel import/export with intelligent column mapping.
+- **Performance Optimization**: Parallel processing for AI Review and Assess endpoints.
 
-## Key Components
-
-### Database Schema
-The application uses four main tables:
-- **users**: Basic user authentication (currently unused)
-- **profiles**: User personal information (name, email, phone, position, skills)
-- **documents**: Uploaded CVs and cover letters with parsed content
-- **aiResults**: AI processing results for all three modes (create, review, assess)
-
-### AI Processing Modes
-1. **Create Mode**: Generates new CV and cover letter from user profile and job description
-2. **Review Mode**: Provides detailed feedback on uploaded documents
-3. **Assess Mode**: Compares documents against job descriptions with match scoring
-
-### Frontend Components
-- **FileUpload**: Drag-and-drop file upload with validation
-- **PersonalProfile**: User profile management form
-- **JobDescription**: Job posting input with character limits
-- **ModeSelector**: AI mode selection interface
-- **ResultsDisplay**: AI results presentation with copy/download functionality
-
-## Data Flow
-
-1. **User Session**: Session-based identification without traditional authentication
-2. **Profile Management**: Users create/update personal profiles stored in PostgreSQL
-3. **Document Upload**: Files are uploaded, parsed (PDF/DOCX), and content stored in database
-4. **AI Processing**: User selects mode, provides job description, and triggers AI analysis
-5. **Results Display**: AI responses are stored and presented with formatting and download options
+### System Design Choices
+- **Session-based Architecture**: Uses session IDs for user identification.
+- **Shared Schema**: TypeScript schemas in `/shared` for type safety between frontend and backend.
+- **Server-side Document Parsing**: Ensures security and proper content extraction.
+- **Single Server Deployment**: Production serves both static files and API from one Express instance.
+- **Database Migrations**: Drizzle ORM manages schema changes.
 
 ## External Dependencies
 
-### Core Dependencies
-- **Database**: Neon Database (PostgreSQL)
-- **AI Service**: OpenAI API (GPT-4o model)
-- **Email Service**: Hostinger SMTP (info@maptheorie.nl)
-- **UI Components**: Radix UI primitives
-- **File Processing**: pdf-parse, mammoth for document parsing
-
-### Development Dependencies
-- **Build Tools**: Vite, ESBuild for production builds
-- **TypeScript**: Full TypeScript support across frontend and backend
-- **Linting**: Implicit through TypeScript configuration
-
-## Deployment Strategy
-
-### Build Process
-- **Frontend**: Vite builds React app to `dist/public`
-- **Backend**: ESBuild bundles server code to `dist/index.js`
-- **Database**: Drizzle migrations manage schema changes
-
-### Environment Configuration
-- **Development**: Vite dev server with Express API
-- **Production**: Single Node.js server serving both static files and API
-- **Database**: Requires `DATABASE_URL` environment variable
-- **AI**: Requires `OPENAI_API_KEY` or `VITE_OPENAI_API_KEY`
-
-### File Structure
-```
-/client          # React frontend
-/server          # Express backend
-/shared          # Shared TypeScript schemas
-/migrations      # Drizzle database migrations
-/uploads         # Temporary file storage
-```
-
-### Key Design Decisions
-
-1. **Session-based Architecture**: Uses session IDs instead of user authentication for simplicity
-2. **Shared Schema**: TypeScript schemas in `/shared` ensure type safety between frontend and backend
-3. **Document Parsing**: Server-side parsing ensures security and proper content extraction
-4. **Database Migration**: Recently migrated from in-memory storage to PostgreSQL for data persistence
-5. **Single Server Deployment**: Production serves both static files and API from single Express instance
-
-### Recent Changes
-
-- **January 2025**: Added user authentication with Replit Auth integration
-- **January 2025**: Migrated from in-memory storage to PostgreSQL database
-- **January 2025**: Updated color scheme to coral orange (#F08A5D) as primary color
-- **January 2025**: Fixed AI mode selector to stack vertically for better mobile experience
-- **January 2025**: Implemented superadmin role system with email-based user invitations
-- **January 2025**: Added user management features (activate/deactivate accounts, extend validity)
-- **January 2025**: Implemented Hostinger SMTP for reliable email delivery of user invitations
-- **January 2025**: Added internationalization support with Dutch as default language and English option
-- **January 2025**: Implemented language selector component with Dutch/English switching
-- **January 2025**: Maintained superadmin interface in English while user interface defaults to Dutch
-- **January 2025**: Enhanced CV auto-population with OpenAI profile extraction from uploaded documents
-- **January 2025**: Implemented comprehensive AI analysis criteria for professional CV and cover letter evaluation
-- **January 2025**: Added detailed match scoring system with component-based assessment for job alignment
-- **January 2025**: Fixed user isolation by migrating all endpoints from sessionId to userId for proper data security
-- **January 2025**: Added AI Career Mentor chatbot feature with full conversation history and multi-language support
-- **January 2025**: Updated landing page with AI chatbot showcase and single pricing tier ($9.97/€8.97)
-- **January 2025**: Implemented dynamic currency detection for European users
-- **January 2025**: Added clear buttons to job description and personal profile components with full translations
-- **January 2025**: Migrated from Neon Database to Supabase for better scalability and Vercel integration
-- **January 2025**: Updated database driver from @neondatabase/serverless to postgres for Supabase compatibility
-- **January 2025**: Added Vercel deployment configuration with proper routing and build setup
-- **January 2025**: Temporarily implemented memory-based storage and sessions to resolve Supabase connection issues during development
-- **January 2025**: Successfully tested full application functionality including login, AI features, CV processing, and chatbot
-- **January 2025**: Enhanced landing page with AI mentor chatbot feature showcase in 4-step "How it works" section
-- **January 2025**: Updated tagline to "Get Hired, Get Ahead — AI-Powered Help with Resumes, Cover Letters & Career Growth"
-- **January 2025**: Added professional video demo section with feature highlights and placeholder for future video content
-- **January 2025**: Redesigned navigation with login button in header next to language selector for better UX
-- **January 2025**: Implemented comprehensive SEO optimization with meta tags, Open Graph, Twitter cards, and structured data
-- **January 2025**: Added appealing background with subtle geometric pattern and branded color gradients
-- **January 2025**: Enhanced Job Applications Tracker with CSV/Excel import functionality with intelligent column mapping
-- **January 2025**: Added drag-and-drop file upload interface for importing existing job tracking files
-- **January 2025**: Upgraded export capabilities to support both CSV and Excel (.xlsx) formats
-- **January 2025**: Implemented smart field mapping for various column naming conventions during import
-- **January 2025**: Major AI performance optimization - implemented parallel processing for Review and Assess endpoints reducing response time from 40+ seconds to ~10-15 seconds
-- **January 2025**: NEW FEATURE - Designed and integrated Mock Interview system with AI recruiter personas and comprehensive feedback system
-- **January 2025**: Extended database schema with interview sessions, questions/answers, and feedback tables with multi-language support
-- **January 2025**: Created InterviewAI class with dynamic question generation, answer evaluation, and final feedback capabilities
-- **January 2025**: COMPLETED - Mock Interview feature now fully functional with real-time AI interactions, removing "Coming Soon" placeholder
-- **January 2025**: Enhanced Mock Interview with CV import functionality - AI personalizes questions based on uploaded CV content
-- **January 2025**: Added overall interview scoring system with prominently displayed 0-100 score and category breakdowns
-- **January 2025**: Implemented DOCX report download functionality with comprehensive interview analysis and Q&A documentation
-- **January 2025**: Integrated Mock Interview navigation in main header and routing system with complete workflow implementation
-- **January 2025**: MAJOR FEATURE - Implemented dual interview modes: Text-based and Avatar mode with webcam/microphone recording
-- **January 2025**: Added video recording capabilities with MediaRecorder API for avatar interview mode
-- **January 2025**: Integrated OpenAI Whisper API for real-time speech-to-text transcription in avatar interviews
-- **January 2025**: Enhanced UI with camera permissions, recording controls, and video preview for immersive interview experience
-- **January 2025**: NEW - Avatar Selection & Text-to-Speech: 6 diverse AI interviewer personas (different genders, ethnicities) with browser-based speech synthesis
-- **January 2025**: Enhanced avatar mode with personalized AI recruiters speaking questions aloud and voice test functionality
-- **January 2025**: Added stop interview buttons for both text and avatar modes with consistent DOCX report generation including full transcripts
-- **January 2025**: COMPLETED - Implemented comprehensive superadmin dashboard with complete user management system
-- **January 2025**: Added subscription management with default 12-month subscriptions for all new users
-- **January 2025**: Created admin dashboard with user status control (active/inactive), subscription management (active/hold/cancelled), and invitation system
-- **January 2025**: Enhanced user schema with subscription fields and proper role-based access control
-- **January 2025**: Implemented email-based user invitations with automatic 12-month subscription setup
-- **January 2025**: Updated CareerCopilot branding with orange "Copilot" text throughout the application
-
-### Superadmin Features
-
-The application now includes a comprehensive superadmin system:
-
-#### User Role Management
-- **Superadmin Role**: Full access to user management and invitation system
-- **User Role**: Standard access to career assistance features (default for new users)
-- **Account Expiration**: User accounts expire after 30 days by default
-- **Account Status**: Users can be activated/deactivated by superadmins
-
-#### Email-Based User Invitations
-- Superadmins can send invitation emails to new users
-- Invitations are valid for 30 days
-- Users complete account setup via email link with first/last name
-- SendGrid integration for reliable email delivery
-
-#### Admin Panel Features
-- **User Management Tab**: View all users, activate/deactivate accounts, extend account validity
-- **Invitations Tab**: View pending invitations and their status
-- **Send Invite Tab**: Send new user invitations via email
-- Role-based navigation with admin panel access for superadmins only
-
-#### Database Schema Updates
-- Added `role`, `isActive`, `accountExpiresAt` fields to users table
-- New `userInvitations` table for tracking email invitations
-- Enhanced storage interface with user management methods
-
-### Internationalization Features
-
-The application now supports Dutch and English languages:
-
-#### Language System
-- **Default Language**: Dutch (Nederlands) for all regular users
-- **Language Switching**: Users can toggle between Dutch and English via language selector
-- **Superadmin Exception**: Admin panel remains in English for consistency
-- **Persistent Preference**: Language choice is saved in localStorage
-
-#### Implementation Details
-- Comprehensive translation system with `useLanguage` hook
-- Translation files for all UI components and messages
-- Language selector component in main navigation
-- Dutch translations for forms, buttons, messages, and notifications
-
-#### Translation Coverage
-- Main navigation and headers in Dutch
-- All form fields and placeholders translated
-- AI mode descriptions and instructions
-- Error messages and toast notifications
-- File upload instructions and validation messages
-
-The application prioritizes user experience with a clean, accessible interface while maintaining robust backend processing for document handling and AI integration, now enhanced with comprehensive user management capabilities and full Dutch language support.
+- **Database**: Supabase (PostgreSQL)
+- **AI Service**: OpenAI API (GPT-4o model, Whisper API)
+- **Email Service**: Hostinger SMTP
+- **UI Components**: Radix UI
+- **Document Parsing Libraries**: `pdf-parse`, `mammoth`
