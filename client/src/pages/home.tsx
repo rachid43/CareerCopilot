@@ -165,7 +165,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col items-end space-y-2">
               {/* 2x2 Grid for navigation buttons */}
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <div className="flex items-center justify-end space-x-2">
                   {user && (
                     <>
@@ -187,6 +187,16 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                     <span>Job Tracker</span>
+                  </Button>
+                </Link>
+                <Link to="/chat">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
+                  >
+                    <Bot size={16} />
+                    <span>{t('aiCareerMentor')}</span>
                   </Button>
                 </Link>
                 <div className="flex justify-end space-x-2">
@@ -212,16 +222,7 @@ export default function Home() {
                     <span>{t('logout')}</span>
                   </Button>
                 </div>
-                <Link to="/chat">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
-                  >
-                    <Bot size={16} />
-                    <span>{t('aiCareerMentor')}</span>
-                  </Button>
-                </Link>
+                <div></div>
                 <Link to="/mock-interview">
                   <Button
                     variant="outline"
