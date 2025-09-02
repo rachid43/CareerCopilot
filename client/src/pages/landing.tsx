@@ -8,49 +8,10 @@ import { useState, useEffect } from "react";
 
 export function Landing() {
   const { t } = useLanguage();
-  const [isEuropean, setIsEuropean] = useState(false);
-  const [currency, setCurrency] = useState('$');
-  const [price, setPrice] = useState('9.97');
-  
-  // Detect user location for currency
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        // Use a shorter timeout and more robust error handling
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
-        
-        const response = await fetch('https://ipapi.co/json/', {
-          signal: controller.signal,
-          headers: {
-            'Accept': 'application/json',
-          }
-        }).catch(() => null);
-        
-        clearTimeout(timeoutId);
-        
-        if (!response || !response.ok) {
-          // Silently fail without throwing
-          return;
-        }
-        
-        const data = await response.json().catch(() => null);
-        if (!data || !data.country_code) return;
-        
-        const europeanCountries = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
-        
-        if (europeanCountries.includes(data.country_code)) {
-          setIsEuropean(true);
-          setCurrency('€');
-          setPrice('8.97');
-        }
-      } catch (error) {
-        // Silently handle all errors to prevent runtime failures
-      }
-    };
-    
-    detectLocation();
-  }, []);
+  // Use Euro pricing as default since this is for European market
+  const [isEuropean] = useState(true);
+  const [currency] = useState('€');
+  const [price] = useState('8.97');
   
   const features = [
     {
