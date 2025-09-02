@@ -164,8 +164,9 @@ export default function Home() {
               </div>
             </div>
             <div className="flex flex-col items-end space-y-2">
-              {/* 2x2 Grid for navigation buttons */}
-              <div className="grid grid-cols-3 gap-2">
+              {/* 3x2 Grid for navigation buttons */}
+              <div className="grid grid-cols-2 gap-2">
+                {/* Row 1 */}
                 <div className="flex items-center justify-end space-x-2">
                   {user && (
                     <>
@@ -189,16 +190,8 @@ export default function Home() {
                     <span>Job Tracker</span>
                   </Button>
                 </Link>
-                <Link to="/chat">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
-                  >
-                    <Bot size={16} />
-                    <span>{t('aiCareerMentor')}</span>
-                  </Button>
-                </Link>
+                
+                {/* Row 2 */}
                 <div className="flex justify-end space-x-2">
                   {(user as any)?.role === 'superadmin' && (
                     <Link to="/admin-dashboard">
@@ -222,6 +215,18 @@ export default function Home() {
                     <span>{t('logout')}</span>
                   </Button>
                 </div>
+                <Link to="/chat">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
+                  >
+                    <Bot size={16} />
+                    <span>{t('aiCareerMentor')}</span>
+                  </Button>
+                </Link>
+                
+                {/* Row 3 */}
                 <div></div>
                 <Link to="/mock-interview">
                   <Button
