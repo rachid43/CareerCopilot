@@ -369,7 +369,7 @@ export function Landing() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="w-full border-gray-300 hover:bg-gray-50 py-3"
+                  className="w-full border-gray-300 hover:bg-gray-50 hover:text-gray-900 py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
                   {t('getStartedBtn')}
@@ -472,7 +472,7 @@ export function Landing() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="w-full border-purple-300 hover:bg-purple-50 text-purple-600 py-3"
+                  className="w-full border-purple-300 hover:bg-purple-50 hover:text-purple-700 text-purple-600 py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
                   {t('getEliteAccess')}
