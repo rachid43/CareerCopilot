@@ -39,6 +39,41 @@ export const translations = {
     choosePlan: 'Kies Je Plan',
     choosePlanSubtitle: 'Selecteer het plan dat past bij jouw baan zoektocht',
     
+    // Pricing plans
+    essentialPlan: 'Essential',
+    professionalPlan: 'Professional', 
+    elitePlan: 'Elite',
+    getStartedRight: 'Goed Beginnen',
+    trackApplyPractice: 'Volgen, Solliciteren & Oefenen',
+    simulateRealInterview: 'Simuleer Het Echte Interview',
+    mostPopular: 'Meest Populair',
+    getStartedBtn: 'Aan de Slag',
+    startFreeTrial: 'Start Gratis Proefperiode',
+    getEliteAccess: 'Krijg Elite Toegang',
+    orForMonths: 'of €{amount} voor 3 maanden',
+    multilingualSupport: 'Alle plannen bevatten meertalige ondersteuning en veilige gegevensverwerking',
+    
+    // Plan features
+    everythingInEssential: 'Alles in Essential',
+    everythingInProfessional: 'Alles in Professional',
+    cvCoverLetterGeneration: 'CV + motivatiebrief AI generatie/verbetering',
+    matchingScoreAnalysis: 'Matching score analyse vs functieomschrijvingen (5 banen/maand)',
+    aiMentorBasic: 'AI mentor chatbot (basis Q&A)',
+    jobTrackerBasic: 'Sollicitatie tracker (handmatige basisvolging)',
+    unlimitedCvScoring: 'Onbeperkte CV + motivatiebrief scoring vs functieomschrijvingen',
+    fullJobTracker: 'Volledige sollicitatie tracker (status updates, rapportage dashboard)',
+    aiMentorAdvanced: 'AI mentor chatbot (carrière tips, CV + sollicitatie inzichten)',
+    unlimitedTextInterviews: 'Onbeperkte tekst-gebaseerde mock interviews (met feedback & scoring, gecontextualiseerd door CV + baan)',
+    unlimitedAvatarInterviews: 'Onbeperkte avatar recruiter simulaties (spraak/video interview oefening)',
+    advancedFeedback: 'Geavanceerde feedback: toon, helderheid, vertrouwen, STAR framework analyse',
+    personalizedReports: 'Gepersonaliseerde verbeteringsrapporten (PDF)',
+    industryQuestionBanks: 'Industrie/rol-specifieke interview vragen banken',
+    prioritySupport: 'Prioriteit updates & ondersteuning',
+    
+    // Footer
+    aiPoweredFooter: '🤖 AI-Aangedreven Carrière Assistent • Veilig • Snel • Professioneel',
+    careerPartner: 'CareerCopilot: Jouw Intelligente Carrière Groei Partner',
+    
     // Navigation
     adminPanel: 'Admin Paneel',
     
@@ -257,6 +292,41 @@ export const translations = {
     mockInterviewDescription: 'Practice interviews with AI recruiters, get personalized feedback, and improve your performance with comprehensive scoring and reports.',
     choosePlan: 'Choose Your Plan',
     choosePlanSubtitle: 'Select the plan that matches your job search journey',
+    
+    // Pricing plans
+    essentialPlan: 'Essential',
+    professionalPlan: 'Professional', 
+    elitePlan: 'Elite',
+    getStartedRight: 'Get Started Right',
+    trackApplyPractice: 'Track, Apply & Practice',
+    simulateRealInterview: 'Simulate the Real Interview',
+    mostPopular: 'Most Popular',
+    getStartedBtn: 'Get Started',
+    startFreeTrial: 'Start Free Trial',
+    getEliteAccess: 'Get Elite Access',
+    orForMonths: 'or €{amount} for 3 months',
+    multilingualSupport: 'All plans include multilingual support and secure data handling',
+    
+    // Plan features
+    everythingInEssential: 'Everything in Essential',
+    everythingInProfessional: 'Everything in Professional',
+    cvCoverLetterGeneration: 'CV + cover letter AI generation/enhancement',
+    matchingScoreAnalysis: 'Matching score analysis vs job descriptions (5 jobs/month)',
+    aiMentorBasic: 'AI mentor chatbot (basic Q&A)',
+    jobTrackerBasic: 'Job application tracker (basic manual tracking)',
+    unlimitedCvScoring: 'Unlimited CV + cover letter scoring vs job descriptions',
+    fullJobTracker: 'Full job application tracker (status updates, reporting dashboard)',
+    aiMentorAdvanced: 'AI mentor chatbot (career tips, CV + application insights)',
+    unlimitedTextInterviews: 'Unlimited text-based mock interviews (with feedback & scoring, contextualized by CV + job)',
+    unlimitedAvatarInterviews: 'Unlimited avatar recruiter simulations (voice/video interview practice)',
+    advancedFeedback: 'Advanced feedback: tone, clarity, confidence, STAR framework analysis',
+    personalizedReports: 'Personalized improvement reports (PDF)',
+    industryQuestionBanks: 'Industry/role-specific interview question banks',
+    prioritySupport: 'Priority updates & support',
+    
+    // Footer
+    aiPoweredFooter: '🤖 AI-Powered Career Assistant • Secure • Fast • Professional',
+    careerPartner: 'CareerCopilot: Your Intelligent Career Growth Partner',
     
     // Navigation
     adminPanel: 'Admin Panel',

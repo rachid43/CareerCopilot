@@ -326,32 +326,32 @@ export function Landing() {
             {/* Essential Plan */}
             <Card className="relative border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-bold">Essential</CardTitle>
+                <CardTitle className="text-xl font-bold">{t('essentialPlan')}</CardTitle>
                 <div className="text-3xl font-bold text-gray-700 mt-4">
                   €15
-                  <span className="text-lg text-gray-500 font-normal">/month</span>
+                  <span className="text-lg text-gray-500 font-normal">/{t('month')}</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">or €39 for 3 months</p>
-                <p className="text-sm font-medium text-gray-700 mt-3">Get Started Right</p>
+                <p className="text-sm text-gray-500 mt-2">{t('orForMonths').replace('{amount}', '39')}</p>
+                <p className="text-sm font-medium text-gray-700 mt-3">{t('getStartedRight')}</p>
               </CardHeader>
               
               <CardContent className="pt-0">
                 <div className="space-y-3 mb-8 text-sm">
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>CV + cover letter AI generation/enhancement</span>
+                    <span>{t('cvCoverLetterGeneration')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Matching score analysis vs job descriptions (5 jobs/month)</span>
+                    <span>{t('matchingScoreAnalysis')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>AI mentor chatbot (basic Q&A)</span>
+                    <span>{t('aiMentorBasic')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Job application tracker (basic manual tracking)</span>
+                    <span>{t('jobTrackerBasic')}</span>
                   </div>
                 </div>
                 
@@ -361,7 +361,7 @@ export function Landing() {
                   className="w-full border-gray-300 hover:bg-gray-50 py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
-                  Get Started
+                  {t('getStartedBtn')}
                 </Button>
               </CardContent>
             </Card>
@@ -370,41 +370,41 @@ export function Landing() {
             <Card className="relative border-2 border-primary shadow-xl scale-105">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
-                  Most Popular
+                  {t('mostPopular')}
                 </span>
               </div>
               
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-bold">Professional</CardTitle>
+                <CardTitle className="text-xl font-bold">{t('professionalPlan')}</CardTitle>
                 <div className="text-3xl font-bold text-primary mt-4">
                   €29
-                  <span className="text-lg text-gray-500 font-normal">/month</span>
+                  <span className="text-lg text-gray-500 font-normal">/{t('month')}</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">or €75 for 3 months</p>
-                <p className="text-sm font-medium text-primary mt-3">Track, Apply & Practice</p>
+                <p className="text-sm text-gray-500 mt-2">{t('orForMonths').replace('{amount}', '75')}</p>
+                <p className="text-sm font-medium text-primary mt-3">{t('trackApplyPractice')}</p>
               </CardHeader>
               
               <CardContent className="pt-0">
                 <div className="space-y-3 mb-8 text-sm">
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Everything in Essential</span>
+                    <span>{t('everythingInEssential')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Unlimited CV + cover letter scoring vs job descriptions</span>
+                    <span>{t('unlimitedCvScoring')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Full job application tracker (status updates, reporting dashboard)</span>
+                    <span>{t('fullJobTracker')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>AI mentor chatbot (career tips, CV + application insights)</span>
+                    <span>{t('aiMentorAdvanced')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Unlimited text-based mock interviews (with feedback & scoring, contextualized by CV + job)</span>
+                    <span>{t('unlimitedTextInterviews')}</span>
                   </div>
                 </div>
                 
@@ -413,7 +413,7 @@ export function Landing() {
                   className="w-full bg-primary hover:bg-orange-600 text-white py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
-                  Start Free Trial
+                  {t('startFreeTrial')}
                 </Button>
               </CardContent>
             </Card>
@@ -421,40 +421,40 @@ export function Landing() {
             {/* Elite Plan */}
             <Card className="relative border-2 border-purple-200 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-bold">Elite</CardTitle>
+                <CardTitle className="text-xl font-bold">{t('elitePlan')}</CardTitle>
                 <div className="text-3xl font-bold text-purple-600 mt-4">
                   €45
-                  <span className="text-lg text-gray-500 font-normal">/month</span>
+                  <span className="text-lg text-gray-500 font-normal">/{t('month')}</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">or €115 for 3 months</p>
-                <p className="text-sm font-medium text-purple-600 mt-3">Simulate the Real Interview</p>
+                <p className="text-sm text-gray-500 mt-2">{t('orForMonths').replace('{amount}', '115')}</p>
+                <p className="text-sm font-medium text-purple-600 mt-3">{t('simulateRealInterview')}</p>
               </CardHeader>
               
               <CardContent className="pt-0">
                 <div className="space-y-3 mb-8 text-sm">
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Everything in Professional</span>
+                    <span>{t('everythingInProfessional')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Unlimited avatar recruiter simulations (voice/video interview practice)</span>
+                    <span>{t('unlimitedAvatarInterviews')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Advanced feedback: tone, clarity, confidence, STAR framework analysis</span>
+                    <span>{t('advancedFeedback')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Personalized improvement reports (PDF)</span>
+                    <span>{t('personalizedReports')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Industry/role-specific interview question banks</span>
+                    <span>{t('industryQuestionBanks')}</span>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>Priority updates & support</span>
+                    <span>{t('prioritySupport')}</span>
                   </div>
                 </div>
                 
@@ -464,7 +464,7 @@ export function Landing() {
                   className="w-full border-purple-300 hover:bg-purple-50 text-purple-600 py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
-                  Get Elite Access
+                  {t('getEliteAccess')}
                 </Button>
               </CardContent>
             </Card>
@@ -472,7 +472,7 @@ export function Landing() {
           
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
-              All plans include multilingual support and secure data handling
+              {t('multilingualSupport')}
             </p>
           </div>
         </div>
@@ -536,8 +536,8 @@ export function Landing() {
 
         {/* Footer */}
         <div className="text-center mt-16 text-gray-500">
-          <p>🤖 AI-Powered Career Assistant • Secure • Fast • Professional</p>
-          <p className="text-xs mt-2">CareerCopilot: Your Intelligent Career Growth Partner</p>
+          <p>{t('aiPoweredFooter')}</p>
+          <p className="text-xs mt-2">{t('careerPartner')}</p>
         </div>
       </div>
       </div>
