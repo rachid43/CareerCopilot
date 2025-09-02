@@ -149,7 +149,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center min-h-20 py-3">
+          <div className="flex justify-between items-center min-h-16 py-2">
             <div className="flex items-center space-x-3">
               <img 
                 src={careerCopilotIcon} 
@@ -163,29 +163,20 @@ export default function Home() {
                 <p className="text-sm text-secondary">{t('appSubtitle')}</p>
               </div>
             </div>
-            <div className="flex flex-col items-end space-y-3">
-              {user && (
-                <div className="flex items-center space-x-2">
-                  <User size={18} className="text-gray-500" />
-                  <span className="text-sm text-gray-700">
-                    {String((user as any)?.firstName || (user as any)?.email || (user as any)?.username || 'User')}
-                  </span>
-                  <LanguageSelector />
-                </div>
-              )}
-              
+            <div className="flex flex-col items-end space-y-2">
               {/* 2x2 Grid for navigation buttons */}
               <div className="grid grid-cols-2 gap-2">
-                <Link to="/chat">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
-                  >
-                    <Bot size={16} />
-                    <span>{t('aiCareerMentor')}</span>
-                  </Button>
-                </Link>
+                <div className="flex items-center justify-end space-x-2">
+                  {user && (
+                    <>
+                      <User size={16} className="text-gray-500" />
+                      <span className="text-sm text-gray-700">
+                        {String((user as any)?.firstName || (user as any)?.email || (user as any)?.username || 'User')}
+                      </span>
+                      <LanguageSelector />
+                    </>
+                  )}
+                </div>
                 <Link to="/job-applications">
                   <Button
                     variant="outline"
@@ -198,6 +189,16 @@ export default function Home() {
                     <span>Job Tracker</span>
                   </Button>
                 </Link>
+                <Link to="/chat">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
+                  >
+                    <Bot size={16} />
+                    <span>{t('aiCareerMentor')}</span>
+                  </Button>
+                </Link>
                 <Link to="/mock-interview">
                   <Button
                     variant="outline"
@@ -208,29 +209,31 @@ export default function Home() {
                     <span>Mock Interview</span>
                   </Button>
                 </Link>
-                <div className="flex space-x-1">
-                  {(user as any)?.role === 'superadmin' && (
-                    <Link to="/admin-dashboard">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center space-x-1 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white text-xs px-2"
-                      >
-                        <Shield size={14} />
-                        <span>Admin</span>
-                      </Button>
-                    </Link>
-                  )}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.location.href = '/api/logout'}
-                    className="flex items-center space-x-1 text-xs px-2"
-                  >
-                    <LogOut size={14} />
-                    <span>{t('logout')}</span>
-                  </Button>
-                </div>
+              </div>
+              
+              {/* Admin and Logout buttons in a separate row */}
+              <div className="flex justify-end space-x-2">
+                {(user as any)?.role === 'superadmin' && (
+                  <Link to="/admin-dashboard">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center space-x-1 border-[#F08A5D] text-[#F08A5D] hover:bg-[#F08A5D] hover:text-white text-xs px-2"
+                    >
+                      <Shield size={14} />
+                      <span>Admin</span>
+                    </Button>
+                  </Link>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.href = '/api/logout'}
+                  className="flex items-center space-x-1 text-xs px-2"
+                >
+                  <LogOut size={14} />
+                  <span>{t('logout')}</span>
+                </Button>
               </div>
             </div>
           </div>
