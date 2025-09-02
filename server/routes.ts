@@ -921,6 +921,28 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
       res.status(500).json({ message: "Failed to update user" });
     }
   });
+
+  // Update user subscription (superadmin only)
+  app.put("/api/admin/users/:id/subscription", isAuthenticated, isSuperAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { subscriptionStatus, subscriptionExpiresAt } = req.body;
+      
+      const updatedUser = await storage.updateUser(userId, { 
+        subscriptionStatus,
+        subscriptionExpiresAt: subscriptionExpiresAt ? new Date(subscriptionExpiresAt) : null
+      });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error updating subscription:', error);
+      res.status(500).json({ message: "Failed to update subscription" });
+    }
+  });
   
   // Send user invitation
   app.post("/api/admin/invite", isAuthenticated, isSuperAdmin, async (req: any, res) => {

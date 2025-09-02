@@ -153,6 +153,31 @@ export function AdminDashboard() {
     updateSubscriptionMutation.mutate({ userId, subscriptionStatus, subscriptionExpiresAt });
   };
 
+  const handleUpdateSubscriptionDate = (userId: number, newDate: string) => {
+    updateSubscriptionMutation.mutate({ 
+      userId, 
+      subscriptionStatus: 'active', 
+      subscriptionExpiresAt: new Date(newDate).toISOString() 
+    });
+  };
+
+  const handleExtendSubscription = (userId: number, months: number) => {
+    const currentUser = users.find(u => u.id === userId);
+    const currentExpiry = currentUser?.subscriptionExpiresAt ? new Date(currentUser.subscriptionExpiresAt) : new Date();
+    
+    // If current expiry is in the past, start from today
+    const baseDate = currentExpiry > new Date() ? currentExpiry : new Date();
+    
+    const newExpiry = new Date(baseDate);
+    newExpiry.setMonth(newExpiry.getMonth() + months);
+    
+    updateSubscriptionMutation.mutate({ 
+      userId, 
+      subscriptionStatus: 'active', 
+      subscriptionExpiresAt: newExpiry.toISOString() 
+    });
+  };
+
   const handleToggleUserStatus = (userId: number, currentStatus: boolean) => {
     updateUserStatusMutation.mutate({ userId, isActive: !currentStatus });
   };
@@ -292,21 +317,46 @@ export function AdminDashboard() {
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Label className="text-sm font-medium">Change Subscription:</Label>
-                      <Select 
-                        onValueChange={(value) => handleUpdateSubscription(userData.id, value)}
-                        data-testid={`select-subscription-${userData.id}`}
-                      >
-                        <SelectTrigger className="w-40">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="active">Active (12 months)</SelectItem>
-                          <SelectItem value="hold">Hold</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2">
+                        <Label className="text-sm font-medium">Change Subscription:</Label>
+                        <Select 
+                          onValueChange={(value) => handleUpdateSubscription(userData.id, value)}
+                          data-testid={`select-subscription-${userData.id}`}
+                        >
+                          <SelectTrigger className="w-40">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="hold">Hold</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Label className="text-sm font-medium">Subscription Expires:</Label>
+                        <Input
+                          type="date"
+                          defaultValue={userData.subscriptionExpiresAt ? new Date(userData.subscriptionExpiresAt).toISOString().split('T')[0] : ''}
+                          className="w-40"
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              handleUpdateSubscriptionDate(userData.id, e.target.value);
+                            }
+                          }}
+                          data-testid={`input-subscription-date-${userData.id}`}
+                        />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleExtendSubscription(userData.id, 12)}
+                          data-testid={`button-extend-12months-${userData.id}`}
+                        >
+                          +12 months
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
