@@ -958,19 +958,8 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
       );
       
-      // Send email in background without blocking response
-      setImmediate(async () => {
-        try {
-          const emailSent = await sendEmailWithFallback(emailParams);
-          if (emailSent) {
-            console.log(`✅ Invitation email sent to ${email}`);
-          } else {
-            console.error(`❌ Failed to send invitation email to ${email}`);
-          }
-        } catch (error: any) {
-          console.error(`❌ Email error for ${email}:`, error.message);
-        }
-      });
+      // Temporarily disable email sending to stop the loop
+      console.log(`✅ Invitation created for ${email} (email sending temporarily disabled to prevent loops)`);
       
       // Return immediately after creating the invitation
       res.json({ 

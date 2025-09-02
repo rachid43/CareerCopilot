@@ -10,35 +10,31 @@ interface EmailParams {
 
 // SMTP Email Service using Hostinger SMTP
 export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
+  let transporter = null;
   try {
-    console.log('Sending email with Hostinger SMTP...');
-    console.log('To:', params.to);
-    console.log('Subject:', params.subject);
+    console.log(`📧 Sending email to: ${params.to}`);
 
     if (!process.env.SMTP_PASSWORD || !process.env.SMTP_HOST) {
-      console.error('Hostinger SMTP credentials not configured');
+      console.error('❌ SMTP credentials not configured');
       return false;
     }
     
-    const transporter = nodemailer.createTransport({
+    transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: parseInt(process.env.SMTP_PORT || '587') === 465, // true for 465 (SSL), false for 587 (TLS)
+      secure: false, // Use TLS
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
       },
-      connectionTimeout: 10000, // 10 seconds connection timeout
-      greetingTimeout: 5000,    // 5 seconds greeting timeout  
-      socketTimeout: 15000,     // 15 seconds socket timeout
+      connectionTimeout: 5000,  // 5 seconds
+      socketTimeout: 10000,     // 10 seconds
       tls: {
         rejectUnauthorized: false
-      },
-      pool: false,              // Disable connection pooling to prevent loops
+      }
     });
     
-    // Send email with simple timeout
-    const result = await transporter.sendMail({
+    await transporter.sendMail({
       from: process.env.SMTP_USER,
       to: params.to,
       subject: params.subject,
@@ -46,14 +42,20 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
       html: params.html,
     });
 
-    // Close transporter to prevent hanging connections
-    transporter.close();
-
-    console.log('Email sent successfully via Hostinger SMTP');
+    console.log('✅ Email sent successfully');
     return true;
   } catch (error: any) {
-    console.error('Hostinger SMTP email error:', error.message);
+    console.error('❌ Email error:', error.message);
     return false;
+  } finally {
+    // Always close the transporter
+    if (transporter) {
+      try {
+        transporter.close();
+      } catch (closeError) {
+        // Ignore close errors
+      }
+    }
   }
 }
 
