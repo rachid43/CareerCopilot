@@ -12,8 +12,6 @@ interface EmailParams {
 export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
   try {
     console.log('Sending email with Hostinger SMTP...');
-    console.log('Email params:', JSON.stringify(params, null, 2));
-    console.log('From:', params.from);
     console.log('To:', params.to);
     console.log('Subject:', params.subject);
 
@@ -21,10 +19,6 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
       console.error('Hostinger SMTP credentials not configured');
       return false;
     }
-
-    console.log('SMTP Host:', process.env.SMTP_HOST);
-    console.log('SMTP Port:', process.env.SMTP_PORT);
-    console.log('SMTP User:', process.env.SMTP_USER);
     
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -34,25 +28,37 @@ export async function sendEmailSMTP(params: EmailParams): Promise<boolean> {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
       },
+      connectionTimeout: 10000, // 10 seconds connection timeout
+      greetingTimeout: 5000,    // 5 seconds greeting timeout  
+      socketTimeout: 15000,     // 15 seconds socket timeout
       tls: {
-        // Don't fail on invalid certs
         rejectUnauthorized: false
-      }
+      },
+      pool: true,               // Use connection pooling
+      maxConnections: 5,        // Max 5 concurrent connections
+      maxMessages: 100,         // Max 100 messages per connection
     });
     
-    await transporter.sendMail({
-      from: process.env.SMTP_USER, // Use SMTP user as sender
+    // Add timeout wrapper for the entire operation
+    const emailPromise = transporter.sendMail({
+      from: process.env.SMTP_USER,
       to: params.to,
       subject: params.subject,
       text: params.text,
       html: params.html,
     });
 
+    // Race against timeout
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email timeout after 20 seconds')), 20000)
+    );
+
+    await Promise.race([emailPromise, timeoutPromise]);
+
     console.log('Email sent successfully via Hostinger SMTP');
     return true;
   } catch (error: any) {
-    console.error('Hostinger SMTP email error:', error);
-    console.error('Error message:', error.message);
+    console.error('Hostinger SMTP email error:', error.message);
     return false;
   }
 }

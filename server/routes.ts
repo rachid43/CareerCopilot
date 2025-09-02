@@ -951,21 +951,27 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         invitedBy: currentUser.id
       });
       
-      // Send email
+      // Send email asynchronously to avoid blocking the response
       const emailParams = generateInvitationEmail(
         email, 
         token, 
         `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.username
       );
       
-      const emailSent = await sendEmailWithFallback(emailParams);
+      // Send invitation immediately without blocking
+      sendEmailWithFallback(emailParams).then(emailSent => {
+        if (emailSent) {
+          console.log(`Invitation email sent successfully to ${email}`);
+        } else {
+          console.error(`Failed to send invitation email to ${email}`);
+        }
+      }).catch(error => {
+        console.error(`Error sending invitation email to ${email}:`, error.message);
+      });
       
-      if (!emailSent) {
-        return res.status(500).json({ message: "Failed to send invitation email" });
-      }
-      
+      // Return immediately after creating the invitation
       res.json({ 
-        message: "Invitation sent successfully",
+        message: "Invitation created and email is being sent",
         invitation: {
           id: invitation.id,
           email: invitation.email,
