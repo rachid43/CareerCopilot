@@ -129,6 +129,12 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     req.logout(() => {
+      // In development mode, directly redirect to the landing page
+      if (process.env.NODE_ENV === 'development') {
+        return res.redirect('/');
+      }
+      
+      // In production, use the standard OpenID Connect logout flow
       res.redirect(
         client.buildEndSessionUrl(config, {
           client_id: process.env.REPL_ID!,
