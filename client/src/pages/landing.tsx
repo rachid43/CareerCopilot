@@ -362,10 +362,6 @@ export function Landing() {
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
-                    <span>{t('aiMentorBasic')}</span>
-                  </div>
-                  <div className="flex items-start">
-                    <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={16} />
                     <span>{t('jobTrackerBasic')}</span>
                   </div>
                 </div>
