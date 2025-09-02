@@ -65,7 +65,7 @@ export function Landing() {
       {/* Content */}
       <div className="relative z-10">
       {/* Top Navigation with Language Selector and Login */}
-      <div className="w-full py-4 px-4">
+      <div className="w-full py-4 px-4 mb-8">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <img 
@@ -73,7 +73,10 @@ export function Landing() {
               alt="CareerCopilot" 
               className="w-10 h-10 mr-3"
             />
-            <span className="text-xl font-bold text-gray-900">Career<span className="text-primary">Copilot</span> <span className="text-xs text-gray-500">AI Assistant</span></span>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gray-900">Career<span className="text-primary">Copilot</span></span>
+              <span className="text-xs text-gray-500 leading-none">🤖 AI Assistant</span>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <LanguageSelector />
@@ -90,7 +93,7 @@ export function Landing() {
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 mt-8">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
           <p className="text-sm text-primary font-semibold mb-2">🤖 {t('appSubtitle')}</p>
           <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
