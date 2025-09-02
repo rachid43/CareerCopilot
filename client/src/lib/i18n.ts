@@ -199,21 +199,8 @@ export const translations = {
     requiredFields: 'Verplichte velden ontbreken',
     requiredFieldsDescription: 'Vul ten minste uw naam en e-mail in',
     
-    // Pricing
-    pricing: 'Prijzen',
-    pricingSubtitle: 'Eenvoudige, transparante prijzen voor professionals',
-    mostPopular: 'Meest Populair',
-    professionalPlan: 'Professional Plan',
+    // Legacy pricing (removed to avoid duplicates)
     month: 'maand',
-    unlimitedAccess: 'Onbeperkte toegang tot alle modi',
-    multiLanguageSupport: 'Volledige meertalige ondersteuning',
-    unlimitedUploads: 'Onbeperkte document uploads',
-    editableOutput: 'Bewerkbare AI output en downloads',
-    unlimitedChatbot: 'Onbeperkte carrière chatbot toegang',
-    matchScoring: 'Match scoring en verbeterings tips',
-    profileManagement: 'Profiel opslaan en hergebruiken',
-    startFreeTrial: 'Start Gratis Proefperiode',
-    noCommitment: 'Geen verplichtingen, stop wanneer je wilt',
     
     // Mock Interview
     'interview.title': 'Mock Interview',
@@ -453,21 +440,8 @@ export const translations = {
     requiredFields: 'Required fields missing',
     requiredFieldsDescription: 'Please fill in at least your name and email',
     
-    // Pricing
-    pricing: 'Pricing',
-    pricingSubtitle: 'Simple, transparent pricing for professionals',
-    mostPopular: 'Most Popular',
-    professionalPlan: 'Professional Plan',
+    // Legacy pricing (removed to avoid duplicates)
     month: 'month',
-    unlimitedAccess: 'Unlimited access to all modes',
-    multiLanguageSupport: 'Full multi-language support',
-    unlimitedUploads: 'Unlimited document uploads',
-    editableOutput: 'Editable AI output and downloads',
-    unlimitedChatbot: 'Unlimited career chatbot access',
-    matchScoring: 'Match scoring and improvement tips',
-    profileManagement: 'Save and reuse personal profiles',
-    startFreeTrial: 'Start Free Trial',
-    noCommitment: 'No commitment, cancel anytime',
     
     // Mock Interview
     'interview.title': 'Mock Interview',
