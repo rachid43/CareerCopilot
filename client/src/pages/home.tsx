@@ -193,7 +193,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                      className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white h-9 px-4"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -242,7 +242,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white"
+                      className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white h-9 px-4"
                     >
                       <Bot size={16} />
                       <span>{t('aiCareerMentor')}</span>
@@ -267,7 +267,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center space-x-2 border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
+                      className="flex items-center space-x-2 border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white h-9 px-4"
                     >
                       <Users size={16} />
                       <span>Mock Interview</span>
