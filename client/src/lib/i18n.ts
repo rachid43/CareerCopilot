@@ -1426,3 +1426,6 @@ export function useLanguage() {
     isRTL: language === 'ar',
   };
 }
+
+// Export useTranslation as alias for useLanguage for compatibility
+export const useTranslation = useLanguage;

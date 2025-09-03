@@ -6,7 +6,7 @@ CareerCopilot is a comprehensive AI-powered career assistant web application des
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 Color scheme: Using #F08A5D (coral orange) as primary color instead of blue.
-Deployment preference: Supabase for database and Vercel for hosting instead of current Replit/Neon setup.
+Deployment preference: Supabase for database and Vercel for hosting (✅ Database migrated to Supabase - January 2025).
 
 ## System Architecture
 
