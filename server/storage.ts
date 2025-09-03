@@ -9,6 +9,7 @@ export interface IStorage {
   getAllUsers(): Promise<User[]>;
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined>;
   updateUserSubscription(id: number, subscriptionStatus: string, subscriptionExpiresAt?: Date): Promise<User | undefined>;
+  updateUserSubscriptionTier(id: number, subscriptionTier: string): Promise<User | undefined>;
   makeUserSuperadmin(username: string): Promise<User | undefined>;
   
   getProfile(sessionId: string): Promise<Profile | undefined>;
@@ -235,6 +236,18 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db
       .update(users)
       .set(updates)
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async updateUserSubscriptionTier(id: number, subscriptionTier: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ 
+        subscriptionTier,
+        updatedAt: new Date()
+      })
       .where(eq(users.id, id))
       .returning();
     return user || undefined;
