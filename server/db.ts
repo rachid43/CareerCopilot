@@ -2,12 +2,12 @@ import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from "@shared/schema";
 
-// Use SUPABASE_URL if available, otherwise fall back to DATABASE_URL  
-const databaseUrl = process.env.SUPABASE_URL || process.env.DATABASE_URL;
+// Use DATABASE_URL for direct database connection
+const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
   throw new Error(
-    "SUPABASE_URL or DATABASE_URL must be set. Please configure your database connection.",
+    "DATABASE_URL must be set. Please configure your database connection.",
   );
 }
 
