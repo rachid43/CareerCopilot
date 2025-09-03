@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PenTool, Brain, CheckCircle, MessageCircle, Globe, Upload, Download, Star, User, Video } from "lucide-react";
 import careerCopilotIcon from "@assets/ICON_CareerCopilot_1755719130597.png";
-import heroBackground from "@assets/pict_1756843611828.webp";
 import { LanguageSelector } from "@/components/language-selector";
 import { useLanguage } from "@/lib/i18n";
 import { useState, useEffect } from "react";
@@ -93,38 +92,13 @@ export function Landing() {
       </div>
       
       <div className="container mx-auto px-4 py-8">
-        {/* Header with Background */}
-        <div className="relative text-center mb-16 mt-8 py-20 px-8 rounded-2xl overflow-hidden">
-          {/* Background Image */}
-          <div 
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: `url(${heroBackground})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat'
-            }}
-          />
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-orange-50/70 to-white/60" />
-          
-          {/* Content */}
-          <div className="relative z-10">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
-            <p className="text-sm text-primary font-semibold mb-2">🤖 {t('appSubtitle')}</p>
-            <h2 className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto font-medium">
-              {t('landingSubtitle')}
-            </h2>
-            
-            {/* Call to Action Button */}
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-orange-600 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
-              onClick={() => window.location.href = '/api/login'}
-            >
-              {t('getStarted')} →
-            </Button>
-          </div>
+        {/* Header */}
+        <div className="text-center mb-16 mt-8">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">Career<span className="text-primary">Copilot</span></h1>
+          <p className="text-sm text-primary font-semibold mb-2">🤖 {t('appSubtitle')}</p>
+          <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
+            {t('landingSubtitle')}
+          </h2>
         </div>
 
         {/* Features */}
