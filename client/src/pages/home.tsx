@@ -205,7 +205,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs px-2 py-1 h-6 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                      className="text-xs px-3 py-1 h-7 w-16 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
                       onClick={() => window.location.href = '/api/login'}
                     >
                       Essential
@@ -252,7 +252,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs px-2 py-1 h-6 border-primary text-primary hover:bg-primary hover:text-white"
+                      className="text-xs px-3 py-1 h-7 w-16 border-primary text-primary hover:bg-primary hover:text-white"
                       onClick={() => window.location.href = '/api/login'}
                     >
                       Pro
@@ -277,7 +277,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs px-2 py-1 h-6 border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
+                      className="text-xs px-3 py-1 h-7 w-16 border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
                       onClick={() => window.location.href = '/api/login'}
                     >
                       Elite
