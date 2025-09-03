@@ -69,12 +69,12 @@ export function JobApplications() {
       queryClient.invalidateQueries({ queryKey: ["/api/job-applications"] });
       queryClient.invalidateQueries({ queryKey: ["/api/job-applications/dashboard"] });
       setIsAddModalOpen(false);
-      toast({ title: "Success", description: "Job application created successfully" });
+      toast({ title: t('success'), description: t('jobApplicationCreatedSuccessfully') });
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
-        description: error.message || "Failed to create job application",
+        title: t('error'),
+        description: error.message || t('failedToCreateJobApplication'),
         variant: "destructive",
       });
     },
@@ -89,12 +89,12 @@ export function JobApplications() {
       queryClient.invalidateQueries({ queryKey: ["/api/job-applications/dashboard"] });
       setIsEditModalOpen(false);
       setEditingApplication(null);
-      toast({ title: "Success", description: "Job application updated successfully" });
+      toast({ title: t('success'), description: t('jobApplicationUpdatedSuccessfully') });
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
-        description: error.message || "Failed to update job application",
+        title: t('error'),
+        description: error.message || t('failedToUpdateJobApplication'),
         variant: "destructive",
       });
     },
@@ -106,12 +106,12 @@ export function JobApplications() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/job-applications"] });
       queryClient.invalidateQueries({ queryKey: ["/api/job-applications/dashboard"] });
-      toast({ title: "Success", description: "Job application deleted successfully" });
+      toast({ title: t('success'), description: t('jobApplicationDeletedSuccessfully') });
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
-        description: error.message || "Failed to delete job application",
+        title: t('error'),
+        description: error.message || t('failedToDeleteJobApplication'),
         variant: "destructive",
       });
     },
@@ -575,8 +575,8 @@ export function JobApplications() {
 
     } catch (error) {
       toast({
-        title: "Import Failed",
-        description: "Failed to import applications. Please try again.",
+        title: t('importFailed'),
+        description: t('failedToImportApplications'),
         variant: "destructive",
       });
     }
@@ -636,7 +636,7 @@ export function JobApplications() {
                 <h1 className="text-xl font-bold text-neutral-900">
                   Career<span className="text-primary">Copilot</span>
                 </h1>
-                <p className="text-sm text-gray-500">Job Applications Tracker</p>
+                <p className="text-sm text-gray-500">{t('jobApplicationsTracker')}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -652,7 +652,7 @@ export function JobApplications() {
               <Link to="/">
                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Home size={16} />
-                  <span>Home</span>
+                  <span>{t('home')}</span>
                 </Button>
               </Link>
             </div>
@@ -664,8 +664,8 @@ export function JobApplications() {
         {/* Page Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Job Applications Tracker</h1>
-            <p className="text-muted-foreground">Track and manage your job applications</p>
+            <h1 className="text-3xl font-bold">{t('jobApplicationsTracker')}</h1>
+            <p className="text-muted-foreground">{t('trackAndManageApplications')}</p>
           </div>
         <div className="flex gap-2">
           <DropdownMenu>

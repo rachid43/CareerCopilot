@@ -215,6 +215,19 @@ export const translations = {
     textInterviewDescription: 'Typ je antwoorden op interviewvragen',
     avatarInterview: 'Avatar Interview',
     avatarInterviewDescription: 'AI avatar stelt vragen, neem video antwoorden op',
+    
+    // Job Applications translations
+    jobApplicationsTracker: 'Sollicitaties Tracker',
+    trackAndManageApplications: 'Volg en beheer je sollicitaties',
+    home: 'Home',
+    jobApplicationCreatedSuccessfully: 'Sollicitatie succesvol aangemaakt',
+    jobApplicationUpdatedSuccessfully: 'Sollicitatie succesvol bijgewerkt',
+    jobApplicationDeletedSuccessfully: 'Sollicitatie succesvol verwijderd',
+    failedToCreateJobApplication: 'Kon sollicitatie niet aanmaken',
+    failedToUpdateJobApplication: 'Kon sollicitatie niet bijwerken',
+    failedToDeleteJobApplication: 'Kon sollicitatie niet verwijderen',
+    failedToImportApplications: 'Kon sollicitaties niet importeren. Probeer opnieuw.',
+    
     requiredFieldsDescription: 'Vul ten minste uw naam en e-mail in',
     
     // Legacy pricing (removed to avoid duplicates)
@@ -536,6 +549,18 @@ export const translations = {
     avatarInterview: 'Avatar Interview',
     avatarInterviewDescription: 'AI avatar asks questions, record video answers',
     
+    // Job Applications translations
+    jobApplicationsTracker: 'Job Applications Tracker',
+    trackAndManageApplications: 'Track and manage your job applications',
+    home: 'Home',
+    jobApplicationCreatedSuccessfully: 'Job application created successfully',
+    jobApplicationUpdatedSuccessfully: 'Job application updated successfully',
+    jobApplicationDeletedSuccessfully: 'Job application deleted successfully',
+    failedToCreateJobApplication: 'Failed to create job application',
+    failedToUpdateJobApplication: 'Failed to update job application',
+    failedToDeleteJobApplication: 'Failed to delete job application',
+    failedToImportApplications: 'Failed to import applications. Please try again.',
+    
     // Legacy pricing (removed to avoid duplicates)
     month: 'month',
     
@@ -813,6 +838,18 @@ export const translations = {
     textInterviewDescription: 'اكتب إجاباتك على أسئلة المقابلة',
     avatarInterview: 'مقابلة الأفاتار',
     avatarInterviewDescription: 'الأفاتار الذكي يطرح الأسئلة، سجل إجابات فيديو',
+    
+    // Job Applications translations
+    jobApplicationsTracker: 'متتبع طلبات العمل',
+    trackAndManageApplications: 'تابع وإدارة طلبات عملك',
+    home: 'الرئيسية',
+    jobApplicationCreatedSuccessfully: 'تم إنشاء طلب العمل بنجاح',
+    jobApplicationUpdatedSuccessfully: 'تم تحديث طلب العمل بنجاح',
+    jobApplicationDeletedSuccessfully: 'تم حذف طلب العمل بنجاح',
+    failedToCreateJobApplication: 'فشل في إنشاء طلب العمل',
+    failedToUpdateJobApplication: 'فشل في تحديث طلب العمل',
+    failedToDeleteJobApplication: 'فشل في حذف طلب العمل',
+    failedToImportApplications: 'فشل في استيراد الطلبات. يرجى المحاولة مرة أخرى.',
     backToHome: 'العودة للرئيسية',
     clear: 'مسح',
     clearProfile: 'مسح الملف الشخصي',
@@ -1069,6 +1106,18 @@ export const translations = {
     textInterviewDescription: 'Mülakat sorularına yazılı cevaplar verin',
     avatarInterview: 'Avatar Mülakatı',
     avatarInterviewDescription: 'AI avatar sorular sorar, video cevaplar kaydedin',
+    
+    // Job Applications translations
+    jobApplicationsTracker: 'İş Başvuru Takipçisi',
+    trackAndManageApplications: 'İş başvurularınızı takip edin ve yönetin',
+    home: 'Ana Sayfa',
+    jobApplicationCreatedSuccessfully: 'İş başvurusu başarıyla oluşturuldu',
+    jobApplicationUpdatedSuccessfully: 'İş başvurusu başarıyla güncellendi',
+    jobApplicationDeletedSuccessfully: 'İş başvurusu başarıyla silindi',
+    failedToCreateJobApplication: 'İş başvurusu oluşturulamadı',
+    failedToUpdateJobApplication: 'İş başvurusu güncellenemedi',
+    failedToDeleteJobApplication: 'İş başvurusu silinemedi',
+    failedToImportApplications: 'Başvurular içe aktarılamadı. Lütfen tekrar deneyin.',
     backToHome: 'Ana Sayfaya Dön',
     clear: 'Temizle',
     clearProfile: 'Profili Temizle',
