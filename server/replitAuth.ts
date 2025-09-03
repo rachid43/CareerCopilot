@@ -114,6 +114,14 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
+    // In development mode, clear the logout flag and redirect to home
+    if (process.env.NODE_ENV === 'development') {
+      // Clear the logout flag
+      delete (req.session as any).isLoggedOut;
+      return res.redirect('/');
+    }
+    
+    // In production, use standard OAuth flow
     passport.authenticate(`replitauth:${req.hostname}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
@@ -129,8 +137,10 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     req.logout(() => {
-      // In development mode, directly redirect to the landing page
+      // In development mode, mark session as logged out and redirect to the landing page
       if (process.env.NODE_ENV === 'development') {
+        // Mark the session as explicitly logged out
+        (req.session as any).isLoggedOut = true;
         return res.redirect('/');
       }
       
@@ -146,18 +156,24 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
-  // In development mode, create a mock user if authentication fails
-  if (process.env.NODE_ENV === 'development' && (!req.isAuthenticated || !req.isAuthenticated())) {
-    // Create a mock authenticated user for development
-    req.user = {
-      claims: {
-        sub: 'dev-user-123',
-        email: 'admin@careercopilot.demo',
-        first_name: 'Demo',
-        last_name: 'Administrator'
-      }
-    };
-    req.isAuthenticated = () => true as any;
+  // In development mode, check if user was explicitly logged out
+  if (process.env.NODE_ENV === 'development') {
+    // If session is marked as logged out, don't auto-authenticate
+    if ((req.session as any)?.isLoggedOut) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    // Create a mock authenticated user for development if not authenticated
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      req.user = {
+        claims: {
+          sub: 'dev-user-123',
+          email: 'admin@careercopilot.demo',
+          first_name: 'Demo',
+          last_name: 'Administrator'
+        }
+      };
+      req.isAuthenticated = () => true as any;
     
     // Ensure the development user exists in storage
     try {
