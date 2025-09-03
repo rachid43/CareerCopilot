@@ -35,6 +35,7 @@ export const users = pgTable("users", {
   isActive: boolean("isActive").notNull().default(true),
   accountExpiresAt: timestamp("accountExpiresAt"),
   subscriptionStatus: text("subscriptionStatus").notNull().default("active"), // 'active' | 'hold' | 'cancelled'
+  subscriptionTier: text("subscriptionTier").notNull().default("essential"), // 'essential' | 'professional' | 'elite'
   subscriptionExpiresAt: timestamp("subscriptionExpiresAt"),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),

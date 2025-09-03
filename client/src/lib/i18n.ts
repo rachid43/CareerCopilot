@@ -255,6 +255,19 @@ export const translations = {
     avatarMode: 'Avatar Modus',
     webcamMicrophoneInterviews: 'Gebruik webcam en microfoon voor realistische video interviews met AI avatars en spraaktranscriptie.',
     
+    // Subscription UI translations
+    upgradeRequired: 'Upgrade Vereist',
+    thisFeatureRequires: 'Deze functie vereist',
+    subscriptionOrHigher: 'abonnement of hoger',
+    currentPlan: 'Huidig Plan',
+    required: 'Vereist',
+    upgradeTo: 'Upgrade naar',
+    upgradeInstantly: 'Upgrade direct en krijg onmiddellijk toegang',
+    inactive: 'Inactief',
+    expires: 'Verloopt',
+    unlimited: 'Onbeperkt',
+    remaining: 'resterend',
+    
     requiredFieldsDescription: 'Vul ten minste uw naam en e-mail in',
     
     // Legacy pricing (removed to avoid duplicates)
@@ -615,6 +628,19 @@ export const translations = {
     avatarMode: 'Avatar Mode',
     webcamMicrophoneInterviews: 'Use webcam and microphone for realistic video interviews with AI avatars and voice transcription.',
     
+    // Subscription UI translations
+    upgradeRequired: 'Upgrade Required',
+    thisFeatureRequires: 'This feature requires',
+    subscriptionOrHigher: 'subscription or higher',
+    currentPlan: 'Current Plan',
+    required: 'Required',
+    upgradeTo: 'Upgrade to',
+    upgradeInstantly: 'Upgrade instantly and get immediate access',
+    inactive: 'Inactive',
+    expires: 'Expires',
+    unlimited: 'Unlimited',
+    remaining: 'remaining',
+    
     // Legacy pricing (removed to avoid duplicates)
     month: 'month',
     
@@ -932,6 +958,19 @@ export const translations = {
     avatarMode: 'وضع الأفاتار',
     webcamMicrophoneInterviews: 'استخدم كاميرا الويب والميكروفون لمقابلات فيديو واقعية مع أفاتار ذكي ونسخ صوتي.',
     
+    // Subscription UI translations
+    upgradeRequired: 'ترقية مطلوبة',
+    thisFeatureRequires: 'هذه الميزة تتطلب',
+    subscriptionOrHigher: 'اشتراك أو أعلى',
+    currentPlan: 'الخطة الحالية',
+    required: 'مطلوب',
+    upgradeTo: 'ترقية إلى',
+    upgradeInstantly: 'ترقية فورية والحصول على وصول فوري',
+    inactive: 'غير نشط',
+    expires: 'ينتهي',
+    unlimited: 'غير محدود',
+    remaining: 'متبقي',
+    
     backToHome: 'العودة للرئيسية',
     clear: 'مسح',
     clearProfile: 'مسح الملف الشخصي',
@@ -1227,6 +1266,19 @@ export const translations = {
     textInputPractice: 'Hızlı geri bildirim ve puanlama için metin girişi yoluyla soruları yanıtlamayı pratik yapın.',
     avatarMode: 'Avatar Modu',
     webcamMicrophoneInterviews: 'AI avatarlar ile gerçekçi video mülakatlar ve ses transkripsiyon için web kamerası ve mikrofon kullanın.',
+    
+    // Subscription UI translations
+    upgradeRequired: 'Yükseltme Gerekli',
+    thisFeatureRequires: 'Bu özellik',
+    subscriptionOrHigher: 'abonelik veya daha yüksek gerektirir',
+    currentPlan: 'Mevcut Plan',
+    required: 'Gerekli',
+    upgradeTo: 'Yükselt',
+    upgradeInstantly: 'Anında yükseltme yapın ve hemen erişim kazanın',
+    inactive: 'İnaktif',
+    expires: 'Sona Erer',
+    unlimited: 'Sınırsız',
+    remaining: 'kalan',
     
     backToHome: 'Ana Sayfaya Dön',
     clear: 'Temizle',
