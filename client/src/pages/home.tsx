@@ -230,7 +230,7 @@ export default function Home() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                      className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white"
                     >
                       <Bot size={16} />
                       <span>{t('aiCareerMentor')}</span>
@@ -239,7 +239,7 @@ export default function Home() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-xs px-2 py-1 h-6 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                    className="text-xs px-2 py-1 h-6 border-primary text-primary hover:bg-primary hover:text-white"
                     onClick={() => window.location.href = '/api/login'}
                   >
                     Pro
