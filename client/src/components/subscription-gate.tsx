@@ -107,8 +107,7 @@ export function UpgradePrompt({
           size="lg"
           className={`w-full ${requiredTier === 'professional' ? 'bg-primary hover:bg-orange-600' : 'bg-purple-600 hover:bg-purple-700'} text-white`}
           onClick={() => {
-            // In a real app, this would open a subscription management page
-            window.location.href = '/api/login'; // For now, redirect to login
+            window.location.href = `/checkout?tier=${requiredTier}`;
           }}
         >
           {t('upgradeTo')} {requiredTierDisplay}

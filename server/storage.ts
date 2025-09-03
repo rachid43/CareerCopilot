@@ -5,6 +5,7 @@ import { eq, and, sql, desc } from 'drizzle-orm';
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined>;
@@ -53,6 +54,11 @@ export class DatabaseStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.stripeCustomerId, stripeCustomerId));
     return user || undefined;
   }
 
@@ -425,6 +431,10 @@ class MemoryStorage implements IStorage {
     return this.users.find(u => u.username === username);
   }
 
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
+    return this.users.find(u => u.stripeCustomerId === stripeCustomerId);
+  }
+
   async createUser(user: InsertUser): Promise<User> {
     const defaultExpiry = new Date();
     defaultExpiry.setFullYear(defaultExpiry.getFullYear() + 1); // 12 months default
@@ -451,6 +461,27 @@ class MemoryStorage implements IStorage {
     const index = this.users.findIndex(u => u.id === id);
     if (index === -1) return undefined;
     this.users[index] = { ...this.users[index], ...updates };
+    return this.users[index];
+  }
+
+  async updateUserSubscription(id: number, subscriptionStatus: string, subscriptionExpiresAt?: Date | null): Promise<User | undefined> {
+    const index = this.users.findIndex(u => u.id === id);
+    if (index === -1) return undefined;
+    this.users[index] = { ...this.users[index], subscriptionStatus, subscriptionExpiresAt: subscriptionExpiresAt || null, updatedAt: new Date() };
+    return this.users[index];
+  }
+
+  async updateUserSubscriptionTier(id: number, subscriptionTier: string): Promise<User | undefined> {
+    const index = this.users.findIndex(u => u.id === id);
+    if (index === -1) return undefined;
+    this.users[index] = { ...this.users[index], subscriptionTier, updatedAt: new Date() };
+    return this.users[index];
+  }
+
+  async makeUserSuperadmin(username: string): Promise<User | undefined> {
+    const index = this.users.findIndex(u => u.username === username);
+    if (index === -1) return undefined;
+    this.users[index] = { ...this.users[index], role: 'superadmin', updatedAt: new Date() };
     return this.users[index];
   }
 
@@ -624,28 +655,6 @@ class MemoryStorage implements IStorage {
     return true;
   }
 
-  async updateUserSubscription(id: number, subscriptionStatus: string, subscriptionExpiresAt?: Date): Promise<User | undefined> {
-    const user = this.users.find(u => u.id === id);
-    if (!user) return undefined;
-    
-    user.subscriptionStatus = subscriptionStatus as any;
-    if (subscriptionExpiresAt !== undefined) {
-      user.subscriptionExpiresAt = subscriptionExpiresAt;
-    }
-    user.updatedAt = new Date();
-    
-    return user;
-  }
-
-  async makeUserSuperadmin(username: string): Promise<User | undefined> {
-    const user = this.users.find(u => u.username === username);
-    if (!user) return undefined;
-    
-    user.role = 'superadmin';
-    user.updatedAt = new Date();
-    
-    return user;
-  }
 }
 
 // Use Supabase PostgreSQL database for production

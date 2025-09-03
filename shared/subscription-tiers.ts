@@ -202,3 +202,60 @@ export function getTierColor(tier: SubscriptionTier): string {
   };
   return colors[tier];
 }
+
+// Subscription pricing and feature lists for UI display
+export interface TierInfo {
+  monthlyPrice: number;
+  features: string[];
+}
+
+export const subscriptionTiers: Record<SubscriptionTier, TierInfo> = {
+  essential: {
+    monthlyPrice: 9.99,
+    features: [
+      'cvCoverLetterGeneration',
+      'matchingScoreAnalysis', 
+      'aiMentorChat',
+      'jobTrackerBasic',
+      'textInterviews',
+      'maxCvGenerations10',
+      'maxInterviewSessions5',
+      'maxJobApplications50'
+    ]
+  },
+  professional: {
+    monthlyPrice: 19.99,
+    features: [
+      'cvCoverLetterGeneration',
+      'matchingScoreAnalysis',
+      'aiMentorChat', 
+      'jobTrackerFull',
+      'unlimitedTextInterviews',
+      'unlimitedCvScoring',
+      'advancedFeedback',
+      'unlimitedCvGenerations',
+      'unlimitedInterviewSessions',
+      'unlimitedJobApplications'
+    ]
+  },
+  elite: {
+    monthlyPrice: 29.99,
+    features: [
+      'cvCoverLetterGeneration',
+      'matchingScoreAnalysis',
+      'aiMentorChat',
+      'jobTrackerFull',
+      'avatarInterviews',
+      'unlimitedTextInterviews',
+      'unlimitedAvatarInterviews',
+      'unlimitedCvScoring',
+      'advancedFeedback',
+      'personalizedReports',
+      'industryQuestionBanks',
+      'prioritySupport',
+      'unlimitedCvGenerations',
+      'unlimitedInterviewSessions',
+      'unlimitedJobApplications'
+    ]
+  }
+};

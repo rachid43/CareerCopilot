@@ -37,6 +37,9 @@ export const users = pgTable("users", {
   subscriptionStatus: text("subscriptionStatus").notNull().default("active"), // 'active' | 'hold' | 'cancelled'
   subscriptionTier: text("subscriptionTier").notNull().default("essential"), // 'essential' | 'professional' | 'elite'
   subscriptionExpiresAt: timestamp("subscriptionExpiresAt"),
+  // Stripe integration fields
+  stripeCustomerId: text("stripeCustomerId"),
+  stripeSubscriptionId: text("stripeSubscriptionId"),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
 });

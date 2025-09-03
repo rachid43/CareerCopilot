@@ -14,6 +14,8 @@ import { AdminDashboard } from "@/pages/admin-dashboard";
 import InvitePage from "@/pages/invite";
 import { JobApplications } from "@/pages/job-applications";
 import MockInterview from "@/pages/mock-interview";
+import CheckoutPage from "@/pages/checkout";
+import SuccessPage from "@/pages/success";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -30,6 +32,8 @@ function Router() {
           <Route path="/chat" component={ChatPage} />
           <Route path="/job-applications" component={JobApplications} />
           <Route path="/mock-interview" component={MockInterview} />
+          <Route path="/checkout" component={CheckoutPage} />
+          <Route path="/success" component={SuccessPage} />
           <Route path="/admin" component={AdminPanel} />
           <Route path="/admin-dashboard" component={AdminDashboard} />
         </>

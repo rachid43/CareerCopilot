@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
 import OpenAI from "openai";
+import Stripe from "stripe";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertProfileSchema, insertDocumentSchema, insertAiResultSchema, insertUserInvitationSchema, insertChatConversationSchema, insertChatMessageSchema, insertJobApplicationSchema } from "@shared/schema";
@@ -15,6 +16,14 @@ import mammoth from "mammoth";
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY || process.env.VITE_OPENAI_API_KEY 
+});
+
+// Initialize Stripe
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-08-27.basil",
 });
 
 const upload = multer({ 
@@ -1968,6 +1977,153 @@ USER MESSAGE: ${content}`;
     } catch (error) {
       console.error('Error fetching invitations:', error);
       res.status(500).json({ message: 'Failed to fetch invitations' });
+    }
+  });
+
+  // Stripe subscription management routes
+  app.post("/api/subscription/create-checkout-session", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { subscriptionTier, successUrl, cancelUrl } = req.body;
+      
+      if (!['essential', 'professional', 'elite'].includes(subscriptionTier)) {
+        return res.status(400).json({ message: "Invalid subscription tier" });
+      }
+
+      // Price IDs for each tier (these would be created in Stripe Dashboard)
+      const priceIds = {
+        essential: process.env.STRIPE_ESSENTIAL_PRICE_ID,
+        professional: process.env.STRIPE_PROFESSIONAL_PRICE_ID,
+        elite: process.env.STRIPE_ELITE_PRICE_ID
+      };
+
+      const priceId = priceIds[subscriptionTier as keyof typeof priceIds];
+      if (!priceId) {
+        return res.status(400).json({ message: `Price ID not configured for ${subscriptionTier}` });
+      }
+
+      // Create or get Stripe customer
+      let stripeCustomerId = user.stripeCustomerId;
+      if (!stripeCustomerId) {
+        const customer = await stripe.customers.create({
+          email: user.email,
+          metadata: {
+            userId: user.id.toString()
+          }
+        });
+        stripeCustomerId = customer.id;
+        await storage.updateUser(user.id, { stripeCustomerId });
+      }
+
+      // Create checkout session
+      const session = await stripe.checkout.sessions.create({
+        customer: stripeCustomerId,
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        metadata: {
+          userId: user.id.toString(),
+          subscriptionTier
+        }
+      });
+
+      res.json({ url: session.url });
+    } catch (error: any) {
+      console.error('Stripe checkout session error:', error);
+      res.status(500).json({ message: `Failed to create checkout session: ${error.message}` });
+    }
+  });
+
+  app.post("/api/subscription/webhook", async (req, res) => {
+    let event;
+
+    try {
+      const sig = req.headers['stripe-signature'];
+      event = stripe.webhooks.constructEvent(req.body, sig!, process.env.STRIPE_WEBHOOK_SECRET!);
+    } catch (err: any) {
+      console.log(`Webhook signature verification failed.`, err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the event
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as any;
+        const userId = parseInt(session.metadata.userId);
+        const subscriptionTier = session.metadata.subscriptionTier;
+        
+        // Update user subscription
+        await storage.updateUser(userId, {
+          subscriptionTier,
+          subscriptionStatus: 'active',
+          subscriptionExpiresAt: null,
+          stripeSubscriptionId: session.subscription
+        });
+        break;
+      }
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as any;
+        // Find user by stripe customer ID
+        const user = await storage.getUserByStripeCustomerId(subscription.customer);
+        if (user) {
+          const status = subscription.status === 'active' ? 'active' : 'inactive';
+          await storage.updateUser(user.id, {
+            subscriptionStatus: status,
+            subscriptionExpiresAt: subscription.status === 'active' ? null : new Date()
+          });
+        }
+        break;
+      }
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as any;
+        // Find user by stripe customer ID
+        const user = await storage.getUserByStripeCustomerId(subscription.customer);
+        if (user) {
+          await storage.updateUser(user.id, {
+            subscriptionStatus: 'inactive',
+            subscriptionTier: 'essential',
+            subscriptionExpiresAt: new Date(),
+            stripeSubscriptionId: null
+          });
+        }
+        break;
+      }
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+
+    res.json({ received: true });
+  });
+
+  app.get("/api/subscription/portal", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      const user = await storage.getUserByUsername(userId.toString());
+      if (!user || !user.stripeCustomerId) {
+        return res.status(404).json({ message: "No Stripe customer found" });
+      }
+
+      const portalSession = await stripe.billingPortal.sessions.create({
+        customer: user.stripeCustomerId,
+        return_url: `${req.protocol}://${req.get('host')}/`,
+      });
+
+      res.json({ url: portalSession.url });
+    } catch (error: any) {
+      console.error('Stripe portal error:', error);
+      res.status(500).json({ message: `Failed to create portal session: ${error.message}` });
     }
   });
 
