@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
+import { useSubscription, useFeatureAccess, useUsageLimit } from "@/hooks/useSubscription";
+import { SubscriptionGate, SubscriptionStatus, UsageLimit } from "@/components/subscription-gate";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +30,13 @@ export default function Home() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { subscription, tier } = useSubscription();
+  const { hasAccess: hasJobTracker } = useFeatureAccess('jobTrackerFull');
+  const { hasAccess: hasChatAccess } = useFeatureAccess('aiMentorChat');
+  const { hasAccess: hasTextInterviews } = useFeatureAccess('textInterviews');
+  const { hasAccess: hasAvatarInterviews } = useFeatureAccess('avatarInterviews');
+  const { allowed: canCreateCV, remaining: cvRemaining } = useUsageLimit('maxCvGenerations', 3); // Mock usage
+  const { allowed: canInterview, remaining: interviewRemaining } = useUsageLimit('maxInterviewSessions', 2); // Mock usage
   const { t, language } = useLanguage();
 
   const { data: profile } = useQuery({
@@ -161,6 +170,14 @@ export default function Home() {
                   Career<span className="text-primary">Copilot</span>
                 </h1>
                 <p className="text-sm text-secondary">{t('appSubtitle')}</p>
+                <SubscriptionStatus />
+                {/* Usage Limits for Essential Tier */}
+                {tier === 'essential' && (
+                  <div className="mt-2 space-y-1">
+                    <UsageLimit remaining={cvRemaining} total={10} feature="CV Generation" />
+                    <UsageLimit remaining={interviewRemaining} total={5} feature="Interviews" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex flex-col items-end space-y-2">
@@ -178,18 +195,32 @@ export default function Home() {
                     </>
                   )}
                 </div>
-                <Link to="/job-applications">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white w-full"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                    <span>Job Tracker</span>
-                  </Button>
-                </Link>
+                <div className="flex flex-col space-y-1">
+                  <SubscriptionGate feature="jobTrackerFull" showUpgradePrompt={false}>
+                    <Link to="/job-applications">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white w-full"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        <span>Job Tracker</span>
+                      </Button>
+                    </Link>
+                  </SubscriptionGate>
+                  {!hasJobTracker && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center justify-center border-primary text-primary hover:bg-primary hover:text-white text-xs px-1 py-1"
+                      onClick={() => window.location.href = '/api/login'}
+                    >
+                      <span>Professional</span>
+                    </Button>
+                  )}
+                </div>
                 
                 {/* Row 2 */}
                 <div className="flex justify-end space-x-2">
@@ -215,29 +246,66 @@ export default function Home() {
                     <span>{t('logout')}</span>
                   </Button>
                 </div>
-                <Link to="/chat">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
-                  >
-                    <Bot size={16} />
-                    <span>{t('aiCareerMentor')}</span>
-                  </Button>
-                </Link>
+                <div className="flex flex-col space-y-1">
+                  <SubscriptionGate feature="aiMentorChat" showUpgradePrompt={false}>
+                    <Link to="/chat">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center space-x-2 border-primary text-primary hover:bg-primary hover:text-white w-full"
+                      >
+                        <Bot size={16} />
+                        <span>{t('aiCareerMentor')}</span>
+                      </Button>
+                    </Link>
+                  </SubscriptionGate>
+                  {!hasChatAccess && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center justify-center border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white text-xs px-1 py-1"
+                      onClick={() => window.location.href = '/api/login'}
+                    >
+                      <span>Essential</span>
+                    </Button>
+                  )}
+                </div>
                 
                 {/* Row 3 */}
                 <div></div>
-                <Link to="/mock-interview">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white w-full"
-                  >
-                    <Users size={16} />
-                    <span>Mock Interview</span>
-                  </Button>
-                </Link>
+                <div className="flex flex-col space-y-1">
+                  <SubscriptionGate feature="textInterviews" showUpgradePrompt={false}>
+                    <Link to="/mock-interview">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center space-x-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white w-full"
+                      >
+                        <Users size={16} />
+                        <span>Mock Interview {hasTextInterviews && !hasAvatarInterviews && '(Text)'}</span>
+                      </Button>
+                    </Link>
+                  </SubscriptionGate>
+                  {!hasTextInterviews ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center justify-center border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white text-xs px-1 py-1"
+                      onClick={() => window.location.href = '/api/login'}
+                    >
+                      <span>Essential</span>
+                    </Button>
+                  ) : !hasAvatarInterviews ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center justify-center border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white text-xs px-1 py-1"
+                      onClick={() => window.location.href = '/api/login'}
+                    >
+                      <span>Elite for Avatar</span>
+                    </Button>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
@@ -267,25 +335,43 @@ export default function Home() {
             {/* Action Panel */}
             <Card className="mb-6">
               <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    onClick={handleAIProcess}
-                    disabled={isProcessing}
-                    className="flex-1 bg-primary text-white hover:bg-orange-600"
-                    size="lg"
-                  >
-                    <Wand2 className="mr-2" size={16} />
-                    {isProcessing ? t('processing') : getButtonText()}
-                  </Button>
-                  <Button
-                    onClick={handleClearAll}
-                    variant="outline"
-                    size="lg"
-                  >
-                    <Trash2 className="mr-2" size={16} />
-                    {t('clearAll')}
-                  </Button>
-                </div>
+                <SubscriptionGate feature="cvCoverLetterGeneration" showUpgradePrompt={false}>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                      onClick={handleAIProcess}
+                      disabled={isProcessing || (tier === 'essential' && !canCreateCV)}
+                      className="flex-1 bg-primary text-white hover:bg-orange-600 disabled:opacity-50"
+                      size="lg"
+                    >
+                      <Wand2 className="mr-2" size={16} />
+                      {isProcessing ? t('processing') : getButtonText()}
+                      {tier === 'essential' && !canCreateCV && ' (Limit Reached)'}
+                    </Button>
+                    <Button
+                      onClick={handleClearAll}
+                      variant="outline"
+                      size="lg"
+                    >
+                      <Trash2 className="mr-2" size={16} />
+                      {t('clearAll')}
+                    </Button>
+                  </div>
+                  {tier === 'essential' && !canCreateCV && (
+                    <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                      <p className="text-sm text-orange-700">
+                        You've reached your monthly limit of {activeMode === 'create' ? 'CV generations' : 'AI processing'}. 
+                        <Button
+                          variant="link"
+                          className="p-0 h-auto text-primary font-semibold ml-1"
+                          onClick={() => window.location.href = '/api/login'}
+                        >
+                          Upgrade to Professional
+                        </Button>
+                        for unlimited access.
+                      </p>
+                    </div>
+                  )}
+                </SubscriptionGate>
 
                 {isProcessing && (
                   <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
