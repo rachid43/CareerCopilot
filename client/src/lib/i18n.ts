@@ -245,6 +245,66 @@ export const translations = {
     'interview.status.completed': 'Voltooid',
     'interview.status.paused': 'Gepauzeerd',
     'common.error': 'Fout',
+    
+    // Avatar translations
+    'avatar.sarah.name': 'Sarah Chen',
+    'avatar.sarah.description': 'Senior Tech Recruiter',
+    'avatar.marcus.name': 'Marcus Johnson', 
+    'avatar.marcus.description': 'Hoofd Talent Acquisitie',
+    'avatar.elena.name': 'Elena Rodriguez',
+    'avatar.elena.description': 'HR Directeur',
+    'avatar.raj.name': 'Raj Patel',
+    'avatar.raj.description': 'Technisch Lead',
+    'avatar.anna.name': 'Anna Kowalski',
+    'avatar.anna.description': 'Executive Recruiter',
+    'avatar.james.name': 'James Wilson',
+    'avatar.james.description': 'Hiring Manager',
+    
+    // Interview mode translations
+    'interview.mode.text': 'Tekst',
+    'interview.mode.avatar': 'Avatar',
+    
+    // Toast messages
+    'toast.interviewStarted': 'Interview Gestart!',
+    'toast.interviewStartedDesc': 'Veel succes met je interview!',
+    'toast.interviewStopped': 'Interview Gestopt',
+    'toast.interviewStoppedDesc': 'Interview vroegtijdig beëindigd. Je kunt je feedback hieronder bekijken.',
+    'toast.downloadComplete': 'Download Voltooid!',
+    'toast.downloadCompleteDesc': 'Interview rapport succesvol gedownload',
+    'toast.downloadFailed': 'Download Mislukt',
+    'toast.downloadFailedDesc': 'Kon interview rapport niet downloaden',
+    'toast.cameraReady': 'Camera & Microfoon Klaar!',
+    'toast.cameraReadyDesc': 'Je kunt nu het avatar interview starten',
+    'toast.mediaAccessDenied': 'Media Toegang Geweigerd',
+    'toast.mediaAccessDeniedDesc': 'Geef toegang tot camera en microfoon voor avatar modus',
+    'toast.recordingError': 'Opname Fout',
+    'toast.speechTranscribed': 'Spraak Getranscribeerd!',
+    'toast.speechTranscribedDesc': 'Je antwoord is omgezet naar tekst',
+    'toast.noAudioFound': 'Geen Audio Gevonden',
+    'toast.noAudioFoundDesc': 'Neem eerst je antwoord op',
+    'toast.cvImported': 'CV Succesvol Geïmporteerd!',
+    'toast.cvImportedDesc': 'Je CV wordt gebruikt om interview vragen te personaliseren',
+    'toast.importFailed': 'Importeren Mislukt',
+    'toast.invalidFileType': 'Ongeldig Bestandstype',
+    'toast.invalidFileTypeDesc': 'Upload een PDF of Word document',
+    
+    // Placeholder texts
+    'placeholder.jobTitle': 'bijv. Senior Software Developer',
+    'placeholder.company': 'bijv. Google, Microsoft',
+    
+    // Labels and titles
+    'label.jobTitle': 'Functietitel',
+    'label.company': 'Bedrijf',
+    'label.chooseInterviewer': 'Kies Je AI Interviewer',
+    'label.enableCamera': 'Camera & Microfoon Inschakelen',
+    'label.yourAnswer': 'Je Antwoord',
+    'label.typeAnswer': 'Typ je antwoord hier...',
+    'label.startRecording': 'Opname Starten',
+    'label.stopRecording': 'Opname Stoppen',
+    'label.submitAnswer': 'Antwoord Versturen',
+    
+    // Pricing plans
+    getProAccess: 'Krijg Pro Toegang',
   },
   en: {
     // Header
@@ -486,6 +546,66 @@ export const translations = {
     'interview.status.completed': 'Completed',
     'interview.status.paused': 'Paused',
     'common.error': 'Error',
+    
+    // Avatar translations
+    'avatar.sarah.name': 'Sarah Chen',
+    'avatar.sarah.description': 'Senior Tech Recruiter',
+    'avatar.marcus.name': 'Marcus Johnson',
+    'avatar.marcus.description': 'Head of Talent Acquisition',
+    'avatar.elena.name': 'Elena Rodriguez',
+    'avatar.elena.description': 'HR Director',
+    'avatar.raj.name': 'Raj Patel',
+    'avatar.raj.description': 'Technical Lead',
+    'avatar.anna.name': 'Anna Kowalski',
+    'avatar.anna.description': 'Executive Recruiter',
+    'avatar.james.name': 'James Wilson',
+    'avatar.james.description': 'Hiring Manager',
+    
+    // Interview mode translations
+    'interview.mode.text': 'Text',
+    'interview.mode.avatar': 'Avatar',
+    
+    // Toast messages
+    'toast.interviewStarted': 'Interview Started!',
+    'toast.interviewStartedDesc': 'Good luck with your mock interview!',
+    'toast.interviewStopped': 'Interview Stopped',
+    'toast.interviewStoppedDesc': 'Interview ended early. You can review your feedback below.',
+    'toast.downloadComplete': 'Download Complete!',
+    'toast.downloadCompleteDesc': 'Interview report downloaded successfully',
+    'toast.downloadFailed': 'Download Failed',
+    'toast.downloadFailedDesc': 'Failed to download interview report',
+    'toast.cameraReady': 'Camera & Microphone Ready!',
+    'toast.cameraReadyDesc': 'You can now start the avatar interview',
+    'toast.mediaAccessDenied': 'Media Access Denied',
+    'toast.mediaAccessDeniedDesc': 'Please allow camera and microphone access for avatar mode',
+    'toast.recordingError': 'Recording Error',
+    'toast.speechTranscribed': 'Speech Transcribed!',
+    'toast.speechTranscribedDesc': 'Your answer has been converted to text',
+    'toast.noAudioFound': 'No Audio Found',
+    'toast.noAudioFoundDesc': 'Please record your answer first',
+    'toast.cvImported': 'CV Imported Successfully!',
+    'toast.cvImportedDesc': 'Your CV will be used to personalize interview questions',
+    'toast.importFailed': 'Import Failed',
+    'toast.invalidFileType': 'Invalid File Type',
+    'toast.invalidFileTypeDesc': 'Please upload a PDF or Word document',
+    
+    // Placeholder texts
+    'placeholder.jobTitle': 'e.g. Senior Software Developer',
+    'placeholder.company': 'e.g. Google, Microsoft',
+    
+    // Labels and titles
+    'label.jobTitle': 'Job Title',
+    'label.company': 'Company',
+    'label.chooseInterviewer': 'Choose Your AI Interviewer',
+    'label.enableCamera': 'Enable Camera & Microphone',
+    'label.yourAnswer': 'Your Answer',
+    'label.typeAnswer': 'Type your answer here...',
+    'label.startRecording': 'Start Recording',
+    'label.stopRecording': 'Stop Recording',
+    'label.submitAnswer': 'Submit Answer',
+    
+    // Pricing plans
+    getProAccess: 'Get Pro Access',
   },
   ar: {
     // Header
@@ -512,6 +632,14 @@ export const translations = {
     step3Description: 'تلقَّ توصيات مخصصة ومستندات محسّنة',
     step4Title: 'تحدث مع مرشد الذكاء الاصطناعي',
     step4Description: 'احصل على نصائح مهنية شخصية من خلال روبوت الدردشة الذكي',
+    step5Title: 'تمرّن على المقابلات',
+    step5Description: 'أتقن مهارات المقابلة مع مقابلات AI الوهمية، احصل على ملاحظات وحمّل تقارير مفصلة',
+    
+    // New translations for landing page
+    mockInterview: 'مقابلة وهمية',
+    mockInterviewDescription: 'تمرّن على المقابلات مع مجندي AI، احصل على ملاحظات شخصية، وحسّن أداءك مع النقاط الشاملة والتقارير.',
+    choosePlan: 'اختر خطتك',
+    choosePlanSubtitle: 'حدد الخطة التي تناسب رحلة البحث عن الوظيفة الخاصة بك',
     
     // Navigation
     adminPanel: 'لوحة الإدارة',
@@ -653,6 +781,69 @@ export const translations = {
     profileManagement: 'حفظ وإعادة استخدام الملفات الشخصية',
     startFreeTrial: 'ابدأ الفترة التجريبية المجانية',
     noCommitment: 'بدون التزام، ألغ في أي وقت',
+    
+    // Avatar translations
+    'avatar.sarah.name': 'سارة تشن',
+    'avatar.sarah.description': 'مختص توظيف تقني أول',
+    'avatar.marcus.name': 'ماركوس جونسون',
+    'avatar.marcus.description': 'رئيس اكتساب المواهب',
+    'avatar.elena.name': 'إيلينا رودريغيز',
+    'avatar.elena.description': 'مدير موارد بشرية',
+    'avatar.raj.name': 'راج باتل',
+    'avatar.raj.description': 'قائد تقني',
+    'avatar.anna.name': 'آنا كوفالسكي',
+    'avatar.anna.description': 'مختص توظيف تنفيذي',
+    'avatar.james.name': 'جيمس ويلسون',
+    'avatar.james.description': 'مدير التوظيف',
+    
+    // Interview mode translations
+    'interview.mode.text': 'نص',
+    'interview.mode.avatar': 'أفاتار',
+    
+    // Toast messages
+    'toast.interviewStarted': 'بدأ المقابلة!',
+    'toast.interviewStartedDesc': 'حظاً موفقاً في مقابلتك الوهمية!',
+    'toast.interviewStopped': 'توقفت المقابلة',
+    'toast.interviewStoppedDesc': 'انتهت المقابلة مبكراً. يمكنك مراجعة تعليقاتك أدناه.',
+    'toast.downloadComplete': 'اكتمل التحميل!',
+    'toast.downloadCompleteDesc': 'تم تحميل تقرير المقابلة بنجاح',
+    'toast.downloadFailed': 'فشل التحميل',
+    'toast.downloadFailedDesc': 'فشل في تحميل تقرير المقابلة',
+    'toast.cameraReady': 'الكاميرا والميكروفون جاهزان!',
+    'toast.cameraReadyDesc': 'يمكنك الآن بدء مقابلة الأفاتار',
+    'toast.mediaAccessDenied': 'تم رفض الوصول للوسائط',
+    'toast.mediaAccessDeniedDesc': 'يرجى السماح بالوصول للكاميرا والميكروفون لوضع الأفاتار',
+    'toast.recordingError': 'خطأ في التسجيل',
+    'toast.speechTranscribed': 'تم تحويل الكلام!',
+    'toast.speechTranscribedDesc': 'تم تحويل إجابتك إلى نص',
+    'toast.noAudioFound': 'لم يتم العثور على صوت',
+    'toast.noAudioFoundDesc': 'يرجى تسجيل إجابتك أولاً',
+    'toast.cvImported': 'تم استيراد السيرة الذاتية بنجاح!',
+    'toast.cvImportedDesc': 'سيتم استخدام سيرتك الذاتية لتخصيص أسئلة المقابلة',
+    'toast.importFailed': 'فشل الاستيراد',
+    'toast.invalidFileType': 'نوع ملف غير صحيح',
+    'toast.invalidFileTypeDesc': 'يرجى رفع مستند PDF أو Word',
+    
+    // Placeholder texts
+    'placeholder.jobTitle': 'مثلاً: مطور برمجيات أول',
+    'placeholder.company': 'مثلاً: جوجل، مايكروسوفت',
+    
+    // Labels and titles
+    'label.jobTitle': 'مسمى الوظيفة',
+    'label.company': 'الشركة',
+    'label.chooseInterviewer': 'اختر مجري مقابلات AI',
+    'label.enableCamera': 'تفعيل الكاميرا والميكروفون',
+    'label.yourAnswer': 'إجابتك',
+    'label.typeAnswer': 'اكتب إجابتك هنا...',
+    'label.startRecording': 'بدء التسجيل',
+    'label.stopRecording': 'إيقاف التسجيل',
+    'label.submitAnswer': 'إرسال الإجابة',
+    
+    // Pricing plans
+    essentialPlan: 'أساسي',
+    professionalPlan: 'مهني',
+    elitePlan: 'نخبة',
+    getProAccess: 'احصل على وصول مهني',
   },
   tr: {
     // Header
@@ -679,6 +870,14 @@ export const translations = {
     step3Description: 'Özelleştirilmiş öneriler ve optimize edilmiş belgeler alın',
     step4Title: 'AI Mentor ile Sohbet Edin',
     step4Description: 'Akıllı AI sohbet robotumuz aracılığıyla kişiselleştirilmiş kariyer tavsiyesi alın',
+    step5Title: 'Mülakat Pratiği Yapın',
+    step5Description: 'AI mock mülakatlarla mülakat becerilerinizi geliştirin, geri bildirim alın ve ayrıntılı raporları indirin',
+    
+    // New translations for landing page
+    mockInterview: 'Mock Mülakat',
+    mockInterviewDescription: 'AI işe alım uzmanlarıyla mülakat pratiği yapın, kişiselleştirilmiş geri bildirim alın ve kapsamlı puanlama ve raporlarla performansınızı geliştirin.',
+    choosePlan: 'Planınızı Seçin',
+    choosePlanSubtitle: 'İş arama yolculuğunuza uygun planı seçin',
     
     // Navigation
     adminPanel: 'Yönetici Paneli',
@@ -820,6 +1019,69 @@ export const translations = {
     profileManagement: 'Kişisel profilleri kaydet ve yeniden kullan',
     startFreeTrial: 'Ücretsiz Deneme Başlat',
     noCommitment: 'Taahhüt yok, istediğiniz zaman iptal edin',
+    
+    // Avatar translations
+    'avatar.sarah.name': 'Sarah Chen',
+    'avatar.sarah.description': 'Kıdemli Teknoloji İşe Alım Uzmanı',
+    'avatar.marcus.name': 'Marcus Johnson',
+    'avatar.marcus.description': 'Yetenek Kazanım Başkanı',
+    'avatar.elena.name': 'Elena Rodriguez',
+    'avatar.elena.description': 'İK Müdürü',
+    'avatar.raj.name': 'Raj Patel',
+    'avatar.raj.description': 'Teknik Lider',
+    'avatar.anna.name': 'Anna Kowalski',
+    'avatar.anna.description': 'Yönetici İşe Alım Uzmanı',
+    'avatar.james.name': 'James Wilson',
+    'avatar.james.description': 'İşe Alım Müdürü',
+    
+    // Interview mode translations
+    'interview.mode.text': 'Metin',
+    'interview.mode.avatar': 'Avatar',
+    
+    // Toast messages
+    'toast.interviewStarted': 'Mülakat Başladı!',
+    'toast.interviewStartedDesc': 'Mock mülakata iyi şanslar!',
+    'toast.interviewStopped': 'Mülakat Durduruldu',
+    'toast.interviewStoppedDesc': 'Mülakat erken sona erdi. Geri bildirimlerinizi aşağıda inceleyebilirsiniz.',
+    'toast.downloadComplete': 'İndirme Tamamlandı!',
+    'toast.downloadCompleteDesc': 'Mülakat raporu başarıyla indirildi',
+    'toast.downloadFailed': 'İndirme Başarısız',
+    'toast.downloadFailedDesc': 'Mülakat raporu indirilemedi',
+    'toast.cameraReady': 'Kamera ve Mikrofon Hazır!',
+    'toast.cameraReadyDesc': 'Artık avatar mülakatını başlatabilirsiniz',
+    'toast.mediaAccessDenied': 'Medya Erişimi Reddedildi',
+    'toast.mediaAccessDeniedDesc': 'Avatar modu için lütfen kamera ve mikrofon erişimine izin verin',
+    'toast.recordingError': 'Kayıt Hatası',
+    'toast.speechTranscribed': 'Konuşma Çevrildi!',
+    'toast.speechTranscribedDesc': 'Yanıtınız metne dönüştürüldü',
+    'toast.noAudioFound': 'Ses Bulunamadı',
+    'toast.noAudioFoundDesc': 'Lütfen önce yanıtınızı kayıt edin',
+    'toast.cvImported': 'CV Başarıyla İçe Aktarıldı!',
+    'toast.cvImportedDesc': 'CVniz mülakat sorularını kişiselleştirmek için kullanılacak',
+    'toast.importFailed': 'İçe Aktarma Başarısız',
+    'toast.invalidFileType': 'Geçersiz Dosya Türü',
+    'toast.invalidFileTypeDesc': 'Lütfen bir PDF veya Word belgesi yükleyin',
+    
+    // Placeholder texts
+    'placeholder.jobTitle': 'örn. Kıdemli Yazılım Geliştirici',
+    'placeholder.company': 'örn. Google, Microsoft',
+    
+    // Labels and titles
+    'label.jobTitle': 'İş Unvanı',
+    'label.company': 'Şirket',
+    'label.chooseInterviewer': 'AI Mülakatçınızı Seçin',
+    'label.enableCamera': 'Kamera ve Mikrofonu Etkinleştir',
+    'label.yourAnswer': 'Yanıtınız',
+    'label.typeAnswer': 'Yanıtınızı buraya yazın...',
+    'label.startRecording': 'Kayıt Başlat',
+    'label.stopRecording': 'Kayıt Durdur',
+    'label.submitAnswer': 'Yanıt Gönder',
+    
+    // Pricing plans
+    essentialPlan: 'Temel',
+    professionalPlan: 'Profesyonel',
+    elitePlan: 'Elite',
+    getProAccess: 'Pro Erişim Al',
   },
 };
 

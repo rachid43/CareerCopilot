@@ -36,60 +36,60 @@ interface InterviewQA {
 }
 
 // Avatar options with diverse representation
-const avatarOptions = [
+const getAvatarOptions = (t: (key: any) => string) => [
   {
     id: 'sarah',
-    name: 'Sarah Chen',
+    name: t('avatar.sarah.name'),
     gender: 'female',
     ethnicity: 'Asian',
     voice: 'female-professional',
     image: '👩🏻‍💼',
-    description: 'Senior Tech Recruiter'
+    description: t('avatar.sarah.description')
   },
   {
     id: 'marcus',
-    name: 'Marcus Johnson',
+    name: t('avatar.marcus.name'),
     gender: 'male',
     ethnicity: 'African American',
     voice: 'male-authoritative',
     image: '👨🏿‍💼',
-    description: 'Head of Talent Acquisition'
+    description: t('avatar.marcus.description')
   },
   {
     id: 'elena',
-    name: 'Elena Rodriguez',
+    name: t('avatar.elena.name'),
     gender: 'female',
     ethnicity: 'Hispanic',
     voice: 'female-warm',
     image: '👩🏽‍💼',
-    description: 'HR Director'
+    description: t('avatar.elena.description')
   },
   {
     id: 'raj',
-    name: 'Raj Patel',
+    name: t('avatar.raj.name'),
     gender: 'male',
     ethnicity: 'South Asian',
     voice: 'male-professional',
     image: '👨🏽‍💼',
-    description: 'Technical Lead'
+    description: t('avatar.raj.description')
   },
   {
     id: 'anna',
-    name: 'Anna Kowalski',
+    name: t('avatar.anna.name'),
     gender: 'female',
     ethnicity: 'European',
     voice: 'female-confident',
     image: '👩🏼‍💼',
-    description: 'Executive Recruiter'
+    description: t('avatar.anna.description')
   },
   {
     id: 'james',
-    name: 'James Wilson',
+    name: t('avatar.james.name'),
     gender: 'male',
     ethnicity: 'Caucasian',
     voice: 'male-friendly',
     image: '👨🏻‍💼',
-    description: 'Hiring Manager'
+    description: t('avatar.james.description')
   }
 ];
 
@@ -391,7 +391,7 @@ export default function MockInterview() {
   useEffect(() => {
     initializeSpeechSynthesis();
     if (!selectedAvatar) {
-      setSelectedAvatar(avatarOptions[0]); // Default to first avatar
+      setSelectedAvatar(getAvatarOptions(t)[0]); // Default to first avatar
     }
   }, [selectedAvatar]);
 
@@ -930,7 +930,7 @@ export default function MockInterview() {
                     Choose Your AI Interviewer
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {avatarOptions.map((avatar) => (
+                    {getAvatarOptions(t).map((avatar) => (
                       <Card 
                         key={avatar.id}
                         className={`cursor-pointer transition-all hover:shadow-md ${
