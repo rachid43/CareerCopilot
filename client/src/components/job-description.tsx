@@ -11,7 +11,6 @@ interface JobDescriptionProps {
 
 export function JobDescription({ value, onChange }: JobDescriptionProps) {
   const { t } = useLanguage();
-  const characterLimit = 3000;
   const characterCount = value.length;
 
   const handleClear = () => {
@@ -32,11 +31,10 @@ export function JobDescription({ value, onChange }: JobDescriptionProps) {
           onChange={(e) => onChange(e.target.value)}
           placeholder={t('jobDescriptionPlaceholder')}
           className="min-h-32 resize-none"
-          maxLength={characterLimit}
         />
         <div className="flex justify-between items-center mt-2">
           <span className="text-xs text-gray-500">
-            {characterCount}/{characterLimit} characters
+            {characterCount} characters
           </span>
           <Button
             variant="ghost"
