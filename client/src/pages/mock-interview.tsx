@@ -716,15 +716,15 @@ export default function MockInterview() {
       </div>
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Mock Interview
+          {t('mockInterview')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Practice with an AI recruiter for realistic interview training
+          {t('mockInterviewDescription')}
         </p>
         {isInterviewActive && (
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mt-4">
             <p className="text-green-800 dark:text-green-200">
-              🎯 <strong>Interview Active!</strong> Answer the questions below to practice your interview skills.
+              🎯 <strong>{t('interviewActive')}</strong> {t('interviewActiveDescription')}
             </p>
           </div>
         )}
@@ -735,7 +735,7 @@ export default function MockInterview() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <PlayCircle className="h-5 w-5" />
-            {isInterviewActive ? 'Mock Interview' : 'Interview Setup'}
+            {isInterviewActive ? t('mockInterview') : t('interviewSetup')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -745,28 +745,28 @@ export default function MockInterview() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Job Title
+                {t('label.jobTitle')}
               </label>
               <input
                 type="text"
                 value={setupForm.jobTitle}
                 onChange={(e) => setSetupForm({ ...setupForm, jobTitle: e.target.value })}
                 className="w-full p-3 border rounded-lg"
-                placeholder="e.g. Senior Software Developer"
+                placeholder={t('placeholder.jobTitle')}
                 data-testid="input-job-title"
               />
             </div>
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Company
+                {t('label.company')}
               </label>
               <input
                 type="text"
                 value={setupForm.company}
                 onChange={(e) => setSetupForm({ ...setupForm, company: e.target.value })}
                 className="w-full p-3 border rounded-lg"
-                placeholder="e.g. Google, Microsoft"
+                placeholder={t('placeholder.company')}
                 data-testid="input-company"
               />
             </div>
@@ -774,13 +774,13 @@ export default function MockInterview() {
 
           <div>
             <label className="block text-sm font-medium mb-2">
-              Job Description
+              {t('jobDescriptionTitle')}
             </label>
             <Textarea
               value={setupForm.jobDescription}
               onChange={(e) => setSetupForm({ ...setupForm, jobDescription: e.target.value })}
               className="min-h-32"
-              placeholder="Paste the full job description here..."
+              placeholder={t('jobDescriptionPlaceholder')}
               data-testid="textarea-job-description"
             />
           </div>
@@ -789,7 +789,7 @@ export default function MockInterview() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="block text-sm font-medium">
-                Import Your CV (Optional)
+                {t('importCV')}
               </label>
               {importedCV && (
                 <Button
@@ -800,7 +800,7 @@ export default function MockInterview() {
                   data-testid="button-remove-cv"
                 >
                   <X className="h-4 w-4 mr-1" />
-                  Remove
+                  {t('remove')}
                 </Button>
               )}
             </div>
@@ -811,7 +811,7 @@ export default function MockInterview() {
                   <Upload className="h-8 w-8 text-gray-400 mx-auto" />
                   <div>
                     <p className="text-sm text-gray-600 mb-2">
-                      Upload your CV to get personalized interview questions
+                      {t('uploadCVDescription')}
                     </p>
                     <div>
                       <input
@@ -834,12 +834,12 @@ export default function MockInterview() {
                             {isImporting ? (
                               <>
                                 <div className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full mr-2" />
-                                Importing...
+                                {t('importing')}
                               </>
                             ) : (
                               <>
                                 <Upload className="h-4 w-4 mr-2" />
-                                Choose CV File
+                                {t('chooseCVFile')}
                               </>
                             )}
                           </span>
@@ -848,7 +848,7 @@ export default function MockInterview() {
                     </div>
                   </div>
                   <p className="text-xs text-gray-500">
-                    PDF or Word documents only, max 100MB
+                    {t('fileUploadLimit')}
                   </p>
                 </div>
               </div>
@@ -858,7 +858,7 @@ export default function MockInterview() {
                   <FileText className="h-5 w-5 text-green-600" />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-green-800">
-                      CV Imported Successfully
+                      {t('cvImportedSuccessfully')}
                     </p>
                     <p className="text-xs text-green-600">
                       {importedCV.filename}
@@ -866,7 +866,7 @@ export default function MockInterview() {
                   </div>
                 </div>
                 <p className="text-xs text-green-700 mt-2">
-                  Your interview questions will be personalized based on your CV content
+                  {t('cvPersonalizationMessage')}
                 </p>
               </div>
             )}
@@ -875,7 +875,7 @@ export default function MockInterview() {
           {/* Interview Mode Selection */}
           <div className="space-y-3">
             <label className="block text-sm font-medium mb-2">
-              Interview Mode
+              {t('interviewMode')}
             </label>
             <div className="grid grid-cols-2 gap-4">
               <div 
@@ -889,8 +889,8 @@ export default function MockInterview() {
               >
                 <div className="text-center space-y-2">
                   <MessageCircle className="h-8 w-8 mx-auto text-blue-600" />
-                  <h3 className="font-semibold">Text Interview</h3>
-                  <p className="text-xs text-gray-600">Type your answers to interview questions</p>
+                  <h3 className="font-semibold">{t('textInterview')}</h3>
+                  <p className="text-xs text-gray-600">{t('textInterviewDescription')}</p>
                 </div>
               </div>
               
@@ -905,8 +905,8 @@ export default function MockInterview() {
               >
                 <div className="text-center space-y-2">
                   <Video className="h-8 w-8 mx-auto text-purple-600" />
-                  <h3 className="font-semibold">Avatar Interview</h3>
-                  <p className="text-xs text-gray-600">AI avatar asks questions, record video answers</p>
+                  <h3 className="font-semibold">{t('avatarInterview')}</h3>
+                  <p className="text-xs text-gray-600">{t('avatarInterviewDescription')}</p>
                 </div>
               </div>
             </div>
