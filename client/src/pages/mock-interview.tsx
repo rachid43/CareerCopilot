@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X, Download, Video, Mic, MicOff, VideoOff, User } from 'lucide-react';
+import { PlayCircle, MessageCircle, Send, RotateCcw, Upload, FileText, X, Download, Video, Mic, MicOff, VideoOff, User, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/lib/i18n';
 import { apiRequest } from '@/lib/queryClient';
+import { useLocation } from 'wouter';
 // FileUpload component will be inline
 
 interface InterviewSession {
@@ -697,8 +698,22 @@ export default function MockInterview() {
     }
   };
 
+  const [, navigate] = useLocation();
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
+      {/* Back to Home Button */}
+      <div className="flex items-center justify-start mb-4">
+        <Button
+          variant="outline"
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+          data-testid="button-back-home"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {t('backToHome')}
+        </Button>
+      </div>
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Mock Interview
