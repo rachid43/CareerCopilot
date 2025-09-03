@@ -114,26 +114,10 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
-    // In development mode, regenerate session and redirect to home
+    // In development mode, clear logout flag and redirect to home
     if (process.env.NODE_ENV === 'development') {
-      // Regenerate a fresh session for login
-      req.session.regenerate((err) => {
-        if (err) {
-          console.error('Session regeneration error:', err);
-        }
-        // Create a fresh authenticated state
-        req.user = {
-          claims: {
-            sub: 'dev-user-123',
-            email: 'admin@careercopilot.demo',
-            first_name: 'Demo',
-            last_name: 'Administrator'
-          }
-        };
-        req.isAuthenticated = (() => true) as any;
-        res.redirect('/');
-      });
-      return;
+      isDevelopmentLoggedOut = false;
+      return res.redirect('/');
     }
     
     // In production, use standard OAuth flow
@@ -152,13 +136,10 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     req.logout(() => {
-      // In development mode, destroy the session and redirect to the landing page
+      // In development mode, set logout flag and redirect
       if (process.env.NODE_ENV === 'development') {
-        // Destroy the session completely
-        req.session.destroy(() => {
-          res.redirect('/');
-        });
-        return;
+        isDevelopmentLoggedOut = true;
+        return res.redirect('/');
       }
       
       // In production, use the standard OpenID Connect logout flow
@@ -172,40 +153,42 @@ export async function setupAuth(app: Express) {
   });
 }
 
+// Simple in-memory development authentication state
+let isDevelopmentLoggedOut = false;
+
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
-  // In development mode, only auto-authenticate if there's a valid session
+  // In development mode, check our simple logout flag
   if (process.env.NODE_ENV === 'development') {
-    // If no session or user is not authenticated, return unauthorized
-    if (!req.session || (!req.isAuthenticated || !req.isAuthenticated())) {
+    // If explicitly logged out, return unauthorized
+    if (isDevelopmentLoggedOut) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     
-    // If session exists but no user object, create mock authenticated user
-    if (!req.user) {
-      req.user = {
-        claims: {
-          sub: 'dev-user-123',
-          email: 'admin@careercopilot.demo',
-          first_name: 'Demo',
-          last_name: 'Administrator'
-        }
-      };
-      
-      // Ensure the development user exists in storage
-      try {
-        const existingUser = await storage.getUserByUsername('dev-user-123');
-        if (!existingUser) {
-          await storage.createUser({
-            username: 'dev-user-123',
-            email: 'admin@careercopilot.demo',
-            firstName: 'Demo',
-            lastName: 'Administrator',
-            profileImageUrl: null,
-          });
-        }
-      } catch (error) {
-        console.log('Development user creation/check failed:', error);
+    // Create mock authenticated user for development
+    req.user = {
+      claims: {
+        sub: 'dev-user-123',
+        email: 'admin@careercopilot.demo',
+        first_name: 'Demo',
+        last_name: 'Administrator'
       }
+    };
+    req.isAuthenticated = (() => true) as any;
+    
+    // Ensure the development user exists in storage
+    try {
+      const existingUser = await storage.getUserByUsername('dev-user-123');
+      if (!existingUser) {
+        await storage.createUser({
+          username: 'dev-user-123',
+          email: 'admin@careercopilot.demo',
+          firstName: 'Demo',
+          lastName: 'Administrator',
+          profileImageUrl: null,
+        });
+      }
+    } catch (error) {
+      console.log('Development user creation/check failed:', error);
     }
     
     return next();
