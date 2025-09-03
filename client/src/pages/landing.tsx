@@ -75,7 +75,7 @@ export function Landing() {
             />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-gray-900">Career<span className="text-primary">Copilot</span></span>
-              <span className="text-xs text-gray-500 leading-none">🤖 AI Assistant</span>
+              <span className="text-xs text-gray-500 leading-none">🤖 {t('aiAssistant')}</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -175,8 +175,8 @@ export function Landing() {
         {/* Demo Video Section */}
         <div className="max-w-4xl mx-auto mb-16">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Watch Career<span className="text-primary">Copilot</span> in Action</h2>
-            <p className="text-lg text-gray-600">Experience How AI Helps You Build Job-Winning Applications — Fast</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('watchInAction')}</h2>
+            <p className="text-lg text-gray-600">{t('experienceAIHelp')}</p>
           </div>
           
           <Card className="overflow-hidden shadow-xl">
@@ -189,10 +189,9 @@ export function Landing() {
                       <path d="M8 5v14l11-7z"/>
                     </svg>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Demo Video Coming Soon</h3>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('demoVideoComingSoon')}</h3>
                   <p className="text-gray-600">
-                    See how Career<span className="text-primary">Copilot</span> helps users create professional CVs,<br/>
-                    practice mock interviews, get detailed feedback, and chat with our AI career mentor
+                    {t('seeHowCareerCopilotHelps')}
                   </p>
                 </div>
                 
@@ -217,29 +216,29 @@ export function Landing() {
               <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Upload className="text-white" size={20} />
               </div>
-              <h4 className="font-semibold mb-2">Smart Upload & Analysis</h4>
-              <p className="text-sm text-gray-600">Upload your CV and watch AI extract and optimize your profile instantly</p>
+              <h4 className="font-semibold mb-2">{t('smartUploadAnalysis')}</h4>
+              <p className="text-sm text-gray-600">{t('uploadCVDescription')}</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <MessageCircle className="text-white" size={20} />
               </div>
-              <h4 className="font-semibold mb-2">AI Career Conversations</h4>
-              <p className="text-sm text-gray-600">Get personalized career advice through intelligent chat interactions</p>
+              <h4 className="font-semibold mb-2">{t('aiCareerConversations')}</h4>
+              <p className="text-sm text-gray-600">{t('personalizedCareerAdvice')}</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Video className="text-white" size={20} />
               </div>
-              <h4 className="font-semibold mb-2">Mock Interviews</h4>
-              <p className="text-sm text-gray-600">Practice with AI recruiters, record responses, and get detailed feedback scores</p>
+              <h4 className="font-semibold mb-2">{t('mockInterviews')}</h4>
+              <p className="text-sm text-gray-600">{t('practiceWithAIRecruiters')}</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Download className="text-white" size={20} />
               </div>
-              <h4 className="font-semibold mb-2">Professional Output</h4>
-              <p className="text-sm text-gray-600">Download polished, ATS-friendly documents ready for job applications</p>
+              <h4 className="font-semibold mb-2">{t('professionalOutput')}</h4>
+              <p className="text-sm text-gray-600">{t('downloadPolishedDocuments')}</p>
             </div>
           </div>
         </div>
@@ -247,10 +246,9 @@ export function Landing() {
         {/* Mock Interview Section */}
         <div className="max-w-6xl mx-auto mb-16">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">AI-Powered Mock Interviews</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('aiPoweredMockInterviews')}</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Practice interviews with realistic AI recruiters, record your responses, and receive comprehensive feedback 
-              with detailed scoring to improve your interview performance.
+              {t('practiceInterviewsDescription')}
             </p>
           </div>
           
@@ -264,9 +262,9 @@ export function Landing() {
                         <Video className="text-white" size={20} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-lg mb-2">Realistic Interview Experience</h4>
+                        <h4 className="font-semibold text-lg mb-2">{t('realisticInterviewExperience')}</h4>
                         <p className="text-gray-600">
-                          Choose from diverse AI interviewer personas and practice with questions tailored to your field and experience level.
+                          {t('diverseAIInterviewers')}
                         </p>
                       </div>
                     </div>
@@ -276,9 +274,9 @@ export function Landing() {
                         <CheckCircle className="text-white" size={20} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-lg mb-2">Comprehensive Scoring</h4>
+                        <h4 className="font-semibold text-lg mb-2">{t('comprehensiveScoring')}</h4>
                         <p className="text-gray-600">
-                          Get detailed feedback on your responses with scoring across multiple categories including clarity, relevance, and confidence.
+                          {t('detailedFeedbackScoring')}
                         </p>
                       </div>
                     </div>
@@ -288,9 +286,9 @@ export function Landing() {
                         <Download className="text-white" size={20} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-lg mb-2">Detailed Reports</h4>
+                        <h4 className="font-semibold text-lg mb-2">{t('detailedReports')}</h4>
                         <p className="text-gray-600">
-                          Download comprehensive interview reports with full transcripts, scores, and improvement recommendations.
+                          {t('downloadInterviewReports')}
                         </p>
                       </div>
                     </div>
@@ -306,20 +304,20 @@ export function Landing() {
                     <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Video className="text-white" size={32} />
                     </div>
-                    <h3 className="text-xl font-bold mb-4">Two Interview Modes</h3>
+                    <h3 className="text-xl font-bold mb-4">{t('twoInterviewModes')}</h3>
                     
                     <div className="space-y-4">
                       <div className="bg-white rounded-lg p-4 shadow-sm">
-                        <h4 className="font-semibold mb-2">Text-Based Mode</h4>
+                        <h4 className="font-semibold mb-2">{t('textBasedMode')}</h4>
                         <p className="text-sm text-gray-600">
-                          Practice answering questions through text input for quick feedback and scoring.
+                          {t('textInputPractice')}
                         </p>
                       </div>
                       
                       <div className="bg-white rounded-lg p-4 shadow-sm">
-                        <h4 className="font-semibold mb-2">Avatar Mode</h4>
+                        <h4 className="font-semibold mb-2">{t('avatarMode')}</h4>
                         <p className="text-sm text-gray-600">
-                          Use webcam and microphone for realistic video interviews with AI avatars and voice transcription.
+                          {t('webcamMicrophoneInterviews')}
                         </p>
                       </div>
                     </div>
@@ -424,7 +422,7 @@ export function Landing() {
                   className="w-full bg-primary hover:bg-orange-600 text-white py-3"
                   onClick={() => window.location.href = '/api/login'}
                 >
-                  Get Pro Access
+                  {t('getProAccess')}
                 </Button>
               </CardContent>
             </Card>
