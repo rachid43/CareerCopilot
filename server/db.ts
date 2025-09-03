@@ -8,7 +8,7 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-// Configure postgres client for Supabase
+// Configure postgres client
 const sql = postgres(process.env.DATABASE_URL, { 
   ssl: 'require',
   max: 1,
