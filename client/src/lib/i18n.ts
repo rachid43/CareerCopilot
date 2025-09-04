@@ -1078,6 +1078,7 @@ export const translations = {
     fullJobTracker: 'متتبع طلبات العمل الكامل (تحديثات الحالة، لوحة التقارير)',
     aiMentorAdvanced: 'روبوت محادثة المرشد الذكي (نصائح مهنية، رؤى السيرة الذاتية + الطلبات)',
     unlimitedTextInterviews: 'مقابلات تجريبية نصية غير محدودة (مع تعليقات وتقييم، بسياق السيرة الذاتية + الوظيفة)',
+    unlimitedAvatarInterviews: 'مقابلات أفاتار غير محدودة',
     advancedFeedback: 'تعليقات متقدمة: النبرة، الوضوح، الثقة، تحليل إطار عمل STAR',
     personalizedReports: 'تقارير تحسين شخصية (PDF)',
     industryQuestionBanks: 'بنوك أسئلة المقابلات الخاصة بالصناعة/الدور',
