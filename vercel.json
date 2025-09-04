@@ -1,5 +1,3 @@
 {
-  "buildCommand": "npm run build && ls -la dist/ && ls -la dist/public/ && cp -r dist/public/* dist/ && ls -la dist/",
-  "outputDirectory": "dist",
-  "installCommand": "npm install"
+  "outputDirectory": "dist/public"
 }
