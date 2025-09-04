@@ -1066,6 +1066,28 @@ export const translations = {
     getEliteAccess: 'احصل على وصول النخبة',
     everythingInEssential: 'كل ما في الأساسي',
     everythingInProfessional: 'كل ما في المهني',
+    
+    // Feature translations for pricing
+    getStartedRight: 'ابدأ بالطريقة الصحيحة',
+    trackApplyPractice: 'تتبع، تقدم ومارس',
+    simulateRealInterview: 'محاكاة المقابلة الحقيقية',
+    cvCoverLetterGeneration: 'إنشاء/تحسين السيرة الذاتية + خطاب التغطية بالذكاء الاصطناعي',
+    matchingScoreAnalysis: 'تحليل درجة المطابقة مقابل وصف الوظائف (5 وظائف/شهر)',
+    jobTrackerBasic: 'متتبع طلبات العمل (تتبع يدوي أساسي)',
+    unlimitedCvScoring: 'تقييم غير محدود للسيرة الذاتية + خطاب التغطية مقابل وصف الوظائف',
+    fullJobTracker: 'متتبع طلبات العمل الكامل (تحديثات الحالة، لوحة التقارير)',
+    aiMentorAdvanced: 'روبوت محادثة المرشد الذكي (نصائح مهنية، رؤى السيرة الذاتية + الطلبات)',
+    unlimitedTextInterviews: 'مقابلات تجريبية نصية غير محدودة (مع تعليقات وتقييم، بسياق السيرة الذاتية + الوظيفة)',
+    advancedFeedback: 'تعليقات متقدمة: النبرة، الوضوح، الثقة، تحليل إطار عمل STAR',
+    personalizedReports: 'تقارير تحسين شخصية (PDF)',
+    industryQuestionBanks: 'بنوك أسئلة المقابلات الخاصة بالصناعة/الدور',
+    prioritySupport: 'تحديثات ودعم أولوية',
+    
+    // Button translations
+    getStartedBtn: 'ابدأ الآن',
+    
+    // Pricing period
+    orForMonths: 'أو €{amount} لمدة 3 أشهر',
   },
   tr: {
     // Header
