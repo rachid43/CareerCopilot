@@ -2011,7 +2011,7 @@ USER MESSAGE: ${content}`;
       let stripeCustomerId = user.stripeCustomerId;
       if (!stripeCustomerId) {
         const customer = await stripe.customers.create({
-          email: user.email,
+          email: user.email || undefined,
           metadata: {
             userId: user.id.toString()
           }
