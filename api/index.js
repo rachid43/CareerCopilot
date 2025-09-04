@@ -27,8 +27,8 @@ app.use((req, res, next) => {
   }
 });
 
-// Static files - serve from root directory
-app.use(express.static(join(__dirname, '../')));
+// Static files - serve from built frontend directory
+app.use(express.static(join(__dirname, '../dist/public')));
 
 // Register API routes
 await registerRoutes(app);
@@ -36,7 +36,7 @@ await registerRoutes(app);
 // SPA fallback - serve index.html for all non-API routes
 app.get('*', (req, res) => {
   if (!req.path.startsWith('/api')) {
-    res.sendFile(join(__dirname, '../index.html'));
+    res.sendFile(join(__dirname, '../dist/public/index.html'));
   } else {
     res.status(404).json({ error: 'API endpoint not found' });
   }
