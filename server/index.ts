@@ -36,7 +36,7 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+async function createApp() {
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -56,16 +56,36 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
+  return { app, server };
+}
+
+// For Vercel serverless (production)
+if (process.env.VERCEL) {
+  let appInstance: express.Application | null = null;
+  
+  export default async function handler(req: Request, res: Response) {
+    if (!appInstance) {
+      const { app: expressApp } = await createApp();
+      appInstance = expressApp;
+    }
+    return appInstance(req, res);
+  }
+} else {
+  // For local development
+  (async () => {
+    const { server } = await createApp();
+    
+    // ALWAYS serve the app on the port specified in the environment variable PORT
+    // Other ports are firewalled. Default to 5000 if not specified.
+    // this serves both the API and the client.
+    // It is the only port that is not firewalled.
+    const port = parseInt(process.env.PORT || '5000', 10);
+    server.listen({
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    }, () => {
+      log(`serving on port ${port}`);
+    });
+  })();
+}
