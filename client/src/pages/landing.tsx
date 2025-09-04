@@ -20,19 +20,17 @@ export function Landing() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
+    // Check if user is already logged in by looking for stored session
+    const storedSession = localStorage.getItem('supabase-session');
+    if (storedSession) {
+      try {
+        const session = JSON.parse(storedSession);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('Error parsing stored session:', error);
+        localStorage.removeItem('supabase-session');
+      }
+    }
   }, []);
   
   const features = [

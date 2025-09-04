@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { authHelpers } from '@/lib/supabase';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -29,8 +28,24 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
     try {
       if (isLogin) {
-        const { error } = await authHelpers.signIn(email, password);
-        if (error) throw error;
+        // Use fetch to call our API endpoint instead of Supabase directly
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Login failed');
+        }
+
+        const data = await response.json();
+        
+        // Store session data in localStorage for the frontend
+        localStorage.setItem('supabase-session', JSON.stringify(data.session));
         
         toast({
           title: "Welcome back!",
@@ -38,9 +53,20 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
         });
         onSuccess();
       } else {
-        const { error } = await authHelpers.signUp(email, password, firstName, lastName);
-        if (error) throw error;
-        
+        // Use fetch to call our signup API endpoint
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password, firstName, lastName }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Signup failed');
+        }
+
         toast({
           title: "Account created!",
           description: "Please check your email to confirm your account.",
@@ -48,6 +74,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
         onClose();
       }
     } catch (error: any) {
+      console.error('Auth error:', error);
       toast({
         title: "Error",
         description: error.message || "Something went wrong",
@@ -102,6 +129,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder="admin@careercopilot.nl"
               />
             </div>
             
@@ -113,6 +141,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder="Enter your password"
               />
             </div>
             
