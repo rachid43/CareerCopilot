@@ -1,0 +1,52 @@
+[03:49:42.747] Running build in Washington, D.C., USA (East) – iad1
+[03:49:42.747] Build machine configuration: 2 cores, 8 GB
+[03:49:42.763] Cloning github.com/rachid43/CareerCopilot (Branch: main, Commit: c096d1f)
+[03:49:45.061] Cloning completed: 2.298s
+[03:49:45.093] Found .vercelignore
+[03:49:45.099] Removed 4 ignored files defined in .vercelignore
+[03:49:45.100]   /test/data/05-versions-space.pdf
+[03:49:45.100]   /uploads/8ca09208c43056e3839a04604d8c9a2d
+[03:49:45.100]   /uploads/9fd9e53d872668556c5e4130abed9354
+[03:49:45.100]   /uploads/f18e313ebf9d70dac398c537dde9f56a
+[03:49:46.004] Restored build cache from previous deployment (6Dd6pw8J4BjcStYAyAn8z9JNZgpn)
+[03:49:46.628] Running "vercel build"
+[03:49:47.045] Vercel CLI 47.0.4
+[03:49:47.857] Installing dependencies...
+[03:49:49.449] 
+[03:49:49.450] up to date in 1s
+[03:49:49.450] 
+[03:49:49.450] 87 packages are looking for funding
+[03:49:49.451]   run `npm fund` for details
+[03:49:49.485] Running "npm run build"
+[03:49:49.645] 
+[03:49:49.645] > rest-express@1.0.0 build
+[03:49:49.645] > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+[03:49:49.645] 
+[03:49:49.938] [36mvite v5.4.19 [32mbuilding for production...[36m[39m
+[03:49:50.005] transforming...
+[03:49:50.353] Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+[03:49:50.355]   npx update-browserslist-db@latest
+[03:49:50.355]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[03:49:58.443] [32m✓[39m 2390 modules transformed.
+[03:49:59.294] rendering chunks...
+[03:49:59.314] computing gzip size...
+[03:49:59.356] [2m../dist/public/[22m[32mindex.html                                            [39m[1m[2m    3.97 kB[22m[1m[22m[2m │ gzip:   1.36 kB[22m
+[03:49:59.356] [2m../dist/public/[22m[2massets/[22m[32mICON_CareerCopilot_1755719130597-BKgUFXt3.png  [39m[1m[2m1,346.07 kB[22m[1m[22m
+[03:49:59.357] [2m../dist/public/[22m[2massets/[22m[35mindex-DvTz6k2a.css                             [39m[1m[2m   78.01 kB[22m[1m[22m[2m │ gzip:  13.18 kB[22m
+[03:49:59.357] [2m../dist/public/[22m[2massets/[22m[36mindex-BMrEi-II.js                              [39m[1m[33m1,511.33 kB[39m[22m[2m │ gzip: 465.53 kB[22m
+[03:49:59.357] [33m
+[03:49:59.357] (!) Some chunks are larger than 500 kB after minification. Consider:
+[03:49:59.357] - Using dynamic import() to code-split the application
+[03:49:59.357] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[03:49:59.358] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[03:49:59.358] [32m✓ built in 9.39s[39m
+[03:49:59.438] 
+[03:49:59.438]   dist/index.js  111.2kb
+[03:49:59.438] 
+[03:49:59.438] ⚡ Done in 18ms
+[03:49:59.730] Using TypeScript 5.6.3 (local user-provided)
+[03:51:15.012] Build Completed in /vercel/output [1m]
+[03:51:15.412] Deploying outputs...
+[03:51:17.214] Warning: Provided `memory` setting in `vercel.json` is ignored on Active CPU billing. You can safely remove this setting from your configuration. Learn more: https://vercel.com/docs/fluid-compute/pricing
+[03:51:22.858] Deployment completed
+[03:51:23.676] Creating build cache...
