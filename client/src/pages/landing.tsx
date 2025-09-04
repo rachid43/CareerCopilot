@@ -3,15 +3,37 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PenTool, Brain, CheckCircle, MessageCircle, Globe, Upload, Download, Star, User, Video } from "lucide-react";
 import careerCopilotIcon from "@assets/ICON_CareerCopilot_1755719130597.png";
 import { LanguageSelector } from "@/components/language-selector";
+import { AuthModal } from "@/components/auth/AuthModal";
 import { useLanguage } from "@/lib/i18n";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useLocation } from "wouter";
 
 export function Landing() {
   const { t } = useLanguage();
+  const [, setLocation] = useLocation();
   // Use Euro pricing as default since this is for European market
   const [isEuropean] = useState(true);
   const [currency] = useState('€');
   const [price] = useState('8.97');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Check if user is already logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
   
   const features = [
     {
@@ -83,7 +105,7 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => window.location.href = '/api/login'}
+              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
             >
               {t('getStarted')}
             </Button>
@@ -372,7 +394,7 @@ export function Landing() {
                   size="lg" 
                   variant="outline"
                   className="w-full border-gray-300 hover:bg-gray-50 hover:text-gray-900 py-3"
-                  onClick={() => window.location.href = '/api/login'}
+                  onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
                 >
                   {t('getStartedBtn')}
                 </Button>
@@ -424,7 +446,7 @@ export function Landing() {
                 <Button 
                   size="lg" 
                   className="w-full bg-primary hover:bg-orange-600 text-white py-3"
-                  onClick={() => window.location.href = '/api/login'}
+                  onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
                 >
                   {t('getProAccess')}
                 </Button>
@@ -475,7 +497,7 @@ export function Landing() {
                   size="lg" 
                   variant="outline"
                   className="w-full border-purple-300 hover:bg-purple-50 hover:text-purple-700 text-purple-600 py-3"
-                  onClick={() => window.location.href = '/api/login'}
+                  onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
                 >
                   {t('getEliteAccess')}
                 </Button>
@@ -554,6 +576,16 @@ export function Landing() {
         </div>
       </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          setShowAuthModal(false);
+          setLocation('/');
+        }}
+      />
     </div>
   );
 }
