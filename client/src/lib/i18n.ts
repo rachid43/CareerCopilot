@@ -229,7 +229,7 @@ export const translations = {
     
     // Landing page translations
     aiAssistant: 'AI Assistent',
-    watchInAction: 'Bekijk Career<span className="text-primary">Copilot</span> in Actie',
+    watchInAction: 'Bekijk CareerCopilot in Actie',
     experienceAIHelp: 'Ervaar Hoe AI Je Helpt Bij Het Bouwen van Winnende Sollicitaties — Snel',
     demoVideoComingSoon: 'Demo Video Komt Binnenkort',
     seeHowCareerCopilotHelps: 'Zie hoe CareerCopilot gebruikers helpt bij het maken van professionele CV\'s, mock interviews oefenen, gedetailleerde feedback krijgen, en chatten met onze AI carrière mentor',
@@ -612,7 +612,7 @@ export const translations = {
     
     // Landing page translations
     aiAssistant: 'AI Assistant',
-    watchInAction: 'Watch Career<span className="text-primary">Copilot</span> in Action',
+    watchInAction: 'Watch CareerCopilot in Action',
     experienceAIHelp: 'Experience How AI Helps You Build Job-Winning Applications — Fast',
     demoVideoComingSoon: 'Demo Video Coming Soon',
     seeHowCareerCopilotHelps: 'See how CareerCopilot helps users create professional CVs, practice mock interviews, get detailed feedback, and chat with our AI career mentor',
@@ -941,7 +941,7 @@ export const translations = {
     
     // Landing page translations
     aiAssistant: 'مساعد ذكي',
-    watchInAction: 'شاهد Career<span className="text-primary">Copilot</span> في العمل',
+    watchInAction: 'شاهد CareerCopilot في العمل',
     experienceAIHelp: 'اختبر كيف يساعدك الذكاء الاصطناعي في بناء طلبات عمل فائزة — بسرعة',
     demoVideoComingSoon: 'فيديو توضيحي قريباً',
     seeHowCareerCopilotHelps: 'انظر كيف يساعد CareerCopilot المستخدمين في إنشاء سير ذاتية مهنية، وممارسة المقابلات التجريبية، والحصول على تعليقات مفصلة، والدردشة مع مرشد المهنة الذكي',
@@ -1248,7 +1248,7 @@ export const translations = {
     
     // Landing page translations
     aiAssistant: 'AI Asistan',
-    watchInAction: 'Career<span className="text-primary">Copilot</span>\'u İş Başında İzleyin',
+    watchInAction: 'CareerCopilot\'u İş Başında İzleyin',
     experienceAIHelp: 'AI\'ın Kazanan İş Başvuruları Oluşturmanızda Nasıl Yardım Ettiğini Deneyimleyin — Hızlı',
     demoVideoComingSoon: 'Demo Video Yakında',
     seeHowCareerCopilotHelps: 'CareerCopilot\'un kullanıcılara profesyonel CV oluşturmada, mock mülakatlar yapmada, detaylı geri bildirim almada ve AI kariyer mentörümüzle sohbet etmede nasıl yardım ettiğini görün',
