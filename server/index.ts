@@ -59,19 +59,19 @@ async function createApp() {
   return { app, server };
 }
 
-// For Vercel serverless (production)
-if (process.env.VERCEL) {
-  let appInstance: express.Application | null = null;
-  
-  export default async function handler(req: Request, res: Response) {
-    if (!appInstance) {
-      const { app: expressApp } = await createApp();
-      appInstance = expressApp;
-    }
-    return appInstance(req, res);
+// Export for Vercel serverless
+let appInstance: express.Application | null = null;
+
+export default async function handler(req: Request, res: Response) {
+  if (!appInstance) {
+    const { app: expressApp } = await createApp();
+    appInstance = expressApp;
   }
-} else {
-  // For local development
+  return appInstance(req, res);
+}
+
+// Start server for local development
+if (!process.env.VERCEL) {
   (async () => {
     const { server } = await createApp();
     
