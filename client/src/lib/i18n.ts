@@ -1422,6 +1422,13 @@ export const translations = {
     
     // Pricing period
     orForMonths: 'veya 3 ay için €{amount}',
+    
+    // Additional feature translations needed for pricing
+    avatarInterviews: 'Avatar Mülakatları',
+    textInterviews: 'Metin Mülakatları',
+    unlimitedGenerations: 'Sınırsız Üretim',
+    unlimitedInterviews: 'Sınırsız Mülakatlar',
+    unlimitedApplications: 'Sınırsız Başvuru',
   },
 };
 
