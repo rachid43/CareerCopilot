@@ -53,7 +53,28 @@ async function createApp() {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // Custom static serving for Vercel serverless
+    const path = await import("path");
+    const fs = await import("fs");
+    
+    const distPath = path.resolve(process.cwd(), "dist", "public");
+    
+    if (fs.existsSync(distPath)) {
+      app.use(express.static(distPath));
+      
+      // fall through to index.html for SPA routing
+      app.use("*", (_req, res) => {
+        const indexPath = path.resolve(distPath, "index.html");
+        if (fs.existsSync(indexPath)) {
+          res.sendFile(indexPath);
+        } else {
+          res.status(404).send("Not found");
+        }
+      });
+    } else {
+      console.error("Static files not found at:", distPath);
+      serveStatic(app); // fallback to original function
+    }
   }
 
   return { app, server };
