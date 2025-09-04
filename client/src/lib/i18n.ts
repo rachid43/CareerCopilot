@@ -1063,6 +1063,9 @@ export const translations = {
     essentialPlan: 'أساسي',
     elitePlan: 'نخبة',
     getProAccess: 'احصل على وصول مهني',
+    getEliteAccess: 'احصل على وصول النخبة',
+    everythingInEssential: 'كل ما في الأساسي',
+    everythingInProfessional: 'كل ما في المهني',
   },
   tr: {
     // Header
