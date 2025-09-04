@@ -1396,6 +1396,32 @@ export const translations = {
     essentialPlan: 'Temel',
     elitePlan: 'Elite',
     getProAccess: 'Pro Erişim Al',
+    getEliteAccess: 'Elite Erişim Al',
+    everythingInEssential: 'Temel\'de Bulunan Her Şey',
+    everythingInProfessional: 'Profesyonel\'de Bulunan Her Şey',
+    
+    // Feature translations for pricing
+    getStartedRight: 'Doğru Başlangıç',
+    trackApplyPractice: 'Takip Et, Başvur ve Pratik Yap',
+    simulateRealInterview: 'Gerçek Mülakat Simülasyonu',
+    cvCoverLetterGeneration: 'CV + ön yazı AI üretimi/iyileştirmesi',
+    matchingScoreAnalysis: 'İş tanımlarına karşı eşleşme skoru analizi (5 iş/ay)',
+    jobTrackerBasic: 'İş başvuru takipçisi (temel manuel takip)',
+    unlimitedCvScoring: 'İş tanımlarına karşı sınırsız CV + ön yazı puanlaması',
+    fullJobTracker: 'Tam iş başvuru takipçisi (durum güncellemeleri, raporlama panosu)',
+    aiMentorAdvanced: 'AI mentor sohbet botu (kariyer ipuçları, CV + başvuru içgörüleri)',
+    unlimitedTextInterviews: 'Sınırsız metin tabanlı mock mülakatlar (geri bildirim ve puanlama ile, CV + iş bağlamında)',
+    unlimitedAvatarInterviews: 'Sınırsız avatar mülakatları',
+    advancedFeedback: 'Gelişmiş geri bildirim: ton, netlik, güven, STAR çerçevesi analizi',
+    personalizedReports: 'Kişiselleştirilmiş iyileştirme raporları (PDF)',
+    industryQuestionBanks: 'Sektör/rol özel mülakat soru bankaları',
+    prioritySupport: 'Öncelikli güncellemeler ve destek',
+    
+    // Button translations
+    getStartedBtn: 'Başlayın',
+    
+    // Pricing period
+    orForMonths: 'veya 3 ay için €{amount}',
   },
 };
 
