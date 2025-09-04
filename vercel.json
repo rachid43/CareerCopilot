@@ -4,6 +4,10 @@
     {
       "src": "dist/index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "dist/public/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -12,12 +16,16 @@
       "dest": "/dist/index.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/assets/(.*)",
+      "dest": "/dist/public/assets/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/dist/public/index.html"
     },
     {
       "src": "/(.*)",
       "dest": "/dist/public/index.html"
     }
-  ],
-  "outputDirectory": "./dist/public"
+  ]
 }
