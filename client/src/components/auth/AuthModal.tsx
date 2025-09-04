@@ -13,15 +13,13 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('admin@careercopilot.nl');
-  const [password, setPassword] = useState('SuperAdmin2025!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  console.log('AuthModal render - isOpen:', isOpen);
-  
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {

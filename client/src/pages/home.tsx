@@ -230,7 +230,29 @@ export default function Home() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.location.href = '/api/logout'}
+                    onClick={async () => {
+                      try {
+                        // Call logout API
+                        const response = await fetch('/api/logout', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                        
+                        if (response.ok) {
+                          // Clear localStorage session
+                          localStorage.removeItem('supabase-session');
+                          // Force page reload to clear authentication state
+                          window.location.href = '/';
+                        }
+                      } catch (error) {
+                        console.error('Logout error:', error);
+                        // Fallback: still clear session and redirect
+                        localStorage.removeItem('supabase-session');
+                        window.location.href = '/';
+                      }
+                    }}
                     className="flex items-center space-x-1 text-xs px-2"
                   >
                     <LogOut size={14} />
