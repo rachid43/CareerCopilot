@@ -176,12 +176,9 @@ export function Landing() {
         <div className="max-w-4xl mx-auto mb-16">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t('watchInAction').replace('CareerCopilot', 'Career')}
-              <span className="text-primary">Copilot</span>
-              {t('watchInAction').includes('in Actie') ? ' in Actie' : 
-               t('watchInAction').includes('in Action') ? ' in Action' :
-               t('watchInAction').includes('في العمل') ? ' في العمل' :
-               t('watchInAction').includes('İş Başında') ? '\'u İş Başında İzleyin' : ' in Action'}
+              {t('watchInAction').split('CareerCopilot')[0]}
+              Career<span className="text-primary">Copilot</span>
+              {t('watchInAction').split('CareerCopilot')[1]}
             </h2>
             <p className="text-lg text-gray-600">{t('experienceAIHelp')}</p>
           </div>
