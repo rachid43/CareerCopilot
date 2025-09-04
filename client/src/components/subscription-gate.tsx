@@ -35,7 +35,7 @@ export function SubscriptionGate({
     return null;
   }
 
-  return <UpgradePrompt feature={feature} currentTier={tier} />;
+  return <UpgradePrompt feature={feature} currentTier={tier || 'essential'} />;
 }
 
 interface UpgradePromptProps {
@@ -56,6 +56,7 @@ export function UpgradePrompt({
 
   const getRequiredTier = (feature: keyof TierFeatures) => {
     const featureToTier = {
+      cvCoverLetterGeneration: 'professional',
       unlimitedCvScoring: 'professional',
       unlimitedTextInterviews: 'professional',
       avatarInterviews: 'elite',
@@ -64,7 +65,7 @@ export function UpgradePrompt({
       personalizedReports: 'elite',
       industryQuestionBanks: 'elite',
       prioritySupport: 'elite'
-    };
+    } as const;
     return featureToTier[feature] || 'professional';
   };
 

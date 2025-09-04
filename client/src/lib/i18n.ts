@@ -204,7 +204,6 @@ export const translations = {
     interviewSetup: 'Interview Instelling',
     importCV: 'Importeer Je CV (Optioneel)',
     remove: 'Verwijderen',
-    uploadCVDescription: 'Upload je CV voor gepersonaliseerde interviewvragen',
     importing: 'Importeren...',
     chooseCVFile: 'Kies CV Bestand',
     fileUploadLimit: 'Alleen PDF of Word documenten, max 100MB',
@@ -263,6 +262,17 @@ export const translations = {
     required: 'Vereist',
     upgradeTo: 'Upgrade naar',
     upgradeInstantly: 'Upgrade direct en krijg onmiddellijk toegang',
+    
+    // Payment and subscription success translations
+    paymentError: 'Betalingsfout',
+    paymentSuccessful: 'Betaling Succesvol',
+    subscriptionActivated: 'Abonnement Geactiveerd',
+    accessGranted: 'Toegang Verleend',
+    continueToApp: 'Ga door naar App',
+    receiptSentEmail: 'Ontvangstbewijs verzonden naar je e-mail',
+    
+    // Feature descriptions
+    mockInterviews: 'Mock Interviews',
     inactive: 'Inactief',
     expires: 'Verloopt',
     unlimited: 'Onbeperkt',
@@ -577,7 +587,6 @@ export const translations = {
     interviewSetup: 'Interview Setup',
     importCV: 'Import Your CV (Optional)',
     remove: 'Remove',
-    uploadCVDescription: 'Upload your CV to get personalized interview questions',
     importing: 'Importing...',
     chooseCVFile: 'Choose CV File',
     fileUploadLimit: 'PDF or Word documents only, max 100MB',
@@ -907,7 +916,6 @@ export const translations = {
     interviewSetup: 'إعداد المقابلة',
     importCV: 'استيراد سيرتك الذاتية (اختياري)',
     remove: 'إزالة',
-    uploadCVDescription: 'ارفع سيرتك الذاتية للحصول على أسئلة مقابلة شخصية',
     importing: 'جار الاستيراد...',
     chooseCVFile: 'اختر ملف السيرة الذاتية',
     fileUploadLimit: 'مستندات PDF أو Word فقط، حد أقصى 100 ميجابايت',
@@ -1053,7 +1061,6 @@ export const translations = {
     
     // Pricing plans
     essentialPlan: 'أساسي',
-    professionalPlan: 'مهني',
     elitePlan: 'نخبة',
     getProAccess: 'احصل على وصول مهني',
   },
@@ -1216,7 +1223,6 @@ export const translations = {
     interviewSetup: 'Mülakat Kurulumu',
     importCV: 'CVnizi İçe Aktarın (Opsiyonel)',
     remove: 'Kaldır',
-    uploadCVDescription: 'Kişiselleştirilmiş mülakat soruları için CVnizi yükleyin',
     importing: 'İçe aktarılıyor...',
     chooseCVFile: 'CV Dosyası Seç',
     fileUploadLimit: 'Sadece PDF veya Word belgeleri, max 100MB',
@@ -1362,7 +1368,6 @@ export const translations = {
     
     // Pricing plans
     essentialPlan: 'Temel',
-    professionalPlan: 'Profesyonel',
     elitePlan: 'Elite',
     getProAccess: 'Pro Erişim Al',
   },

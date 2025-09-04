@@ -1,0 +1,95 @@
+[03:42:54.017] Running build in Washington, D.C., USA (East) – iad1
+[03:42:54.017] Build machine configuration: 2 cores, 8 GB
+[03:42:54.037] Cloning github.com/rachid43/CareerCopilot (Branch: main, Commit: 234dc56)
+[03:42:55.877] Cloning completed: 1.840s
+[03:42:55.910] Found .vercelignore
+[03:42:55.916] Removed 4 ignored files defined in .vercelignore
+[03:42:55.916]   /test/data/05-versions-space.pdf
+[03:42:55.916]   /uploads/8ca09208c43056e3839a04604d8c9a2d
+[03:42:55.916]   /uploads/9fd9e53d872668556c5e4130abed9354
+[03:42:55.916]   /uploads/f18e313ebf9d70dac398c537dde9f56a
+[03:42:56.042] Restored build cache from previous deployment (8V5JBvmtDDkckbHwbHvos4ThrmLb)
+[03:42:56.668] Running "vercel build"
+[03:42:57.057] Vercel CLI 47.0.4
+[03:42:57.889] Installing dependencies...
+[03:43:00.795] 
+[03:43:00.796] up to date in 2s
+[03:43:00.797] 
+[03:43:00.797] 87 packages are looking for funding
+[03:43:00.797]   run `npm fund` for details
+[03:43:00.831] Running "npm run build"
+[03:43:00.939] 
+[03:43:00.939] > rest-express@1.0.0 build
+[03:43:00.940] > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+[03:43:00.940] 
+[03:43:01.230] [36mvite v5.4.19 [32mbuilding for production...[36m[39m
+[03:43:01.289] transforming...
+[03:43:01.643] Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+[03:43:01.645]   npx update-browserslist-db@latest
+[03:43:01.645]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[03:43:03.111] [1m[33m[plugin:vite:esbuild][39m[22m [33m[plugin vite:esbuild] client/src/lib/i18n.ts: [33mDuplicate key "uploadCVDescription" in object literal[33m
+[03:43:03.111] 236|      seeHowCareerCopilotHelps: 'Zie hoe CareerCopilot gebruikers helpt bij het maken van professionele CV\'s, mock interviews oefenen, gedetailleerde feedback krijgen, en chatten met onze AI carrière mentor',
+[03:43:03.112] 237|      smartUploadAnalysis: 'Slimme Upload & Analyse',
+[03:43:03.112] 238|      uploadCVDescription: 'Upload je CV en zie hoe AI je profiel direct extraheert en optimaliseert',
+[03:43:03.112]    |      ^
+[03:43:03.112] 239|      aiCareerConversations: 'AI Carrière Gesprekken',
+[03:43:03.112] 240|      personalizedCareerAdvice: 'Krijg gepersonaliseerd carrièreadvies via intelligente chat interacties',
+[03:43:03.112] [39m
+[03:43:03.113] [1m[33m[plugin:vite:esbuild][39m[22m [33m[plugin vite:esbuild] client/src/lib/i18n.ts: [33mDuplicate key "uploadCVDescription" in object literal[33m
+[03:43:03.113] 609|      seeHowCareerCopilotHelps: 'See how CareerCopilot helps users create professional CVs, practice mock interviews, get detailed feedback, and chat with our AI career mentor',
+[03:43:03.114] 610|      smartUploadAnalysis: 'Smart Upload & Analysis',
+[03:43:03.114] 611|      uploadCVDescription: 'Upload your CV and watch AI extract and optimize your profile instantly',
+[03:43:03.114]    |      ^
+[03:43:03.114] 612|      aiCareerConversations: 'AI Career Conversations',
+[03:43:03.114] 613|      personalizedCareerAdvice: 'Get personalized career advice through intelligent chat interactions',
+[03:43:03.114] [39m
+[03:43:03.115] [1m[33m[plugin:vite:esbuild][39m[22m [33m[plugin vite:esbuild] client/src/lib/i18n.ts: [33mDuplicate key "uploadCVDescription" in object literal[33m
+[03:43:03.116] 939|      seeHowCareerCopilotHelps: 'انظر كيف يساعد CareerCopilot المستخدمين في إنشاء سير ذاتية مهنية، وممارسة المقابلات التجريبية، والحصول على تعليقات مفصلة، والدردشة مع مرشد المهنة الذكي',
+[03:43:03.116] 940|      smartUploadAnalysis: 'رفع ذكي وتحليل',
+[03:43:03.116] 941|      uploadCVDescription: 'ارفع سيرتك الذاتية وشاهد الذكاء الاصطناعي يستخرج ويحسن ملفك الشخصي فوراً',
+[03:43:03.116]    |      ^
+[03:43:03.116] 942|      aiCareerConversations: 'محادثات المهنة الذكية',
+[03:43:03.116] 943|      personalizedCareerAdvice: 'احصل على نصائح مهنية شخصية من خلال تفاعلات دردشة ذكية',
+[03:43:03.116] [39m
+[03:43:03.117] [1m[33m[plugin:vite:esbuild][39m[22m [33m[plugin vite:esbuild] client/src/lib/i18n.ts: [33mDuplicate key "professionalPlan" in object literal[33m
+[03:43:03.117] 1054|      // Pricing plans
+[03:43:03.118] 1055|      essentialPlan: 'أساسي',
+[03:43:03.118] 1056|      professionalPlan: 'مهني',
+[03:43:03.118]    |      ^
+[03:43:03.118] 1057|      elitePlan: 'نخبة',
+[03:43:03.118] 1058|      getProAccess: 'احصل على وصول مهني',
+[03:43:03.118] [39m
+[03:43:03.119] [1m[33m[plugin:vite:esbuild][39m[22m [33m[plugin vite:esbuild] client/src/lib/i18n.ts: [33mDuplicate key "uploadCVDescription" in object literal[33m
+[03:43:03.119] 1248|      seeHowCareerCopilotHelps: 'CareerCopilot\'un kullanıcılara profesyonel CV oluşturmada, mock mülakatlar yapmada, detaylı geri bildirim almada ve AI kariyer mentörümüzle sohbet etmede nasıl yardım ettiğini görün',
+[03:43:03.119] 1249|      smartUploadAnalysis: 'Akıllı Yükleme ve Analiz',
+[03:43:03.119] 1250|      uploadCVDescription: 'CV\'nizi yükleyin ve AI\'ın profilinizi anında çıkarıp optimize etmesini izleyin',
+[03:43:03.120]    |      ^
+[03:43:03.120] 1251|      aiCareerConversations: 'AI Kariyer Konuşmaları',
+[03:43:03.120] 1252|      personalizedCareerAdvice: 'Akıllı sohbet etkileşimleri yoluyla kişiselleştirilmiş kariyer tavsiyesi alın',
+[03:43:03.120] [39m
+[03:43:03.121] [1m[33m[plugin:vite:esbuild][39m[22m [33m[plugin vite:esbuild] client/src/lib/i18n.ts: [33mDuplicate key "professionalPlan" in object literal[33m
+[03:43:03.121] 1363|      // Pricing plans
+[03:43:03.122] 1364|      essentialPlan: 'Temel',
+[03:43:03.122] 1365|      professionalPlan: 'Profesyonel',
+[03:43:03.122]    |      ^
+[03:43:03.122] 1366|      elitePlan: 'Elite',
+[03:43:03.122] 1367|      getProAccess: 'Pro Erişim Al',
+[03:43:03.122] [39m
+[03:43:09.631] [32m✓[39m 2390 modules transformed.
+[03:43:10.482] rendering chunks...
+[03:43:10.501] computing gzip size...
+[03:43:10.812] [2m../dist/public/[22m[32mindex.html                                            [39m[1m[2m    3.97 kB[22m[1m[22m[2m │ gzip:   1.36 kB[22m
+[03:43:10.812] [2m../dist/public/[22m[2massets/[22m[32mICON_CareerCopilot_1755719130597-BKgUFXt3.png  [39m[1m[2m1,346.07 kB[22m[1m[22m
+[03:43:10.813] [2m../dist/public/[22m[2massets/[22m[35mindex-DvTz6k2a.css                             [39m[1m[2m   78.01 kB[22m[1m[22m[2m │ gzip:  13.18 kB[22m
+[03:43:10.813] [2m../dist/public/[22m[2massets/[22m[36mindex-ikyM_sYU.js                              [39m[1m[33m1,511.41 kB[39m[22m[2m │ gzip: 465.47 kB[22m
+[03:43:10.813] [33m
+[03:43:10.813] (!) Some chunks are larger than 500 kB after minification. Consider:
+[03:43:10.814] - Using dynamic import() to code-split the application
+[03:43:10.814] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[03:43:10.814] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[03:43:10.814] [32m✓ built in 9.56s[39m
+[03:43:10.893] 
+[03:43:10.893]   dist/index.js  111.2kb
+[03:43:10.893] 
+[03:43:10.894] ⚡ Done in 16ms
+[03:43:11.163] Using TypeScript 5.6.3 (local user-provided)
