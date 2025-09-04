@@ -47,6 +47,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
         // Store session data in localStorage for the frontend
         localStorage.setItem('supabase-session', JSON.stringify(data.session));
         
+        // Force a page reload to trigger authentication state update
+        window.location.reload();
+        
         toast({
           title: "Welcome back!",
           description: "You have been successfully logged in.",
