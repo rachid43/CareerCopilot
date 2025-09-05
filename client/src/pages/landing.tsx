@@ -18,6 +18,17 @@ export function Landing() {
   const [price] = useState('8.97');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [user, setUser] = useState<any>(null);
+  
+  // Production debugging
+  useEffect(() => {
+    console.log('🌍 PRODUCTION DEBUG:', {
+      hostname: window.location.hostname,
+      href: window.location.href,
+      showAuthModal,
+      user,
+      timestamp: new Date().toISOString()
+    });
+  }, [showAuthModal, user]);
 
   useEffect(() => {
     // Check if user is already logged in by looking for stored session
@@ -103,7 +114,21 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+              onClick={(e) => {
+                console.log('🌍 PRODUCTION BUTTON CLICK:', {
+                  hostname: window.location.hostname,
+                  user,
+                  showAuthModal,
+                  event: e.type
+                });
+                if (user) {
+                  setLocation('/');
+                } else {
+                  console.log('🌍 Setting modal to true...');
+                  setShowAuthModal(true);
+                  console.log('🌍 Modal state after setting:', true);
+                }
+              }}
               data-testid="button-get-started"
             >
               {t('getStarted')}
@@ -572,7 +597,7 @@ export function Landing() {
         <div className="text-center mt-16 text-gray-500">
           <p>{t('aiPoweredFooter')}</p>
           <p className="text-xs mt-2">{t('careerPartner')}</p>
-          {/* Deployment trigger: Login modal fix v2.1 - 2025-01-09 */}
+          {/* Deployment trigger: Login modal fix v2.2 with production debugging - 2025-01-09 */}
         </div>
       </div>
       </div>

@@ -20,6 +20,13 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // Production debugging
+  console.log('🌍 AUTHMODAL RENDER:', {
+    hostname: window.location.hostname,
+    isOpen,
+    timestamp: new Date().toISOString()
+  });
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
