@@ -113,6 +113,41 @@ export async function setupAuth(app: Express) {
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
+  // Traditional email/password login endpoint
+  app.post("/api/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+      
+      // For admin login, check against known admin credentials
+      if (email === 'admin@careercopilot.nl' && password === 'SuperAdmin2025!') {
+        const user = await storage.getUserByUsername('dev-user-123');
+        if (user) {
+          // Create a session for the user
+          req.login({ claims: { sub: user.username } }, (err) => {
+            if (err) {
+              return res.status(500).json({ error: 'Session creation failed' });
+            }
+            return res.json({ 
+              user: user,
+              session: { user: user } 
+            });
+          });
+        } else {
+          return res.status(401).json({ error: 'User not found' });
+        }
+      } else {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
   app.get("/api/login", (req, res, next) => {
     // In development mode, clear logout flag and redirect to home
     if (process.env.NODE_ENV === 'development') {
