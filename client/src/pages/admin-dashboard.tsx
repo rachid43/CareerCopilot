@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { Mail, Users, UserCheck, UserX, Calendar, Send, Shield } from 'lucide-react';
+import { Mail, Users, UserCheck, UserX, Calendar, Send, Shield, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocation } from 'wouter';
 
@@ -210,6 +210,18 @@ export function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      {/* Back Button */}
+      <div className="flex items-center justify-start mb-4">
+        <Button
+          variant="outline"
+          onClick={() => setLocation('/')}
+          className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-800"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
