@@ -47,10 +47,27 @@ async function createApp() {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // Proxy API routes to Vercel functions in development
   if (app.get("env") === "development") {
+    // Handle Vercel API functions - proxy to files in api/ directory
+    app.use('/api', async (req, res, next) => {
+      const apiPath = req.path.slice(1); // remove leading slash
+      const functionPath = `./api/${apiPath}.js`;
+      
+      try {
+        const fs = await import('fs');
+        if (fs.existsSync(functionPath)) {
+          const handler = await import(`../api/${apiPath}.js`);
+          return handler.default(req, res);
+        }
+      } catch (error) {
+        console.error(`Error loading API function ${apiPath}:`, error);
+      }
+      
+      // If no API function found, continue to next middleware
+      next();
+    });
+    
     await setupVite(app, server);
   } else {
     // Custom static serving for Vercel serverless
