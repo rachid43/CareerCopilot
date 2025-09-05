@@ -103,16 +103,27 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => {
-                console.log('Get Started clicked! User:', user, 'Current modal state:', showAuthModal);
-                if (user) {
-                  setLocation('/');
-                } else {
-                  console.log('Opening auth modal...');
-                  setShowAuthModal(true);
-                  console.log('Modal state after setting:', true);
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🔥 BUTTON CLICKED! Event:', e);
+                console.log('🔥 User state:', user);
+                console.log('🔥 Current showAuthModal:', showAuthModal);
+                
+                try {
+                  if (user) {
+                    console.log('🔥 User exists, redirecting to home');
+                    setLocation('/');
+                  } else {
+                    console.log('🔥 No user, opening auth modal...');
+                    setShowAuthModal(true);
+                    console.log('🔥 setShowAuthModal(true) called');
+                  }
+                } catch (error) {
+                  console.error('🔥 Error in button handler:', error);
                 }
               }}
+              data-testid="button-get-started"
             >
               {t('getStarted')}
             </Button>
@@ -585,10 +596,15 @@ export function Landing() {
       </div>
 
       {/* Auth Modal */}
+      {console.log('🔥 Rendering AuthModal with showAuthModal:', showAuthModal)}
       <AuthModal
         isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
+        onClose={() => {
+          console.log('🔥 AuthModal onClose called');
+          setShowAuthModal(false);
+        }}
         onSuccess={() => {
+          console.log('🔥 AuthModal onSuccess called');
           setShowAuthModal(false);
           setLocation('/');
         }}
