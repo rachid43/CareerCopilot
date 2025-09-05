@@ -103,7 +103,16 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+              onClick={() => {
+                console.log('Get Started clicked! User:', user, 'Current modal state:', showAuthModal);
+                if (user) {
+                  setLocation('/');
+                } else {
+                  console.log('Opening auth modal...');
+                  setShowAuthModal(true);
+                  console.log('Modal state after setting:', true);
+                }
+              }}
             >
               {t('getStarted')}
             </Button>

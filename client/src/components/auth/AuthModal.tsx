@@ -20,6 +20,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  console.log('AuthModal render - isOpen:', isOpen);
+  
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -89,8 +91,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <Card className="w-full max-w-md mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+      <Card className="w-full max-w-md mx-4 relative z-[10000]">
         <CardHeader className="text-center">
           <CardTitle>{isLogin ? 'Welcome Back' : 'Create Account'}</CardTitle>
           <CardDescription>
