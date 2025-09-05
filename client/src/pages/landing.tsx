@@ -103,26 +103,7 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('🔥 BUTTON CLICKED! Event:', e);
-                console.log('🔥 User state:', user);
-                console.log('🔥 Current showAuthModal:', showAuthModal);
-                
-                try {
-                  if (user) {
-                    console.log('🔥 User exists, redirecting to home');
-                    setLocation('/');
-                  } else {
-                    console.log('🔥 No user, opening auth modal...');
-                    setShowAuthModal(true);
-                    console.log('🔥 setShowAuthModal(true) called');
-                  }
-                } catch (error) {
-                  console.error('🔥 Error in button handler:', error);
-                }
-              }}
+              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
               data-testid="button-get-started"
             >
               {t('getStarted')}
@@ -596,15 +577,10 @@ export function Landing() {
       </div>
 
       {/* Auth Modal */}
-      {console.log('🔥 Rendering AuthModal with showAuthModal:', showAuthModal)}
       <AuthModal
         isOpen={showAuthModal}
-        onClose={() => {
-          console.log('🔥 AuthModal onClose called');
-          setShowAuthModal(false);
-        }}
+        onClose={() => setShowAuthModal(false)}
         onSuccess={() => {
-          console.log('🔥 AuthModal onSuccess called');
           setShowAuthModal(false);
           setLocation('/');
         }}
