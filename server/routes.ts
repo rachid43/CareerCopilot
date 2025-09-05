@@ -177,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         subscriptionStatus: 'active',
         subscriptionExpiresAt: expiryDate
       });
-      console.log('✅ Created dev-user-123 as superadmin with 12-month subscription');
+      console.log('✅ Created dev-user-123 as superadmin with extended subscription');
     } else {
       await storage.makeUserSuperadmin('dev-user-123');
       console.log('✅ Made existing dev-user-123 a superadmin');
@@ -973,13 +973,18 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 30); // 30 days from now
       
+      // Set 3-month Elite subscription for invitation
+      const subscriptionExpiry = new Date();
+      subscriptionExpiry.setMonth(subscriptionExpiry.getMonth() + 3); // 3 months Elite subscription
+      
       // Create invitation
       const invitation = await storage.createInvitation({
         email,
         token,
         expiresAt,
         isUsed: false,
-        invitedBy: currentUser.id
+        invitedBy: currentUser.id,
+        subscriptionExpiresAt: subscriptionExpiry
       });
       
       // Send email asynchronously to avoid blocking the response
@@ -1128,6 +1133,10 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
       const accountExpiry = new Date();
       accountExpiry.setDate(accountExpiry.getDate() + 30); // 30 days active
       
+      // Set 3-month Elite subscription
+      const subscriptionExpiry = new Date();
+      subscriptionExpiry.setMonth(subscriptionExpiry.getMonth() + 3); // 3 months Elite subscription
+      
       const newUser = await storage.createUser({
         username: invitation.email,
         email: invitation.email,
@@ -1137,12 +1146,8 @@ JSON: {"score":80, "strengths":[".."], "improvements":[".."], "summary":".."}` }
         isActive: true,
         accountExpiresAt: accountExpiry,
         subscriptionStatus: 'active',
-        subscriptionExpiresAt: invitation.subscriptionExpiresAt || (() => {
-          // Fallback: set 12-month subscription if not set in invitation
-          const fallbackExpiry = new Date();
-          fallbackExpiry.setFullYear(fallbackExpiry.getFullYear() + 1);
-          return fallbackExpiry;
-        })()
+        subscriptionTier: 'elite', // Set Elite tier by default
+        subscriptionExpiresAt: subscriptionExpiry
       });
       
       // Mark invitation as used
@@ -1933,9 +1938,9 @@ USER MESSAGE: ${content}`;
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 30); // 30 days expiry
       
-      // Set default 12-month subscription
+      // Set default 3-month Elite subscription for new registrations
       const subscriptionExpiresAt = new Date();
-      subscriptionExpiresAt.setFullYear(subscriptionExpiresAt.getFullYear() + 1); // 12 months
+      subscriptionExpiresAt.setMonth(subscriptionExpiresAt.getMonth() + 3); // 3 months Elite
       
       const invitation = await storage.createInvitation({
         email,

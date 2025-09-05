@@ -437,7 +437,7 @@ class MemoryStorage implements IStorage {
 
   async createUser(user: InsertUser): Promise<User> {
     const defaultExpiry = new Date();
-    defaultExpiry.setFullYear(defaultExpiry.getFullYear() + 1); // 12 months default
+    defaultExpiry.setMonth(defaultExpiry.getMonth() + 3); // 3 months Elite default
     
     const newUser = { 
       ...user, 
@@ -445,6 +445,7 @@ class MemoryStorage implements IStorage {
       role: user.role || 'user', 
       isActive: user.isActive ?? true,
       subscriptionStatus: user.subscriptionStatus || 'active',
+      subscriptionTier: user.subscriptionTier || 'elite', // Default to Elite tier
       subscriptionExpiresAt: user.subscriptionExpiresAt || defaultExpiry,
       createdAt: new Date(),
       updatedAt: new Date()

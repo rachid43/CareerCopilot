@@ -128,7 +128,7 @@ export function AdminDashboard() {
       refetchInvitations();
       toast({
         title: "Invitation Sent",
-        description: "User invitation has been sent successfully with 12-month subscription.",
+        description: "User invitation has been sent successfully with 3-months Elite subscription.",
       });
     },
     onError: (error: any) => {
@@ -144,7 +144,7 @@ export function AdminDashboard() {
     let subscriptionExpiresAt = undefined;
     
     if (subscriptionStatus === 'active') {
-      // Set 12 months from now for active subscriptions
+      // Set 12 months from now for active subscriptions (admin can extend manually)
       const expiryDate = new Date();
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
       subscriptionExpiresAt = expiryDate.toISOString();
@@ -260,7 +260,7 @@ export function AdminDashboard() {
             <CardHeader>
               <CardTitle>User Management</CardTitle>
               <CardDescription>
-                Manage user accounts, subscriptions (default 12 months), and access status
+                Manage user accounts, subscriptions, and access status
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -383,7 +383,7 @@ export function AdminDashboard() {
             <CardHeader>
               <CardTitle>Active Invitations</CardTitle>
               <CardDescription>
-                View pending user invitations with 12-month subscription included
+                View pending user invitations with 3-months Elite subscription included
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -424,7 +424,7 @@ export function AdminDashboard() {
             <CardHeader>
               <CardTitle>Send User Invitation</CardTitle>
               <CardDescription>
-                Send an invitation to a new user with automatic 12-month subscription
+                Send an invitation to a new user with automatic 3-months Elite subscription
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -454,13 +454,13 @@ export function AdminDashboard() {
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Send Invitation (12-month subscription)
+                      Send Invitation (3-months Elite)
                     </>
                   )}
                 </Button>
                 <p className="text-sm text-gray-600">
                   The user will receive an email with a link to join Career<span className="text-orange-500 font-semibold">Copilot</span> 
-                  and will automatically get a 12-month subscription.
+                  and will automatically get a 3-months Elite subscription.
                 </p>
               </div>
             </CardContent>

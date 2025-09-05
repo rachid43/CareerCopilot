@@ -38,7 +38,7 @@ Deployment preference: Supabase for database and Vercel for hosting (✅ Databas
 - **User Management**:
     - Session-based user identification (migrated from `sessionId` to `userId`).
     - Superadmin role for user management (activate/deactivate, extend validity, subscription management).
-    - Email-based user invitations (12-month default subscription).
+    - Email-based user invitations (3-month Elite default subscription).
     - Role-based access control.
 - **Document Handling**: Upload, parse (PDF/DOCX), and store document content.
 - **Job Applications Tracker**: CSV/Excel import/export with intelligent column mapping.
