@@ -13,8 +13,8 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@careercopilot.nl');
+  const [password, setPassword] = useState('SuperAdmin2025!');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -153,6 +153,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 type="submit"
                 className="flex-1 bg-primary hover:bg-orange-600"
                 disabled={isLoading}
+                data-testid="button-login-submit"
               >
                 {isLoading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
               </Button>
@@ -161,6 +162,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 variant="outline"
                 onClick={onClose}
                 disabled={isLoading}
+                data-testid="button-login-cancel"
               >
                 Cancel
               </Button>
