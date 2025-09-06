@@ -574,7 +574,7 @@ export function Landing() {
         <div className="text-center mt-16 text-gray-500">
           <p>{t('aiPoweredFooter')}</p>
           <p className="text-xs mt-2">{t('careerPartner')}</p>
-          {/* Login functionality working correctly - 2025-01-09 */}
+          {/* Fixed authentication consistency - 2025-01-09 */}
         </div>
       </div>
       </div>
