@@ -109,9 +109,10 @@ export function Landing() {
               onClick={() => {
                 // Clear any stored session to force fresh login
                 localStorage.removeItem('supabase-session');
+                localStorage.removeItem('sb-session'); // Clear any other Supabase session keys
                 setUser(null); // Clear user state
-                // Invalidate auth cache
-                queryClient.invalidateQueries({ queryKey: ['/api/auth'] });
+                // Invalidate auth cache completely
+                queryClient.clear(); // Clear all cached data
                 setShowAuthModal(true);
               }}
               data-testid="button-get-started"
