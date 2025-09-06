@@ -28,6 +28,13 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
     try {
       if (isLogin) {
+        // Domain-specific auth debugging
+        console.log('🔐 AUTH DEBUG:', {
+          domain: window.location.hostname,
+          origin: window.location.origin,
+          timestamp: new Date().toISOString()
+        });
+
         // Use fetch to call our API endpoint instead of Supabase directly
         const response = await fetch('/api/login', {
           method: 'POST',
@@ -35,6 +42,13 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email, password }),
+        });
+
+        console.log('🔐 LOGIN RESPONSE:', {
+          domain: window.location.hostname,
+          status: response.status,
+          ok: response.ok,
+          statusText: response.statusText
         });
 
         if (!response.ok) {

@@ -9,6 +9,14 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
+      // Domain debugging
+      console.log('🔐 API LOGIN REQUEST:', {
+        origin: req.headers.origin,
+        host: req.headers.host,
+        referer: req.headers.referer,
+        userAgent: req.headers['user-agent']?.substring(0, 50)
+      });
+
       const { email, password } = req.body;
       
       if (!email || !password) {
