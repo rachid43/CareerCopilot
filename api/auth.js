@@ -18,10 +18,16 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
+      // Debug headers
+      console.log('🔑 Server Debug - All headers:', Object.keys(req.headers));
+      console.log('🔑 Server Debug - Authorization header exists:', !!req.headers.authorization);
+      console.log('🔑 Server Debug - Authorization value:', req.headers.authorization);
+      
       // Get the authorization header
       const authHeader = req.headers.authorization;
       
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        console.log('🔑 Server Debug - Header check failed:', { authHeader, startsWith: authHeader?.startsWith('Bearer ') });
         return res.status(401).json({ message: 'No token provided' });
       }
       
