@@ -33,16 +33,25 @@ export const getQueryFn: <T>(options: {
     const storedSession = localStorage.getItem('supabase-session');
     const headers: Record<string, string> = {};
     
+    console.log('🔑 Debug - Stored session:', storedSession ? 'EXISTS' : 'NULL');
+    
     if (storedSession) {
       try {
         const session = JSON.parse(storedSession);
+        console.log('🔑 Debug - Parsed session keys:', Object.keys(session || {}));
+        
         if (session?.access_token) {
           headers.Authorization = `Bearer ${session.access_token}`;
+          console.log('🔑 Debug - Added Bearer token, length:', session.access_token.length);
+        } else {
+          console.log('🔑 Debug - No access_token in session');
         }
       } catch (error) {
         console.error('Error parsing stored session for auth header:', error);
       }
     }
+    
+    console.log('🔑 Debug - Final headers:', headers);
     
     const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",

@@ -105,7 +105,24 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+              onClick={() => {
+                console.log('🔍 Landing - Click debug:');
+                console.log('🔍 localStorage keys:', Object.keys(localStorage));
+                const session = localStorage.getItem('supabase-session');
+                console.log('🔍 supabase-session exists:', !!session);
+                if (session) {
+                  try {
+                    const parsed = JSON.parse(session);
+                    console.log('🔍 session keys:', Object.keys(parsed || {}));
+                    console.log('🔍 has access_token:', !!parsed?.access_token);
+                  } catch (e) {
+                    console.log('🔍 session parse error:', e);
+                  }
+                }
+                console.log('🔍 user from useAuth:', user);
+                
+                user ? setLocation('/') : setShowAuthModal(true);
+              }}
               data-testid="button-get-started"
             >
               {t('getStarted')}
