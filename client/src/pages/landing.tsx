@@ -8,6 +8,7 @@ import { useLanguage } from "@/lib/i18n";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLocation } from "wouter";
+import { queryClient } from "@/lib/queryClient";
 
 export function Landing() {
   const { t } = useLanguage();
@@ -105,7 +106,14 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+              onClick={() => {
+                // Clear any stored session to force fresh login
+                localStorage.removeItem('supabase-session');
+                setUser(null); // Clear user state
+                // Invalidate auth cache
+                queryClient.invalidateQueries({ queryKey: ['/api/auth'] });
+                setShowAuthModal(true);
+              }}
               data-testid="button-get-started"
             >
               {t('getStarted')}
@@ -395,7 +403,14 @@ export function Landing() {
                   size="lg" 
                   variant="outline"
                   className="w-full border-gray-300 hover:bg-gray-50 hover:text-gray-900 py-3"
-                  onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+                  onClick={() => {
+                    // Clear any stored session to force fresh login
+                    localStorage.removeItem('supabase-session');
+                    setUser(null); // Clear user state
+                    // Invalidate auth cache
+                    queryClient.invalidateQueries({ queryKey: ['/api/auth'] });
+                    setShowAuthModal(true);
+                  }}
                 >
                   {t('getStartedBtn')}
                 </Button>
@@ -447,7 +462,14 @@ export function Landing() {
                 <Button 
                   size="lg" 
                   className="w-full bg-primary hover:bg-orange-600 text-white py-3"
-                  onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+                  onClick={() => {
+                    // Clear any stored session to force fresh login
+                    localStorage.removeItem('supabase-session');
+                    setUser(null); // Clear user state
+                    // Invalidate auth cache
+                    queryClient.invalidateQueries({ queryKey: ['/api/auth'] });
+                    setShowAuthModal(true);
+                  }}
                 >
                   {t('getProAccess')}
                 </Button>
@@ -498,7 +520,14 @@ export function Landing() {
                   size="lg" 
                   variant="outline"
                   className="w-full border-purple-300 hover:bg-purple-50 hover:text-purple-700 text-purple-600 py-3"
-                  onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+                  onClick={() => {
+                    // Clear any stored session to force fresh login
+                    localStorage.removeItem('supabase-session');
+                    setUser(null); // Clear user state
+                    // Invalidate auth cache
+                    queryClient.invalidateQueries({ queryKey: ['/api/auth'] });
+                    setShowAuthModal(true);
+                  }}
                 >
                   {t('getEliteAccess')}
                 </Button>
