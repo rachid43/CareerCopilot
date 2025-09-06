@@ -18,7 +18,7 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      // Get the authorization header (check both cases for Vercel compatibility)
+      // Get the authorization header (handle case-sensitivity for Vercel)
       const authHeader = req.headers.authorization || req.headers['Authorization'];
       
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
