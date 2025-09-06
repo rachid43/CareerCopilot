@@ -19,6 +19,11 @@ export function Landing() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [user, setUser] = useState<any>(null);
   
+  // Production modal debugging
+  useEffect(() => {
+    console.log('🚀 MODAL STATE ON', window.location.hostname + ':', showAuthModal);
+  }, [showAuthModal]);
+  
 
   useEffect(() => {
     // Check if user is already logged in by looking for stored session
@@ -104,7 +109,20 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
+              onClick={() => {
+                console.log('🚀 BUTTON CLICKED ON', window.location.hostname);
+                console.log('🚀 Current user:', user);
+                console.log('🚀 Current modal state:', showAuthModal);
+                
+                if (user) {
+                  console.log('🚀 User exists, redirecting...');
+                  setLocation('/');
+                } else {
+                  console.log('🚀 No user, opening modal...');
+                  setShowAuthModal(true);
+                  console.log('🚀 Modal should now be:', true);
+                }
+              }}
               data-testid="button-get-started"
             >
               {t('getStarted')}
