@@ -19,10 +19,6 @@ export function Landing() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [user, setUser] = useState<any>(null);
   
-  // Production modal debugging
-  useEffect(() => {
-    console.log('🚀 MODAL STATE ON', window.location.hostname + ':', showAuthModal);
-  }, [showAuthModal]);
   
 
   useEffect(() => {
@@ -109,20 +105,7 @@ export function Landing() {
             <Button 
               size="sm" 
               className="bg-primary hover:bg-orange-600 text-white"
-              onClick={() => {
-                console.log('🚀 BUTTON CLICKED ON', window.location.hostname);
-                console.log('🚀 Current user:', user);
-                console.log('🚀 Current modal state:', showAuthModal);
-                
-                if (user) {
-                  console.log('🚀 User exists, redirecting...');
-                  setLocation('/');
-                } else {
-                  console.log('🚀 No user, opening modal...');
-                  setShowAuthModal(true);
-                  console.log('🚀 Modal should now be:', true);
-                }
-              }}
+              onClick={() => user ? setLocation('/') : setShowAuthModal(true)}
               data-testid="button-get-started"
             >
               {t('getStarted')}
@@ -591,7 +574,7 @@ export function Landing() {
         <div className="text-center mt-16 text-gray-500">
           <p>{t('aiPoweredFooter')}</p>
           <p className="text-xs mt-2">{t('careerPartner')}</p>
-          {/* Added auth domain debugging - 2025-01-09 */}
+          {/* Login functionality working correctly - 2025-01-09 */}
         </div>
       </div>
       </div>

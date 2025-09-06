@@ -20,14 +20,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  console.log('🚀 AUTHMODAL RENDERING ON', window.location.hostname, 'isOpen:', isOpen);
-
-  if (!isOpen) {
-    console.log('🚀 AUTHMODAL RETURNING NULL - isOpen is false');
-    return null;
-  }
-
-  console.log('🚀 AUTHMODAL SHOULD BE VISIBLE!');
+  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,13 +28,6 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
     try {
       if (isLogin) {
-        // Domain-specific auth debugging
-        console.log('🔐 AUTH DEBUG:', {
-          domain: window.location.hostname,
-          origin: window.location.origin,
-          timestamp: new Date().toISOString()
-        });
-
         // Use fetch to call our API endpoint instead of Supabase directly
         const response = await fetch('/api/login', {
           method: 'POST',
@@ -49,13 +35,6 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email, password }),
-        });
-
-        console.log('🔐 LOGIN RESPONSE:', {
-          domain: window.location.hostname,
-          status: response.status,
-          ok: response.ok,
-          statusText: response.statusText
         });
 
         if (!response.ok) {
