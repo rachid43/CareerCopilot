@@ -31,8 +31,36 @@ async function getUserFromToken(authHeader) {
 export default async function handler(req, res) {
   try {
     const authHeader = req.headers.authorization || req.headers['Authorization'];
-    const user = await getUserFromToken(authHeader);
-    const userId = user.id;
+    const supabaseUser = await getUserFromToken(authHeader);
+    
+    // Look up local integer user ID using Supabase UUID as username
+    const { data: localUser, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('username', supabaseUser.id)
+      .single();
+    
+    if (userError || !localUser) {
+      // Create local user if doesn't exist
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert({
+          username: supabaseUser.id,
+          email: supabaseUser.email,
+          first_name: supabaseUser.user_metadata?.first_name || '',
+          last_name: supabaseUser.user_metadata?.last_name || '',
+          supabase_user_id: supabaseUser.id
+        })
+        .select('id')
+        .single();
+      
+      if (createError || !newUser) {
+        return res.status(404).json({ message: 'User not found and could not be created' });
+      }
+      const userId = newUser.id;
+    } else {
+      const userId = localUser.id;
+    }
 
     if (req.method === 'GET') {
       // Get all job applications for the user

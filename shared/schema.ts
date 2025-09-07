@@ -26,6 +26,7 @@ export const sessions = pgTable(
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
+  supabaseUserId: text("supabase_user_id").unique(), // Store Supabase UUID for mapping
   username: text("username").notNull().unique(),
   email: text("email"),
   firstName: text("firstName"),
