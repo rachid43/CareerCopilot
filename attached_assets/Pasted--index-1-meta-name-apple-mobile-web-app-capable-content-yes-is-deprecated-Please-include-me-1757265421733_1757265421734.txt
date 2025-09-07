@@ -1,0 +1,126 @@
+(index):1 <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes">Understand this warning
+index-D0ztv-SQ.js:48  GET https://www.careercopilot.nl/api/profile 404 (Not Found)
+(anonymous) @ index-D0ztv-SQ.js:48
+a @ index-D0ztv-SQ.js:48
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+(anonymous) @ index-D0ztv-SQ.js:40
+setTimeout
+i @ index-D0ztv-SQ.js:48
+s @ index-D0ztv-SQ.js:48
+batch @ index-D0ztv-SQ.js:48
+Ta @ index-D0ztv-SQ.js:48
+setData @ index-D0ztv-SQ.js:48
+onSuccess @ index-D0ztv-SQ.js:48
+d @ index-D0ztv-SQ.js:48
+Promise.then
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+VR @ index-D0ztv-SQ.js:40
+S @ index-D0ztv-SQ.js:25
+C @ index-D0ztv-SQ.js:25Understand this error
+index-D0ztv-SQ.js:48  GET https://www.careercopilot.nl/api/documents 404 (Not Found)
+(anonymous) @ index-D0ztv-SQ.js:48
+a @ index-D0ztv-SQ.js:48
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+(anonymous) @ index-D0ztv-SQ.js:40
+setTimeout
+i @ index-D0ztv-SQ.js:48
+s @ index-D0ztv-SQ.js:48
+batch @ index-D0ztv-SQ.js:48
+Ta @ index-D0ztv-SQ.js:48
+setData @ index-D0ztv-SQ.js:48
+onSuccess @ index-D0ztv-SQ.js:48
+d @ index-D0ztv-SQ.js:48
+Promise.then
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+VR @ index-D0ztv-SQ.js:40
+S @ index-D0ztv-SQ.js:25
+C @ index-D0ztv-SQ.js:25Understand this error
+index-D0ztv-SQ.js:48  GET https://www.careercopilot.nl/api/job-applications/dashboard 404 (Not Found)
+(anonymous) @ index-D0ztv-SQ.js:48
+a @ index-D0ztv-SQ.js:48
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+(anonymous) @ index-D0ztv-SQ.js:40Understand this error
+index-D0ztv-SQ.js:48  GET https://www.careercopilot.nl/api/job-applications 404 (Not Found)
+(anonymous) @ index-D0ztv-SQ.js:48
+a @ index-D0ztv-SQ.js:48
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+(anonymous) @ index-D0ztv-SQ.js:40Understand this error
+index-D0ztv-SQ.js:48  POST https://www.careercopilot.nl/api/job-applications 404 (Not Found)
