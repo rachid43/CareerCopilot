@@ -12,9 +12,24 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  // Get the stored session and add authorization header if available
+  const storedSession = localStorage.getItem('supabase-session');
+  const headers: Record<string, string> = data ? { "Content-Type": "application/json" } : {};
+  
+  if (storedSession) {
+    try {
+      const session = JSON.parse(storedSession);
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
+      }
+    } catch (error) {
+      console.error('Error parsing stored session for auth header:', error);
+    }
+  }
+
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
