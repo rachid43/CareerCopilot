@@ -24,14 +24,35 @@ export function FileUpload() {
       formData.append('document', file);
       formData.append('type', type);
 
+      // Get authentication headers
+      const storedSession = localStorage.getItem('supabase-session');
+      const headers: Record<string, string> = {};
+      
+      if (storedSession) {
+        try {
+          const session = JSON.parse(storedSession);
+          if (session?.access_token) {
+            headers.Authorization = `Bearer ${session.access_token}`;
+          }
+        } catch (error) {
+          console.error('Error parsing stored session for auth header:', error);
+        }
+      }
+
       const response = await fetch('/api/documents/upload', {
         method: 'POST',
+        headers,
         body: formData,
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
+        const errorText = await response.text();
+        try {
+          const error = JSON.parse(errorText);
+          throw new Error(error.message || 'Upload failed');
+        } catch {
+          throw new Error(errorText || 'Upload failed');
+        }
       }
 
       return response.json();
@@ -64,13 +85,34 @@ export function FileUpload() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
+      // Get authentication headers
+      const storedSession = localStorage.getItem('supabase-session');
+      const headers: Record<string, string> = {};
+      
+      if (storedSession) {
+        try {
+          const session = JSON.parse(storedSession);
+          if (session?.access_token) {
+            headers.Authorization = `Bearer ${session.access_token}`;
+          }
+        } catch (error) {
+          console.error('Error parsing stored session for auth header:', error);
+        }
+      }
+
       const response = await fetch(`/api/documents/${id}`, {
         method: 'DELETE',
+        headers,
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
+        const errorText = await response.text();
+        try {
+          const error = JSON.parse(errorText);
+          throw new Error(error.message || 'Delete failed');
+        } catch {
+          throw new Error(errorText || 'Delete failed');
+        }
       }
 
       return response.json();
