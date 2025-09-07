@@ -1,0 +1,50 @@
+
+﻿
+(index):1 <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes">
+
+index-D0ztv-SQ.js:48 
+ GET https://www.careercopilot.nl/api/profile 404 (Not Found)
+index-D0ztv-SQ.js:48 
+ GET https://www.careercopilot.nl/api/documents 500 (Internal Server Error)
+index-D0ztv-SQ.js:48 
+ GET https://www.careercopilot.nl/api/job-applications 500 (Internal Server Error)
+index-D0ztv-SQ.js:48 
+ GET https://www.careercopilot.nl/api/job-applications/dashboard 500 (Internal Server Error)
+index-D0ztv-SQ.js:48 
+ POST https://www.careercopilot.nl/api/job-applications 500 (Internal Server Error)
+index-D0ztv-SQ.js:547 🔍 Import Debug - File read successfully
+index-D0ztv-SQ.js:548 Headers found: 
+(13) ['jobapplicationnbr', 'applied roles', 'company', 'applydate', 'where applied', 'credentialsused', 'comments-information', 'response', 'responsedate', 'locationcity', 'locationcountry', 'responsetime (in days)', 'interviewcomments']
+index-D0ztv-SQ.js:548 First 3 data rows: 
+(3) [Array(12), Array(12), Array(12)]
+index-D0ztv-SQ.js:548 Header index mapping:
+index-D0ztv-SQ.js:548 Index 0: "jobapplicationnbr"
+index-D0ztv-SQ.js:548 Index 1: "applied roles"
+index-D0ztv-SQ.js:548 Index 2: "company"
+index-D0ztv-SQ.js:548 Index 3: "applydate"
+index-D0ztv-SQ.js:548 Index 4: "where applied"
+index-D0ztv-SQ.js:548 Index 5: "credentialsused"
+index-D0ztv-SQ.js:548 Index 6: "comments-information"
+index-D0ztv-SQ.js:548 Index 7: "response"
+index-D0ztv-SQ.js:548 Index 8: "responsedate"
+index-D0ztv-SQ.js:548 Index 9: "locationcity"
+index-D0ztv-SQ.js:548 Index 10: "locationcountry"
+index-D0ztv-SQ.js:548 Index 11: "responsetime (in days)"
+index-D0ztv-SQ.js:548 Index 12: "interviewcomments"
+index-D0ztv-SQ.js:548 Field mapping for first row:
+index-D0ztv-SQ.js:548 credentialsUsed from header search: null
+index-D0ztv-SQ.js:548 credentialsUsed from row[5]: undefined
+index-D0ztv-SQ.js:548 commentsInformation from header search: cv+cover letter
+index-D0ztv-SQ.js:548 commentsInformation from row[6]: cv+cover letter
+index-D0ztv-SQ.js:548 whereApplied from header search: site nike
+index-D0ztv-SQ.js:548 whereApplied from row[4]: site nike
+index-D0ztv-SQ.js:548 Parsed 182 applications from file
+index-D0ztv-SQ.js:48 
+ POST https://www.careercopilot.nl/api/job-applications 500 (Internal Server Error)
+index-D0ztv-SQ.js:548 Failed to import application: 
+{appliedRoles: 'senior lean coach', company: 'NIKE', applyDate: '2016-04-06', whereApplied: 'site nike', credentialsUsed: '', …}
+ Error: 500: {"message":"Failed to create application"}
+    at E3 (index-D0ztv-SQ.js:48:43038)
+    at async fn (index-D0ztv-SQ.js:48:43467)
+index-D0ztv-SQ.js:48 
+ POST https://www.careercopilot.nl/api/job-applications 500 (Internal Server Error)
