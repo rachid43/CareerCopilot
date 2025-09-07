@@ -1,0 +1,89 @@
+index-BIatjjyW.js:48  GET https://www.careercopilot.nl/api/documents 404 (Not Found)
+(anonymous) @ index-BIatjjyW.js:48
+s @ index-BIatjjyW.js:48
+x @ index-BIatjjyW.js:48
+start @ index-BIatjjyW.js:48
+fetch @ index-BIatjjyW.js:48
+Ju @ index-BIatjjyW.js:48
+onSubscribe @ index-BIatjjyW.js:48
+subscribe @ index-BIatjjyW.js:48
+(anonymous) @ index-BIatjjyW.js:48
+uR @ index-BIatjjyW.js:38
+Qp @ index-BIatjjyW.js:40
+dc @ index-BIatjjyW.js:40
+GL @ index-BIatjjyW.js:40
+yo @ index-BIatjjyW.js:40
+YS @ index-BIatjjyW.js:40
+to @ index-BIatjjyW.js:38
+(anonymous) @ index-BIatjjyW.js:40
+setTimeout
+i @ index-BIatjjyW.js:48
+a @ index-BIatjjyW.js:48
+batch @ index-BIatjjyW.js:48
+Ts @ index-BIatjjyW.js:48
+setData @ index-BIatjjyW.js:48
+onSuccess @ index-BIatjjyW.js:48
+d @ index-BIatjjyW.js:48
+Promise.then
+x @ index-BIatjjyW.js:48
+start @ index-BIatjjyW.js:48
+fetch @ index-BIatjjyW.js:48
+Ju @ index-BIatjjyW.js:48
+onSubscribe @ index-BIatjjyW.js:48
+subscribe @ index-BIatjjyW.js:48
+(anonymous) @ index-BIatjjyW.js:48
+uR @ index-BIatjjyW.js:38
+Qp @ index-BIatjjyW.js:40
+dc @ index-BIatjjyW.js:40
+YS @ index-BIatjjyW.js:40
+to @ index-BIatjjyW.js:38
+GL @ index-BIatjjyW.js:40
+yo @ index-BIatjjyW.js:40
+VR @ index-BIatjjyW.js:40
+S @ index-BIatjjyW.js:25
+N @ index-BIatjjyW.js:25Understand this error
+index-BIatjjyW.js:48  GET https://www.careercopilot.nl/api/profile 404 (Not Found)
+(anonymous) @ index-BIatjjyW.js:48
+s @ index-BIatjjyW.js:48
+x @ index-BIatjjyW.js:48
+start @ index-BIatjjyW.js:48
+fetch @ index-BIatjjyW.js:48
+Ju @ index-BIatjjyW.js:48
+onSubscribe @ index-BIatjjyW.js:48
+subscribe @ index-BIatjjyW.js:48
+(anonymous) @ index-BIatjjyW.js:48
+uR @ index-BIatjjyW.js:38
+Qp @ index-BIatjjyW.js:40
+dc @ index-BIatjjyW.js:40
+GL @ index-BIatjjyW.js:40
+yo @ index-BIatjjyW.js:40
+YS @ index-BIatjjyW.js:40
+to @ index-BIatjjyW.js:38
+(anonymous) @ index-BIatjjyW.js:40
+setTimeout
+i @ index-BIatjjyW.js:48
+a @ index-BIatjjyW.js:48
+batch @ index-BIatjjyW.js:48
+Ts @ index-BIatjjyW.js:48
+setData @ index-BIatjjyW.js:48
+onSuccess @ index-BIatjjyW.js:48
+d @ index-BIatjjyW.js:48
+Promise.then
+x @ index-BIatjjyW.js:48
+start @ index-BIatjjyW.js:48
+fetch @ index-BIatjjyW.js:48
+Ju @ index-BIatjjyW.js:48
+onSubscribe @ index-BIatjjyW.js:48
+subscribe @ index-BIatjjyW.js:48
+(anonymous) @ index-BIatjjyW.js:48
+uR @ index-BIatjjyW.js:38
+Qp @ index-BIatjjyW.js:40
+dc @ index-BIatjjyW.js:40
+YS @ index-BIatjjyW.js:40
+to @ index-BIatjjyW.js:38
+GL @ index-BIatjjyW.js:40
+yo @ index-BIatjjyW.js:40
+VR @ index-BIatjjyW.js:40
+S @ index-BIatjjyW.js:25
+N @ index-BIatjjyW.js:25Understand this error
+index-BIatjjyW.js:348  POST https://www.careercopilot.nl/api/documents/upload 500 (Internal Server Error)
