@@ -264,9 +264,16 @@ export function JobApplications() {
   const handleFileImport = (file: File) => {
     if (!file) return;
 
+    console.log("🔍 Import Debug - File selected:", {
+      name: file.name,
+      type: file.type,
+      size: file.size
+    });
+
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
+        console.log("🔍 Import Debug - File read successfully");
         const data = e.target?.result;
         let jsonData: any[][] = [];
 
@@ -493,16 +500,16 @@ export function JobApplications() {
           return;
         }
 
-        console.log(`Parsed ${importedApplications.length} applications from file:`, importedApplications.slice(0, 3));
+        console.log(`🔍 Import Debug - Parsed ${importedApplications.length} applications from file:`, importedApplications.slice(0, 3));
 
         // Batch create applications
         importApplications(importedApplications);
         
       } catch (error) {
-        console.error('Import error:', error);
+        console.error('🔍 Import Debug - Parse error:', error);
         toast({
-          title: "Import Error",
-          description: "Failed to parse the file. Please check the format and try again.",
+          title: "Import Error", 
+          description: `Failed to parse the file. Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           variant: "destructive",
         });
       }
@@ -530,6 +537,8 @@ export function JobApplications() {
 
   // Batch import applications
   const importApplications = async (importData: InsertJobApplication[]) => {
+    console.log(`🔍 Import Debug - Starting batch import of ${importData.length} applications`);
+    
     try {
       let successCount = 0;
       let errorCount = 0;
@@ -553,13 +562,15 @@ export function JobApplications() {
             interviewComments: application.interviewComments?.trim() || ""
           };
 
+          console.log(`🔍 Import Debug - Attempting to create application for ${cleanApplication.company}`);
           await createMutation.mutateAsync(cleanApplication);
           successCount++;
+          console.log(`✅ Import Debug - Successfully created application for ${cleanApplication.company}`);
         } catch (error: any) {
           errorCount++;
           const errorMsg = error?.response?.data?.message || error?.message || 'Unknown error';
           errors.push(`${application.company}: ${errorMsg}`);
-          console.error('Failed to import application:', application, error);
+          console.error('❌ Import Debug - Failed to import application:', application, error);
         }
       }
 
@@ -575,8 +586,8 @@ export function JobApplications() {
 
     } catch (error) {
       toast({
-        title: t('importFailed'),
-        description: t('failedToImportApplications'),
+        title: "Import Failed",
+        description: "Failed to import applications. Please try again.",
         variant: "destructive",
       });
     }
