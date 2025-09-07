@@ -55,26 +55,36 @@ const upload = multer({
 });
 
 async function parseDocument(filePath, mimetype) {
+  console.log(`Parsing document: ${filePath}, MIME type: ${mimetype}`);
+  
   try {
     const buffer = await fs.readFile(filePath);
+    console.log(`File read successfully, buffer length: ${buffer.length}`);
     
     if (mimetype === 'application/pdf') {
+      console.log('Processing as PDF');
       const data = await pdfParse(buffer);
       return data.text;
     } else if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      console.log('Processing as DOCX');
       const result = await mammoth.extractRawText({ buffer });
       return result.value;
     }
     
-    throw new Error('Unsupported file type');
+    console.error(`Unsupported MIME type received: ${mimetype}`);
+    throw new Error(`Unsupported file type: ${mimetype}. Only PDF and DOCX files are supported.`);
   } catch (error) {
+    console.error('Document parsing error:', error);
+    if (error.message.includes('Unsupported file type')) {
+      throw error;
+    }
     throw new Error(`Failed to parse document: ${error.message}`);
   } finally {
     // Clean up uploaded file
     try {
       await fs.unlink(filePath);
     } catch (e) {
-      // Ignore cleanup errors
+      console.log('File cleanup completed or failed silently');
     }
   }
 }
@@ -189,6 +199,13 @@ export default async function handler(req, res) {
           resolve();
         }
       });
+    });
+
+    console.log('File upload processed. File details:', {
+      filename: req.file?.originalname,
+      mimetype: req.file?.mimetype,
+      size: req.file?.size,
+      path: req.file?.path
     });
 
     if (!req.file) {
