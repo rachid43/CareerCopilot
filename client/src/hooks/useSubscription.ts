@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { SubscriptionTier, canUserAccessFeature, getTierFeatures, TierFeatures, checkUsageLimit } from "@shared/subscription-tiers";
-import { User } from "@shared/schema";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SubscriptionInfo {
   tier: SubscriptionTier;
@@ -10,18 +9,6 @@ interface SubscriptionInfo {
   features: TierFeatures;
 }
 
-export function useAuth() {
-  const { data: user, isLoading } = useQuery<User>({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
-
-  return {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-  };
-}
 
 export function useSubscription() {
   const { user, isLoading: userLoading } = useAuth();

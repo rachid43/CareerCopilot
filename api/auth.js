@@ -34,21 +34,27 @@ export default async function handler(req, res) {
         return res.status(401).json({ message: 'Invalid token' });
       }
       
+      // Debug the user metadata
+      console.log('🔍 API Debug - User metadata:', JSON.stringify(user.user_metadata, null, 2));
+      
       // Return user data in the format expected by the frontend
-      return res.status(200).json({
+      const userData = {
         id: user.id,
         username: user.id, // Use Supabase user ID as username
         email: user.email,
         firstName: user.user_metadata?.firstName || user.user_metadata?.first_name || '',
         lastName: user.user_metadata?.lastName || user.user_metadata?.last_name || '',
         role: user.user_metadata?.role || 'user',
-        isActive: true,
+        isActive: user.user_metadata?.isActive ?? true,
         subscriptionStatus: user.user_metadata?.subscriptionStatus || 'active',
         subscriptionTier: user.user_metadata?.subscriptionTier || 'essential',
         accountExpiresAt: user.user_metadata?.accountExpiresAt || null,
         createdAt: user.created_at,
         updatedAt: user.updated_at
-      });
+      };
+      
+      console.log('🔍 API Debug - Returning userData:', JSON.stringify(userData, null, 2));
+      return res.status(200).json(userData);
       
     } catch (error) {
       console.error('Auth error:', error);

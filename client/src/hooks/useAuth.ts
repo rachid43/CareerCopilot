@@ -10,6 +10,7 @@ interface User {
   role: string;
   isActive: boolean;
   subscriptionStatus?: string;
+  subscriptionTier?: string;
   subscriptionExpiresAt?: string;
   accountExpiresAt?: string;
   createdAt?: string;
@@ -21,6 +22,14 @@ export function useAuth() {
     retry: false,
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
+
+  // Debug user data
+  if (user) {
+    console.log('🔍 Client Debug - User data received:', user);
+    console.log('🔍 Client Debug - Tier:', user.subscriptionTier);
+    console.log('🔍 Client Debug - Status:', user.subscriptionStatus);
+    console.log('🔍 Client Debug - IsActive:', user.isActive);
+  }
 
   return {
     user,
