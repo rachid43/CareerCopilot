@@ -51,10 +51,20 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      // Create new job application
+      // Create new job application - map camelCase to snake_case
       const applicationData = {
-        ...req.body,
-        user_id: userId
+        user_id: userId,
+        applied_roles: req.body.appliedRoles,
+        company: req.body.company,
+        apply_date: req.body.applyDate,
+        where_applied: req.body.whereApplied,
+        credentials_used: req.body.credentialsUsed || null,
+        comments_information: req.body.commentsInformation || null,
+        response: req.body.response || 'No Response',
+        response_date: req.body.responseDate || null,
+        location_city: req.body.locationCity || null,
+        location_country: req.body.locationCountry || null,
+        interview_comments: req.body.interviewComments || null
       };
 
       const { data, error } = await supabase
@@ -86,12 +96,25 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: 'Application not found' });
       }
 
+      // Map camelCase to snake_case for update
+      const mappedUpdateData = {
+        applied_roles: updateData.appliedRoles,
+        company: updateData.company,
+        apply_date: updateData.applyDate,
+        where_applied: updateData.whereApplied,
+        credentials_used: updateData.credentialsUsed || null,
+        comments_information: updateData.commentsInformation || null,
+        response: updateData.response || 'No Response',
+        response_date: updateData.responseDate || null,
+        location_city: updateData.locationCity || null,
+        location_country: updateData.locationCountry || null,
+        interview_comments: updateData.interviewComments || null,
+        updated_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('job_applications')
-        .update({
-          ...updateData,
-          updated_at: new Date().toISOString()
-        })
+        .update(mappedUpdateData)
         .eq('id', id)
         .eq('user_id', userId)
         .select()
