@@ -106,20 +106,20 @@ export const userInvitations = pgTable("user_invitations", {
 // Job Applications Tracker table
 export const jobApplications = pgTable("job_applications", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull().references(() => users.id),
-  appliedRoles: text("appliedRoles").notNull(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  appliedRoles: text("applied_roles").notNull(),
   company: text("company").notNull(),
-  applyDate: date("applyDate").notNull(),
-  whereApplied: text("whereApplied").notNull(), // 'LinkedIn' | 'Website' | 'Referral' | 'Other'
-  credentialsUsed: text("credentialsUsed"),
-  commentsInformation: text("commentsInformation"),
+  applyDate: date("apply_date").notNull(),
+  whereApplied: text("where_applied").notNull(), // 'LinkedIn' | 'Website' | 'Referral' | 'Other'
+  credentialsUsed: text("credentials_used"),
+  commentsInformation: text("comments_information"),
   response: text("response").notNull().default("No Response"), // 'No Response' | 'Interview' | 'Offer' | 'Rejected' | 'Open' | 'Under Interview' | 'WithDrawn' | 'Other'
-  responseDate: date("responseDate"),
-  locationCity: text("locationCity"),
-  locationCountry: text("locationCountry"),
-  interviewComments: text("interviewComments"),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt").defaultNow(),
+  responseDate: date("response_date"),
+  locationCity: text("location_city"),
+  locationCountry: text("location_country"),
+  interviewComments: text("interview_comments"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Mock Interview Sessions table
