@@ -44,11 +44,29 @@ export default async function handler(req, res) {
       .eq('username', supabaseUser.id)
       .single();
     
-    if (userError || !localUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+    let userId;
     
-    const userId = localUser.id;
+    if (userError || !localUser) {
+      // Create local user if doesn't exist
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert({
+          username: supabaseUser.id,
+          email: supabaseUser.email,
+          firstName: supabaseUser.user_metadata?.first_name || '',
+          lastName: supabaseUser.user_metadata?.last_name || '',
+          supabaseUserId: supabaseUser.id
+        })
+        .select('id')
+        .single();
+      
+      if (createError || !newUser) {
+        return res.status(404).json({ message: 'User not found and could not be created' });
+      }
+      userId = newUser.id;
+    } else {
+      userId = localUser.id;
+    }
 
     // Get all applications for dashboard metrics
     const { data: applications, error } = await supabase
@@ -76,12 +94,46 @@ export default async function handler(req, res) {
       ? Math.round((interviews / totalApplications) * 100) 
       : 0;
 
+    const offers = applications.filter(app => app.response === 'Offer').length;
+    const rejections = applications.filter(app => app.response === 'Rejected').length;
+    const pendingResponse = applications.filter(app => 
+      app.response === 'No Response' || app.response === 'Open'
+    ).length;
+    
+    // Calculate follow-up reminders (applications older than 7 days without response)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const followUpReminders = applications.filter(app => {
+      const applyDate = new Date(app.apply_date);
+      return applyDate < sevenDaysAgo && (app.response === 'No Response' || app.response === 'Open');
+    }).length;
+    
+    // Calculate late follow-ups (applications older than 14 days without response)  
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+    
+    const lateFollowUps = applications.filter(app => {
+      const applyDate = new Date(app.apply_date);
+      return applyDate < fourteenDaysAgo && (app.response === 'No Response' || app.response === 'Open');
+    }).length;
+    
+    const offerRate = totalApplications > 0 
+      ? Math.round((offers / totalApplications) * 100) 
+      : 0;
+
     const dashboardData = {
       totalApplications,
       totalResponses,
       interviews,
+      offers,
+      rejections,
+      pendingResponse,
+      followUpReminders,
+      lateFollowUps,
       responseRate,
-      interviewRate
+      interviewRate,
+      offerRate
     };
 
     return res.status(200).json(dashboardData);

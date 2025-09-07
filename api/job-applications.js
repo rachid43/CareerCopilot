@@ -69,7 +69,7 @@ export default async function handler(req, res) {
       const { data, error } = await supabase
         .from('job_applications')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', userId) // Keep snake_case - this matches the schema
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       // Create new job application - map camelCase to snake_case
       const applicationData = {
-        user_id: userId,
+        user_id: userId, // Keep snake_case - this matches the schema
         applied_roles: req.body.appliedRoles,
         company: req.body.company,
         apply_date: req.body.applyDate,
