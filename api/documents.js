@@ -51,8 +51,8 @@ export default async function handler(req, res) {
       const { data, error } = await supabase
         .from('documents')
         .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
+        .eq('userId', userId) // Use camelCase to match schema
+        .order('id', { ascending: false }); // Use id for ordering since createdAt might not exist
 
       if (error) {
         console.error('Database error:', error);

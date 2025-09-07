@@ -49,9 +49,9 @@ export default async function handler(req, res) {
         .insert({
           username: supabaseUser.id,
           email: supabaseUser.email,
-          first_name: supabaseUser.user_metadata?.first_name || '',
-          last_name: supabaseUser.user_metadata?.last_name || '',
-          supabase_user_id: supabaseUser.id
+          firstName: supabaseUser.user_metadata?.first_name || '', // Use camelCase to match schema
+          lastName: supabaseUser.user_metadata?.last_name || '', // Use camelCase to match schema
+          supabaseUserId: supabaseUser.id // Use camelCase to match schema
         })
         .select('id')
         .single();

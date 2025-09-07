@@ -165,9 +165,9 @@ export default async function handler(req, res) {
         .insert({
           username: supabaseUser.id,
           email: supabaseUser.email,
-          first_name: supabaseUser.user_metadata?.first_name || '',
-          last_name: supabaseUser.user_metadata?.last_name || '',
-          supabase_user_id: supabaseUser.id
+          firstName: supabaseUser.user_metadata?.first_name || '', // Use camelCase to match schema
+          lastName: supabaseUser.user_metadata?.last_name || '', // Use camelCase to match schema
+          supabaseUserId: supabaseUser.id // Use camelCase to match schema
         })
         .select('id')
         .single();
@@ -208,11 +208,11 @@ export default async function handler(req, res) {
     const { data: document, error: docError } = await supabase
       .from('documents')
       .insert({
-        user_id: userId,
+        userId: userId, // Use camelCase to match schema
         filename: req.file.originalname,
         content: content,
         type: type,
-        session_id: supabaseUser.id
+        sessionId: supabaseUser.id // Use camelCase to match schema
       })
       .select()
       .single();
@@ -232,12 +232,12 @@ export default async function handler(req, res) {
           const { data: existingProfile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
-            .eq('user_id', userId)
+            .eq('userId', userId) // Use camelCase to match schema
             .single();
 
           const profileData = {
-            user_id: userId,
-            session_id: supabaseUser.id,
+            userId: userId, // Use camelCase to match schema
+            sessionId: supabaseUser.id, // Use camelCase to match schema
             name: extractedProfile.name || existingProfile?.name || '',
             email: extractedProfile.email || existingProfile?.email || '',
             phone: extractedProfile.phone || existingProfile?.phone || '',
@@ -250,7 +250,7 @@ export default async function handler(req, res) {
           // Upsert profile
           const { error: upsertError } = await supabase
             .from('profiles')
-            .upsert(profileData, { onConflict: 'user_id' });
+            .upsert(profileData, { onConflict: 'userId' }); // Use camelCase to match schema
 
           if (upsertError) {
             console.error('Error updating profile:', upsertError);

@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       .from('documents')
       .delete()
       .eq('id', id)
-      .eq('user_id', userId)
+      .eq('userId', userId) // Use camelCase to match schema
       .select()
       .single();
 
