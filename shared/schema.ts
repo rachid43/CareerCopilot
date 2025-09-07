@@ -96,77 +96,77 @@ export const userInvitations = pgTable("user_invitations", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   token: text("token").notNull().unique(),
-  expiresAt: timestamp("expires_at").notNull(),
-  isUsed: boolean("is_used").notNull().default(false),
-  invitedBy: integer("invited_by").references(() => users.id),
-  subscriptionExpiresAt: timestamp("subscription_expires_at"),
-  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  isUsed: boolean("isUsed").notNull().default(false),
+  invitedBy: integer("invitedBy").references(() => users.id),
+  subscriptionExpiresAt: timestamp("subscriptionExpiresAt"),
+  createdAt: timestamp("createdAt").defaultNow(),
 });
 
 // Job Applications Tracker table
 export const jobApplications = pgTable("job_applications", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id),
-  appliedRoles: text("applied_roles").notNull(),
+  userId: integer("userId").notNull().references(() => users.id),
+  appliedRoles: text("appliedRoles").notNull(),
   company: text("company").notNull(),
-  applyDate: date("apply_date").notNull(),
-  whereApplied: text("where_applied").notNull(), // 'LinkedIn' | 'Website' | 'Referral' | 'Other'
-  credentialsUsed: text("credentials_used"),
-  commentsInformation: text("comments_information"),
+  applyDate: date("applyDate").notNull(),
+  whereApplied: text("whereApplied").notNull(), // 'LinkedIn' | 'Website' | 'Referral' | 'Other'
+  credentialsUsed: text("credentialsUsed"),
+  commentsInformation: text("commentsInformation"),
   response: text("response").notNull().default("No Response"), // 'No Response' | 'Interview' | 'Offer' | 'Rejected' | 'Open' | 'Under Interview' | 'WithDrawn' | 'Other'
-  responseDate: date("response_date"),
-  locationCity: text("location_city"),
-  locationCountry: text("location_country"),
-  interviewComments: text("interview_comments"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  responseDate: date("responseDate"),
+  locationCity: text("locationCity"),
+  locationCountry: text("locationCountry"),
+  interviewComments: text("interviewComments"),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
 // Mock Interview Sessions table
 export const interviewSessions = pgTable("interview_sessions", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id),
-  jobTitle: text("job_title").notNull(),
+  userId: integer("userId").notNull().references(() => users.id),
+  jobTitle: text("jobTitle").notNull(),
   company: text("company").notNull(),
-  jobDescription: text("job_description").notNull(),
-  interviewType: text("interview_type").notNull(), // 'behavioral' | 'technical' | 'situational' | 'mixed'
-  difficultyLevel: text("difficulty_level").notNull().default("mid"), // 'junior' | 'mid' | 'senior'
-  recruiterPersona: text("recruiter_persona").notNull().default("friendly"), // 'friendly' | 'formal' | 'challenging'
+  jobDescription: text("jobDescription").notNull(),
+  interviewType: text("interviewType").notNull(), // 'behavioral' | 'technical' | 'situational' | 'mixed'
+  difficultyLevel: text("difficultyLevel").notNull().default("mid"), // 'junior' | 'mid' | 'senior'
+  recruiterPersona: text("recruiterPersona").notNull().default("friendly"), // 'friendly' | 'formal' | 'challenging'
   status: text("status").notNull().default("active"), // 'active' | 'completed' | 'paused'
-  totalQuestions: integer("total_questions").notNull().default(0),
-  currentQuestionIndex: integer("current_question_index").notNull().default(0),
-  overallScore: integer("overall_score"), // 1-100 scale
+  totalQuestions: integer("totalQuestions").notNull().default(0),
+  currentQuestionIndex: integer("currentQuestionIndex").notNull().default(0),
+  overallScore: integer("overallScore"), // 1-100 scale
   duration: integer("duration"), // in minutes
   language: text("language").notNull().default("en"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
 // Interview Questions and Answers table
 export const interviewQA = pgTable("interview_qa", {
   id: serial("id").primaryKey(),
-  sessionId: integer("session_id").notNull().references(() => interviewSessions.id),
-  questionNumber: integer("question_number").notNull(),
+  sessionId: integer("sessionId").notNull().references(() => interviewSessions.id),
+  questionNumber: integer("questionNumber").notNull(),
   question: text("question").notNull(),
-  questionType: text("question_type").notNull(), // 'opening' | 'behavioral' | 'technical' | 'situational' | 'closing'
-  userAnswer: text("user_answer").notNull(),
-  answerScore: integer("answer_score"), // 1-10 scale
+  questionType: text("questionType").notNull(), // 'opening' | 'behavioral' | 'technical' | 'situational' | 'closing'
+  userAnswer: text("userAnswer").notNull(),
+  answerScore: integer("answerScore"), // 1-10 scale
   feedback: text("feedback"), // AI feedback on the answer
   suggestions: text("suggestions"), // Improvement suggestions
-  responseTime: integer("response_time"), // in seconds
-  createdAt: timestamp("created_at").defaultNow(),
+  responseTime: integer("responseTime"), // in seconds
+  createdAt: timestamp("createdAt").defaultNow(),
 });
 
 // Interview Feedback and Analytics table
 export const interviewFeedback = pgTable("interview_feedback", {
   id: serial("id").primaryKey(),
-  sessionId: integer("session_id").notNull().references(() => interviewSessions.id),
+  sessionId: integer("sessionId").notNull().references(() => interviewSessions.id),
   category: text("category").notNull(), // 'communication' | 'content' | 'confidence' | 'technical' | 'overall'
   score: integer("score").notNull(), // 1-10 scale
   strengths: text("strengths"), // JSON array of strengths
   improvements: text("improvements"), // JSON array of improvement areas
-  detailedFeedback: text("detailed_feedback"),
-  createdAt: timestamp("created_at").defaultNow(),
+  detailedFeedback: text("detailedFeedback"),
+  createdAt: timestamp("createdAt").defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).omit({
