@@ -1,0 +1,75 @@
+GET https://www.careercopilot.nl/api/auth 401 (Unauthorized)
+(anonymous) @ index-D0ztv-SQ.js:48
+a @ index-D0ztv-SQ.js:48
+x @ index-D0ztv-SQ.js:48
+start @ index-D0ztv-SQ.js:48
+fetch @ index-D0ztv-SQ.js:48
+Ju @ index-D0ztv-SQ.js:48
+onSubscribe @ index-D0ztv-SQ.js:48
+subscribe @ index-D0ztv-SQ.js:48
+(anonymous) @ index-D0ztv-SQ.js:48
+uR @ index-D0ztv-SQ.js:38
+Qp @ index-D0ztv-SQ.js:40
+dc @ index-D0ztv-SQ.js:40
+YS @ index-D0ztv-SQ.js:40
+to @ index-D0ztv-SQ.js:38
+GL @ index-D0ztv-SQ.js:40
+yo @ index-D0ztv-SQ.js:40
+VR @ index-D0ztv-SQ.js:40
+S @ index-D0ztv-SQ.js:25
+C @ index-D0ztv-SQ.js:25Understand this error
+(index):1 [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq)
+index-D0ztv-SQ.js:425  POST https://www.careercopilot.nl/api/login 404 (Not Found)
+w @ index-D0ztv-SQ.js:425
+fM @ index-D0ztv-SQ.js:37
+hM @ index-D0ztv-SQ.js:37
+pM @ index-D0ztv-SQ.js:37
+wS @ index-D0ztv-SQ.js:37
+qN @ index-D0ztv-SQ.js:37
+(anonymous) @ index-D0ztv-SQ.js:37
+sb @ index-D0ztv-SQ.js:40
+xN @ index-D0ztv-SQ.js:37
+bg @ index-D0ztv-SQ.js:37
+Iw @ index-D0ztv-SQ.js:37
+RM @ index-D0ztv-SQ.js:37Understand this error
+index-D0ztv-SQ.js:425 Auth error: SyntaxError: Unexpected token 'T', "The page c"... is not valid JSON
+w @ index-D0ztv-SQ.js:425
+await in w
+fM @ index-D0ztv-SQ.js:37
+hM @ index-D0ztv-SQ.js:37
+pM @ index-D0ztv-SQ.js:37
+wS @ index-D0ztv-SQ.js:37
+qN @ index-D0ztv-SQ.js:37
+(anonymous) @ index-D0ztv-SQ.js:37
+sb @ index-D0ztv-SQ.js:40
+xN @ index-D0ztv-SQ.js:37
+bg @ index-D0ztv-SQ.js:37
+Iw @ index-D0ztv-SQ.js:37
+RM @ index-D0ztv-SQ.js:37Understand this error
+index-D0ztv-SQ.js:425  POST https://www.careercopilot.nl/api/login 404 (Not Found)
+w @ index-D0ztv-SQ.js:425
+fM @ index-D0ztv-SQ.js:37
+hM @ index-D0ztv-SQ.js:37
+pM @ index-D0ztv-SQ.js:37
+wS @ index-D0ztv-SQ.js:37
+qN @ index-D0ztv-SQ.js:37
+(anonymous) @ index-D0ztv-SQ.js:37
+sb @ index-D0ztv-SQ.js:40
+xN @ index-D0ztv-SQ.js:37
+bg @ index-D0ztv-SQ.js:37
+Iw @ index-D0ztv-SQ.js:37
+RM @ index-D0ztv-SQ.js:37Understand this error
+index-D0ztv-SQ.js:425 Auth error: SyntaxError: Unexpected token 'T', "The page c"... is not valid JSON
+w @ index-D0ztv-SQ.js:425
+await in w
+fM @ index-D0ztv-SQ.js:37
+hM @ index-D0ztv-SQ.js:37
+pM @ index-D0ztv-SQ.js:37
+wS @ index-D0ztv-SQ.js:37
+qN @ index-D0ztv-SQ.js:37
+(anonymous) @ index-D0ztv-SQ.js:37
+sb @ index-D0ztv-SQ.js:40
+xN @ index-D0ztv-SQ.js:37
+bg @ index-D0ztv-SQ.js:37
+Iw @ index-D0ztv-SQ.js:37
+RM @ index-D0ztv-SQ.js:37Understand this error
