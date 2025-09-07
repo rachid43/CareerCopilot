@@ -10,8 +10,8 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
   }
 });
 
-// Regular supabase client for database operations
-const supabase = createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY);
+// Use service key for database operations to ensure proper access
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function getUserFromToken(authHeader) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
