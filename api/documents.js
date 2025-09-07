@@ -31,8 +31,20 @@ async function getUserFromToken(authHeader) {
 export default async function handler(req, res) {
   try {
     const authHeader = req.headers.authorization || req.headers['Authorization'];
-    const user = await getUserFromToken(authHeader);
-    const userId = user.id;
+    const supabaseUser = await getUserFromToken(authHeader);
+    
+    // Look up local integer user ID using Supabase UUID as username
+    const { data: localUser, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('username', supabaseUser.id)
+      .single();
+    
+    if (userError || !localUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    const userId = localUser.id;
 
     if (req.method === 'GET') {
       // Get all documents for the user

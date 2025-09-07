@@ -40,6 +40,8 @@ export default async function handler(req, res) {
       .eq('username', supabaseUser.id)
       .single();
     
+    let userId;
+    
     if (userError || !localUser) {
       // Create local user if doesn't exist
       const { data: newUser, error: createError } = await supabase
@@ -57,9 +59,9 @@ export default async function handler(req, res) {
       if (createError || !newUser) {
         return res.status(404).json({ message: 'User not found and could not be created' });
       }
-      const userId = newUser.id;
+      userId = newUser.id;
     } else {
-      const userId = localUser.id;
+      userId = localUser.id;
     }
 
     if (req.method === 'GET') {
