@@ -5,16 +5,60 @@
     "api/**/*.js": {
       "memory": 1024,
       "maxDuration": 30
+    },
+    "dist/index.js": {
+      "memory": 1024,
+      "maxDuration": 30
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "src": "/api/documents/upload",
+      "dest": "/api/documents/upload"
     },
     {
-      "source": "/((?!api).*)",
-      "destination": "/index.html"
+      "src": "/api/documents/([^/]+)",
+      "dest": "/api/documents/$1"
+    },
+    {
+      "src": "/api/documents",
+      "dest": "/api/documents"
+    },
+    {
+      "src": "/api/job-applications/dashboard",
+      "dest": "/api/job-applications/dashboard"
+    },
+    {
+      "src": "/api/job-applications",
+      "dest": "/api/job-applications"
+    },
+    {
+      "src": "/api/profile",
+      "dest": "/api/profile"
+    },
+    {
+      "src": "/api/auth",
+      "dest": "/api/auth"
+    },
+    {
+      "src": "/api/login",
+      "dest": "/api/login"
+    },
+    {
+      "src": "/api/logout",
+      "dest": "/api/logout"
+    },
+    {
+      "src": "/api/signup",
+      "dest": "/api/signup"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
