@@ -194,6 +194,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes handled by Supabase API functions in api/auth.js
 
   // Protected profile endpoints
+  // NOTE: Profile routes migrated to serverless function api/profile.js for production
+  // These are kept for local development only
   app.get("/api/profile", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
@@ -244,7 +246,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Document upload endpoints
+  // NOTE: Document routes migrated to serverless functions in api/documents/* for production
+  // These are kept for local development only
   app.post("/api/documents/upload", isAuthenticated, upload.single('document'), async (req: any, res) => {
     try {
       if (!req.file) {
@@ -382,6 +385,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // NOTE: Documents GET route migrated to api/documents.js for production
   app.get("/api/documents", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
@@ -1300,6 +1304,7 @@ USER MESSAGE: ${content}`;
     }
   });
 
+  // NOTE: Job Applications routes migrated to api/job-applications/* for production
   // Job Applications Tracker routes
   
   // Get all job applications for current user
