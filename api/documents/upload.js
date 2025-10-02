@@ -5,28 +5,48 @@ import mammoth from 'mammoth';
 import fs from 'fs/promises';
 import OpenAI from 'openai';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+// Lazy initialization to prevent crashes on missing env vars
+let supabaseAdmin;
+let supabase;
+let openai;
 
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
+function initializeClients() {
+  if (!supabaseAdmin) {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error('Missing Supabase environment variables');
+    }
+    
+    supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    });
+
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
   }
-});
-
-// Use service key for database operations to ensure proper access
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY 
-});
+  
+  if (!openai) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('Missing OpenAI API key');
+    }
+    openai = new OpenAI({ 
+      apiKey: process.env.OPENAI_API_KEY 
+    });
+  }
+  
+  return { supabaseAdmin, supabase, openai };
+}
 
 async function getUserFromToken(authHeader) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new Error('No token provided');
   }
   
+  const { supabaseAdmin } = initializeClients();
   const token = authHeader.split(' ')[1];
   const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
   
@@ -91,6 +111,7 @@ async function parseDocument(filePath, mimetype) {
 
 async function extractProfileFromCV(cvContent) {
   try {
+    const { openai } = initializeClients();
     const prompt = `
 Extract personal information from this CV/Resume content and return it in JSON format with these exact fields:
 - name: Full name of the person
@@ -156,17 +177,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Validate environment variables
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Missing Supabase environment variables');
-      return res.status(500).json({ message: 'Server configuration error: Missing Supabase credentials' });
-    }
+    // Initialize clients (will throw error if env vars missing)
+    const { supabase } = initializeClients();
     
-    if (!process.env.OPENAI_API_KEY) {
-      console.error('Missing OpenAI API key');
-      return res.status(500).json({ message: 'Server configuration error: Missing OpenAI credentials' });
-    }
-
     const authHeader = req.headers.authorization || req.headers['Authorization'];
     const supabaseUser = await getUserFromToken(authHeader);
     
