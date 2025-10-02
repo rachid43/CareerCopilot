@@ -37,9 +37,9 @@ async function getUserFromToken(authHeader) {
   return user;
 }
 
-// Configure multer for file uploads
+// Configure multer for file uploads (Vercel uses /tmp directly)
 const upload = multer({
-  dest: '/tmp/uploads/',
+  dest: '/tmp/',
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
   fileFilter: (req, file, cb) => {
     const allowedMimes = [
@@ -156,6 +156,17 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Validate environment variables
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase environment variables');
+      return res.status(500).json({ message: 'Server configuration error: Missing Supabase credentials' });
+    }
+    
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('Missing OpenAI API key');
+      return res.status(500).json({ message: 'Server configuration error: Missing OpenAI credentials' });
+    }
+
     const authHeader = req.headers.authorization || req.headers['Authorization'];
     const supabaseUser = await getUserFromToken(authHeader);
     
