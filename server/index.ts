@@ -57,14 +57,21 @@ async function createApp() {
       try {
         const fs = await import('fs');
         if (fs.existsSync(functionPath)) {
+          console.log(`Loading API function: ${apiPath} from ${functionPath}`);
           const handler = await import(`../api/${apiPath}.js`);
-          return handler.default(req, res);
+          if (handler.default) {
+            return handler.default(req, res);
+          } else {
+            console.error(`No default export in ${apiPath}`);
+          }
+        } else {
+          console.log(`API function not found: ${functionPath}, falling through to old routes`);
         }
       } catch (error) {
         console.error(`Error loading API function ${apiPath}:`, error);
       }
       
-      // If no API function found, continue to next middleware
+      // If no API function found, continue to next middleware (old routes)
       next();
     });
     
