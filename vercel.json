@@ -2,7 +2,13 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist/public",
   "functions": {
+    "api/documents/upload.js": {
+      "runtime": "nodejs20.x",
+      "memory": 3008,
+      "maxDuration": 60
+    },
     "api/**/*.js": {
+      "runtime": "nodejs20.x",
       "memory": 1024,
       "maxDuration": 30
     }

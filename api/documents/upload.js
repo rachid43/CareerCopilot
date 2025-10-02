@@ -171,6 +171,13 @@ ${cvContent}
   }
 }
 
+// Disable body parsing, multer will handle it
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
