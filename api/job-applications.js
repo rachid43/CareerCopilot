@@ -1,23 +1,37 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+// Lazy initialization to prevent crashes on missing env vars
+let supabaseAdmin;
+let supabase;
 
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
+function initializeClients() {
+  if (!supabaseAdmin) {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error('Missing Supabase environment variables');
+    }
+    
+    supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    });
+
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
   }
-});
-
-// Use service key for database operations to ensure proper access
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  
+  return { supabaseAdmin, supabase };
+}
 
 async function getUserFromToken(authHeader) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new Error('No token provided');
   }
   
+  const { supabaseAdmin } = initializeClients();
   const token = authHeader.split(' ')[1];
   const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
   
@@ -30,6 +44,8 @@ async function getUserFromToken(authHeader) {
 
 export default async function handler(req, res) {
   try {
+    const { supabase } = initializeClients();
+    
     const authHeader = req.headers.authorization || req.headers['Authorization'];
     const supabaseUser = await getUserFromToken(authHeader);
     
